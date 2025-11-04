@@ -1,4 +1,4 @@
-import { ArrowLeft, User, Mail, Calendar, Award, BookOpen, Target, Edit, Linkedin, TrendingUp, Brain, CheckCircle, AlertCircle, ChevronDown, ChevronUp, Sparkles, Clock, Trophy, Zap, Briefcase, Star, BookMarked, Upload, FileText, Download, Eye, MessageSquare, ThumbsUp, X as XIcon, Check, Loader2, RefreshCw } from 'lucide-react';
+import { ArrowLeft, User, Mail, Calendar, Award, BookOpen, Target, Edit, Linkedin, TrendingUp, Brain, CheckCircle, AlertCircle, ChevronDown, ChevronUp, Sparkles, Clock, Trophy, Zap, Briefcase, Star, BookMarked, Upload, FileText, Download, Eye, MessageSquare, ThumbsUp, X as XIcon, Check, Loader2, RefreshCw, Copy, Share2, Plus, ChevronLeft, ChevronRight } from 'lucide-react';
 import { PageType } from '../App';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './ui/collapsible';
@@ -7,6 +7,9 @@ import { Switch } from './ui/switch';
 import { Label } from './ui/label';
 import { Textarea } from './ui/textarea';
 import { Badge } from './ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from './ui/dialog';
+import { toast } from 'sonner@2.0.3';
 
 interface ProfileProps {
   onNavigate: (page: PageType) => void;
@@ -23,6 +26,7 @@ export function Profile({ onNavigate }: ProfileProps) {
   const [isActivityOpen, setIsActivityOpen] = useState(false);
   const [isLearningHistoryOpen, setIsLearningHistoryOpen] = useState(true);
   const [isResumeBuilderOpen, setIsResumeBuilderOpen] = useState(true);
+  const [isLinkedInCoachOpen, setIsLinkedInCoachOpen] = useState(true);
   
   // Badge filter state
   const [badgeFilter, setBadgeFilter] = useState<'all' | 'trailhead' | 'transition-trails'>('all');
@@ -41,6 +45,16 @@ export function Profile({ onNavigate }: ProfileProps) {
   const [pennyMessages, setPennyMessages] = useState<Array<{sender: 'penny' | 'user', message: string, suggestions?: string[]}>>([]);
   const [userMessage, setUserMessage] = useState('');
   const [isRebuilding, setIsRebuilding] = useState(false);
+  
+  // LinkedIn Integration state
+  const [isLinkedInConnected, setIsLinkedInConnected] = useState(true);
+  const [isLinkedInProcessing, setIsLinkedInProcessing] = useState(false);
+  const [linkedInProfileTab, setLinkedInProfileTab] = useState('headline');
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [sharePostType, setSharePostType] = useState<'capstone' | 'badge' | 'milestone'>('capstone');
+  const [sharePostText, setSharePostText] = useState('');
+  const [selectedAchievements, setSelectedAchievements] = useState<string[]>([]);
+  const [achievementCarouselIndex, setAchievementCarouselIndex] = useState(0);
 
   // Pluralsight IQ Assessments
   const skillAssessments = [
@@ -473,6 +487,146 @@ export function Profile({ onNavigate }: ProfileProps) {
         message: "✨ Your résumé has been rebuilt! I've enhanced the formatting, added your Transition Trails achievements, and optimized for ATS systems. Check the preview on the right!",
       }]);
     }, 3000);
+  };
+
+  // LinkedIn Profile Data
+  const linkedInProfile = {
+    name: 'Alex Johnson',
+    headline: 'Volunteer Coordinator at Community Foundation',
+    profilePicture: 'AJ',
+    tokenStatus: 'Active',
+    lastSync: '2 hours ago'
+  };
+
+  // LinkedIn Profile Suggestions from Penny
+  const linkedInSuggestions = {
+    headline: {
+      current: 'Volunteer Coordinator at Community Foundation',
+      penny: 'Salesforce Administrator | Certified Admin Candidate | Volunteer Coordinator Transitioning to Tech',
+      reasoning: 'Your new headline emphasizes your tech journey and certification progress, making you more discoverable to recruiters.'
+    },
+    about: {
+      current: 'Passionate about helping nonprofits achieve their mission through volunteer coordination and community engagement.',
+      penny: `Salesforce Administrator and tech professional with a unique background in nonprofit operations. Currently pursuing Salesforce Administrator certification (68% complete) through the Transition Trails program.\n\nI bring real-world nonprofit experience combined with hands-on Salesforce expertise including:\n• Process Automation & Flow Builder\n• Lightning Web Components\n• Data Management & Reporting\n• User Experience Design\n\nRecent capstone project: Customer Service Portal Redesign - built automation workflows serving 500+ users.\n\nI'm passionate about using technology to amplify nonprofit impact and am actively seeking Salesforce Administrator opportunities.`,
+      reasoning: 'This version tells your transformation story while highlighting specific technical skills employers search for.'
+    },
+    experience: {
+      current: 'Volunteer Coordinator\nCommunity Foundation\n2020 - Present\n• Managed volunteer program\n• Coordinated events',
+      penny: 'Volunteer Coordinator\nCommunity Foundation\n2020 - Present\n• Managed 50+ volunteers across 12 community events, improving retention by 35%\n• Implemented Salesforce volunteer management system, reducing admin time by 20 hours/month\n• Designed automated email campaigns using Salesforce Flow, reaching 500+ stakeholders\n• Built custom dashboards for executive reporting, enabling data-driven decision making',
+      reasoning: 'Added quantifiable metrics and incorporated your Salesforce work to show immediate business value.'
+    },
+    skills: {
+      current: ['Event Planning', 'Volunteer Management', 'Community Outreach'],
+      penny: ['Salesforce Administration', 'Process Automation', 'Flow Builder', 'Lightning Web Components', 'Data Management', 'Reporting & Dashboards', 'Volunteer Management', 'Event Planning', 'Stakeholder Communication'],
+      reasoning: 'Leading with technical skills increases your visibility in recruiter searches while keeping your transferable skills.'
+    },
+    featured: {
+      current: [],
+      penny: [
+        {
+          type: 'project',
+          title: 'Customer Service Portal Redesign',
+          description: 'Capstone project: Built Salesforce Experience Cloud portal with custom automation workflows',
+          link: '#'
+        },
+        {
+          type: 'certification',
+          title: 'Salesforce Administrator (In Progress)',
+          description: '68% complete - Expected completion: May 2025',
+          link: '#'
+        },
+        {
+          type: 'post',
+          title: 'My Journey from Nonprofit to Tech',
+          description: 'Sharing insights on career transition and the power of upskilling',
+          link: '#'
+        }
+      ],
+      reasoning: 'Showcasing your capstone work and certification progress provides social proof of your capabilities.'
+    }
+  };
+
+  // Shareable Achievements
+  const shareableAchievements = [
+    {
+      id: 'capstone-1',
+      type: 'capstone',
+      title: 'Customer Service Portal Redesign',
+      description: 'Built a Salesforce Experience Cloud portal with automation workflows serving 500+ users',
+      image: '🏆',
+      date: 'Feb 18, 2025'
+    },
+    {
+      id: 'badge-1',
+      type: 'badge',
+      title: 'Process Automation Specialist',
+      description: 'Completed advanced Flow Builder training and earned specialist badge',
+      image: '⚡',
+      date: 'Feb 28, 2025'
+    },
+    {
+      id: 'cert-progress',
+      type: 'milestone',
+      title: 'Salesforce Admin Certification Progress',
+      description: '68% complete on my journey to Salesforce Administrator certification',
+      image: '🎯',
+      date: 'Today'
+    },
+    {
+      id: 'trailhead-rank',
+      type: 'milestone',
+      title: 'Trailhead Rank: Ranger',
+      description: 'Completed 24 modules and earned 2,400 points',
+      image: '⭐',
+      date: 'Mar 1, 2025'
+    }
+  ];
+
+  // Default share post templates
+  const sharePostTemplates = {
+    capstone: `🎉 Excited to share my latest capstone project from the Transition Trails program!\n\nI built a Customer Service Portal using Salesforce Experience Cloud, featuring:\n✅ Custom automation workflows\n✅ Lightning Web Components\n✅ Serving 500+ users\n\nThis project represents the culmination of months of learning and hands-on development. Grateful for the support from my coach Sarah Martinez and the entire Transition Trails community.\n\n#Salesforce #CareerTransition #TechForGood #TransitionTrails`,
+    badge: `🏆 Just earned my Process Automation Specialist badge!\n\nCompleted advanced training in Salesforce Flow Builder, learning to:\n• Design complex automation workflows\n• Implement error handling and debugging\n• Optimize for performance and scalability\n\nReady to put these skills to work in real-world Salesforce projects!\n\n#Salesforce #ProcessAutomation #ContinuousLearning`,
+    milestone: `📊 Career transition milestone: 68% complete on my Salesforce Administrator certification!\n\nThrough the Transition Trails program, I've gone from nonprofit coordinator to confident Salesforce developer. The journey includes:\n• 24 Trailhead modules completed\n• 3 capstone projects delivered\n• Hands-on experience with real-world scenarios\n\nTarget certification date: May 2025. The best investment is in yourself!\n\n#CareerChange #Salesforce #ProfessionalDevelopment #TransitionTrails`
+  };
+
+  const handleConnectLinkedIn = () => {
+    setIsLinkedInProcessing(true);
+    setTimeout(() => {
+      setIsLinkedInProcessing(false);
+      setIsLinkedInConnected(true);
+      toast.success('LinkedIn connected successfully!');
+    }, 2000);
+  };
+
+  const handleDisconnectLinkedIn = () => {
+    setIsLinkedInConnected(false);
+    toast.success('LinkedIn disconnected');
+  };
+
+  const handleCopyToClipboard = (text: string, label: string) => {
+    navigator.clipboard.writeText(text);
+    toast.success(`${label} copied to clipboard!`);
+  };
+
+  const handleOpenShareModal = (type: 'capstone' | 'badge' | 'milestone') => {
+    setSharePostType(type);
+    setSharePostText(sharePostTemplates[type]);
+    setIsShareModalOpen(true);
+  };
+
+  const handlePostToLinkedIn = () => {
+    toast.success('Posted to LinkedIn successfully!', {
+      description: 'Your achievement is now live on your profile'
+    });
+    setIsShareModalOpen(false);
+  };
+
+  const toggleAchievement = (achievementId: string) => {
+    setSelectedAchievements(prev => 
+      prev.includes(achievementId) 
+        ? prev.filter(id => id !== achievementId)
+        : [...prev, achievementId]
+    );
   };
 
   return (
@@ -1697,8 +1851,507 @@ export function Profile({ onNavigate }: ProfileProps) {
               </CollapsibleContent>
             </div>
           </Collapsible>
+
+          {/* LinkedIn Profile Coach */}
+          <Collapsible open={isLinkedInCoachOpen} onOpenChange={setIsLinkedInCoachOpen}>
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200">
+              <CollapsibleTrigger className="w-full p-4 flex items-center justify-between hover:bg-gray-50 rounded-t-xl transition-colors">
+                <h3 className="text-gray-900 flex items-center space-x-2">
+                  <Linkedin className="w-5 h-5 text-[#0A66C2]" />
+                  <span>LinkedIn Profile Coach</span>
+                </h3>
+                {isLinkedInCoachOpen ? <ChevronUp className="w-5 h-5 text-gray-500" /> : <ChevronDown className="w-5 h-5 text-gray-500" />}
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <div className="p-4 pt-0">
+                  {!isLinkedInConnected ? (
+                    /* Disconnected State */
+                    <div className="text-center py-12">
+                      <div className="w-20 h-20 rounded-full bg-[#2F6B4E]/10 flex items-center justify-center mx-auto mb-6">
+                        <Linkedin className="w-10 h-10 text-[#0A66C2]" />
+                      </div>
+                      <h4 className="text-gray-900 mb-2">Connect LinkedIn to Get Custom Profile Advice</h4>
+                      <p className="text-sm text-gray-600 mb-6 max-w-md mx-auto">
+                        Link your account to receive personalized résumé and profile guidance from Penny,
+                        and share your achievements directly to LinkedIn.
+                      </p>
+                      <button
+                        onClick={handleConnectLinkedIn}
+                        disabled={isLinkedInProcessing}
+                        className="bg-[#0A66C2] text-white px-6 py-3 rounded-lg hover:bg-[#084d8f] transition-colors flex items-center justify-center space-x-2 mx-auto disabled:opacity-50"
+                      >
+                        {isLinkedInProcessing ? (
+                          <>
+                            <Loader2 className="w-5 h-5 animate-spin" />
+                            <span>Connecting...</span>
+                          </>
+                        ) : (
+                          <>
+                            <Linkedin className="w-5 h-5" />
+                            <span>Connect LinkedIn</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  ) : (
+                    /* Connected State */
+                    <div className="space-y-6">
+                      {/* Connection Status Card */}
+                      <div className="p-4 bg-gradient-to-br from-[#0A66C2]/5 to-white border border-[#0A66C2]/20 rounded-lg">
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-12 h-12 rounded-full bg-[#2C6975] text-white flex items-center justify-center">
+                              {linkedInProfile.profilePicture}
+                            </div>
+                            <div>
+                              <h4 className="text-gray-900">{linkedInProfile.name}</h4>
+                              <p className="text-sm text-gray-600">{linkedInProfile.headline}</p>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <Badge variant="outline" className="border-green-300 text-green-700 mb-2">
+                              <div className="w-2 h-2 rounded-full bg-green-500 mr-1"></div>
+                              {linkedInProfile.tokenStatus}
+                            </Badge>
+                            <p className="text-xs text-gray-500">Synced {linkedInProfile.lastSync}</p>
+                          </div>
+                        </div>
+                        <button
+                          onClick={handleDisconnectLinkedIn}
+                          className="text-xs text-gray-600 hover:text-red-600 hover:underline"
+                        >
+                          Disconnect LinkedIn
+                        </button>
+                      </div>
+
+                      {/* Penny Nudge Banner */}
+                      <div className="p-4 bg-gradient-to-r from-[#F9A03F]/10 to-[#F5F3E8] border-l-4 border-[#F9A03F] rounded-lg">
+                        <div className="flex items-start space-x-3">
+                          <Sparkles className="w-5 h-5 text-[#F9A03F] flex-shrink-0 mt-0.5" />
+                          <div className="flex-1">
+                            <p className="text-sm text-gray-900 mb-2">
+                              <span className="font-medium">Penny found 5 ways to improve your profile!</span>
+                            </p>
+                            <p className="text-sm text-gray-700">
+                              Your Capstone Summary and recent badges can boost your LinkedIn visibility. Check the suggestions below.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Profile Coach Tabs */}
+                      <div>
+                        <h4 className="text-gray-900 mb-4 flex items-center space-x-2">
+                          <Sparkles className="w-4 h-4 text-[#F9A03F]" />
+                          <span>Your LinkedIn, Reimagined with Penny</span>
+                        </h4>
+
+                        <Tabs value={linkedInProfileTab} onValueChange={setLinkedInProfileTab} className="space-y-4">
+                          <TabsList className="bg-gray-100 p-1 grid grid-cols-5 w-full">
+                            <TabsTrigger value="headline" className="text-xs">Headline</TabsTrigger>
+                            <TabsTrigger value="about" className="text-xs">About</TabsTrigger>
+                            <TabsTrigger value="experience" className="text-xs">Experience</TabsTrigger>
+                            <TabsTrigger value="skills" className="text-xs">Skills</TabsTrigger>
+                            <TabsTrigger value="featured" className="text-xs">Featured</TabsTrigger>
+                          </TabsList>
+
+                          {/* Headline Tab */}
+                          <TabsContent value="headline" className="space-y-4">
+                            <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                              <p className="text-xs text-gray-600 mb-2">Current Headline:</p>
+                              <p className="text-sm text-gray-900">{linkedInSuggestions.headline.current}</p>
+                            </div>
+
+                            <div className="p-4 bg-gradient-to-br from-[#F5F3E8] to-white border-2 border-[#F9A03F]/30 rounded-lg">
+                              <div className="flex items-start justify-between mb-3">
+                                <div className="flex items-center space-x-2">
+                                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-[#F9A03F] to-[#e89135] text-white flex items-center justify-center">
+                                    <Sparkles className="w-3 h-3" />
+                                  </div>
+                                  <span className="text-sm text-gray-900 font-medium">Penny's Suggestion</span>
+                                </div>
+                                <Badge variant="outline" className="text-xs border-[#F9A03F] text-[#F9A03F]">
+                                  Recommended
+                                </Badge>
+                              </div>
+                              <p className="text-sm text-gray-900 mb-3">{linkedInSuggestions.headline.penny}</p>
+                              <p className="text-xs text-gray-600 mb-4 p-3 bg-white/50 rounded border border-[#F9A03F]/20">
+                                💡 {linkedInSuggestions.headline.reasoning}
+                              </p>
+                              <div className="flex items-center space-x-2">
+                                <button
+                                  onClick={() => handleCopyToClipboard(linkedInSuggestions.headline.penny, 'Headline')}
+                                  className="flex-1 bg-[#2C6975] text-white px-4 py-2 rounded-lg hover:bg-[#234f57] transition-colors flex items-center justify-center space-x-2 text-sm"
+                                >
+                                  <Copy className="w-4 h-4" />
+                                  <span>Copy</span>
+                                </button>
+                                <button className="flex-1 bg-gray-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors flex items-center justify-center space-x-2 text-sm">
+                                  <RefreshCw className="w-4 h-4" />
+                                  <span>Regenerate</span>
+                                </button>
+                              </div>
+                            </div>
+                          </TabsContent>
+
+                          {/* About Tab */}
+                          <TabsContent value="about" className="space-y-4">
+                            <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                              <p className="text-xs text-gray-600 mb-2">Current About:</p>
+                              <p className="text-sm text-gray-900 whitespace-pre-wrap">{linkedInSuggestions.about.current}</p>
+                            </div>
+
+                            <div className="p-4 bg-gradient-to-br from-[#F5F3E8] to-white border-2 border-[#F9A03F]/30 rounded-lg">
+                              <div className="flex items-start justify-between mb-3">
+                                <div className="flex items-center space-x-2">
+                                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-[#F9A03F] to-[#e89135] text-white flex items-center justify-center">
+                                    <Sparkles className="w-3 h-3" />
+                                  </div>
+                                  <span className="text-sm text-gray-900 font-medium">Penny's Suggestion</span>
+                                </div>
+                                <Badge variant="outline" className="text-xs border-[#F9A03F] text-[#F9A03F]">
+                                  Recommended
+                                </Badge>
+                              </div>
+                              <p className="text-sm text-gray-900 mb-3 whitespace-pre-wrap">{linkedInSuggestions.about.penny}</p>
+                              <p className="text-xs text-gray-600 mb-4 p-3 bg-white/50 rounded border border-[#F9A03F]/20">
+                                💡 {linkedInSuggestions.about.reasoning}
+                              </p>
+                              <div className="flex items-center space-x-2">
+                                <button
+                                  onClick={() => handleCopyToClipboard(linkedInSuggestions.about.penny, 'About section')}
+                                  className="flex-1 bg-[#2C6975] text-white px-4 py-2 rounded-lg hover:bg-[#234f57] transition-colors flex items-center justify-center space-x-2 text-sm"
+                                >
+                                  <Copy className="w-4 h-4" />
+                                  <span>Copy</span>
+                                </button>
+                                <button className="flex-1 bg-gray-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors flex items-center justify-center space-x-2 text-sm">
+                                  <RefreshCw className="w-4 h-4" />
+                                  <span>Regenerate</span>
+                                </button>
+                              </div>
+                            </div>
+                          </TabsContent>
+
+                          {/* Experience Tab */}
+                          <TabsContent value="experience" className="space-y-4">
+                            <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                              <p className="text-xs text-gray-600 mb-2">Current Experience:</p>
+                              <p className="text-sm text-gray-900 whitespace-pre-wrap">{linkedInSuggestions.experience.current}</p>
+                            </div>
+
+                            <div className="p-4 bg-gradient-to-br from-[#F5F3E8] to-white border-2 border-[#F9A03F]/30 rounded-lg">
+                              <div className="flex items-start justify-between mb-3">
+                                <div className="flex items-center space-x-2">
+                                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-[#F9A03F] to-[#e89135] text-white flex items-center justify-center">
+                                    <Sparkles className="w-3 h-3" />
+                                  </div>
+                                  <span className="text-sm text-gray-900 font-medium">Penny's Suggestion</span>
+                                </div>
+                                <Badge variant="outline" className="text-xs border-[#F9A03F] text-[#F9A03F]">
+                                  Recommended
+                                </Badge>
+                              </div>
+                              <p className="text-sm text-gray-900 mb-3 whitespace-pre-wrap">{linkedInSuggestions.experience.penny}</p>
+                              <p className="text-xs text-gray-600 mb-4 p-3 bg-white/50 rounded border border-[#F9A03F]/20">
+                                💡 {linkedInSuggestions.experience.reasoning}
+                              </p>
+                              <div className="flex items-center space-x-2">
+                                <button
+                                  onClick={() => handleCopyToClipboard(linkedInSuggestions.experience.penny, 'Experience')}
+                                  className="flex-1 bg-[#2C6975] text-white px-4 py-2 rounded-lg hover:bg-[#234f57] transition-colors flex items-center justify-center space-x-2 text-sm"
+                                >
+                                  <Copy className="w-4 h-4" />
+                                  <span>Copy</span>
+                                </button>
+                                <button className="flex-1 bg-gray-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors flex items-center justify-center space-x-2 text-sm">
+                                  <RefreshCw className="w-4 h-4" />
+                                  <span>Regenerate</span>
+                                </button>
+                              </div>
+                            </div>
+                          </TabsContent>
+
+                          {/* Skills Tab */}
+                          <TabsContent value="skills" className="space-y-4">
+                            <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                              <p className="text-xs text-gray-600 mb-3">Current Skills:</p>
+                              <div className="flex flex-wrap gap-2">
+                                {linkedInSuggestions.skills.current.map((skill, idx) => (
+                                  <Badge key={idx} variant="outline" className="text-xs">
+                                    {skill}
+                                  </Badge>
+                                ))}
+                              </div>
+                            </div>
+
+                            <div className="p-4 bg-gradient-to-br from-[#F5F3E8] to-white border-2 border-[#F9A03F]/30 rounded-lg">
+                              <div className="flex items-start justify-between mb-3">
+                                <div className="flex items-center space-x-2">
+                                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-[#F9A03F] to-[#e89135] text-white flex items-center justify-center">
+                                    <Sparkles className="w-3 h-3" />
+                                  </div>
+                                  <span className="text-sm text-gray-900 font-medium">Penny's Suggestion</span>
+                                </div>
+                                <Badge variant="outline" className="text-xs border-[#F9A03F] text-[#F9A03F]">
+                                  Recommended
+                                </Badge>
+                              </div>
+                              <div className="flex flex-wrap gap-2 mb-3">
+                                {linkedInSuggestions.skills.penny.map((skill, idx) => (
+                                  <Badge key={idx} variant="outline" className="text-xs border-[#2C6975] text-[#2C6975]">
+                                    {skill}
+                                    {idx < 6 && <span className="ml-1 text-[#F9A03F]">✨</span>}
+                                  </Badge>
+                                ))}
+                              </div>
+                              <p className="text-xs text-gray-600 mb-4 p-3 bg-white/50 rounded border border-[#F9A03F]/20">
+                                💡 {linkedInSuggestions.skills.reasoning}
+                              </p>
+                              <div className="flex items-center space-x-2">
+                                <button
+                                  onClick={() => handleCopyToClipboard(linkedInSuggestions.skills.penny.join(', '), 'Skills list')}
+                                  className="flex-1 bg-[#2C6975] text-white px-4 py-2 rounded-lg hover:bg-[#234f57] transition-colors flex items-center justify-center space-x-2 text-sm"
+                                >
+                                  <Copy className="w-4 h-4" />
+                                  <span>Copy All</span>
+                                </button>
+                                <button className="flex-1 bg-gray-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors flex items-center justify-center space-x-2 text-sm">
+                                  <RefreshCw className="w-4 h-4" />
+                                  <span>Regenerate</span>
+                                </button>
+                              </div>
+                            </div>
+                          </TabsContent>
+
+                          {/* Featured Tab */}
+                          <TabsContent value="featured" className="space-y-4">
+                            <div className="p-4 bg-gray-50 rounded-lg border border-gray-200 text-center py-8">
+                              <p className="text-sm text-gray-600">No featured content yet</p>
+                            </div>
+
+                            <div className="p-4 bg-gradient-to-br from-[#F5F3E8] to-white border-2 border-[#F9A03F]/30 rounded-lg">
+                              <div className="flex items-start justify-between mb-4">
+                                <div className="flex items-center space-x-2">
+                                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-[#F9A03F] to-[#e89135] text-white flex items-center justify-center">
+                                    <Sparkles className="w-3 h-3" />
+                                  </div>
+                                  <span className="text-sm text-gray-900 font-medium">Penny's Suggestions</span>
+                                </div>
+                              </div>
+
+                              <div className="space-y-3">
+                                {linkedInSuggestions.featured.penny.map((item, idx) => (
+                                  <div key={idx} className="p-3 bg-white border border-gray-200 rounded-lg">
+                                    <div className="flex items-start justify-between mb-2">
+                                      <div className="flex-1">
+                                        <div className="flex items-center space-x-2 mb-1">
+                                          <h5 className="text-sm text-gray-900">{item.title}</h5>
+                                          <Badge variant="outline" className="text-xs">
+                                            {item.type}
+                                          </Badge>
+                                        </div>
+                                        <p className="text-xs text-gray-600">{item.description}</p>
+                                      </div>
+                                    </div>
+                                    <button className="text-xs text-[#2C6975] hover:underline flex items-center space-x-1">
+                                      <Plus className="w-3 h-3" />
+                                      <span>Add to Featured</span>
+                                    </button>
+                                  </div>
+                                ))}
+                              </div>
+
+                              <p className="text-xs text-gray-600 mt-4 p-3 bg-white/50 rounded border border-[#F9A03F]/20">
+                                💡 {linkedInSuggestions.featured.reasoning}
+                              </p>
+                            </div>
+                          </TabsContent>
+                        </Tabs>
+                      </div>
+
+                      {/* Achievement Integration Panel */}
+                      <div className="p-4 bg-white border border-gray-200 rounded-lg">
+                        <div className="flex items-center justify-between mb-4">
+                          <h4 className="text-gray-900 flex items-center space-x-2">
+                            <Trophy className="w-4 h-4 text-[#F9A03F]" />
+                            <span>Highlight Your Growth</span>
+                          </h4>
+                          <div className="flex items-center space-x-2">
+                            <button
+                              onClick={() => setAchievementCarouselIndex(Math.max(0, achievementCarouselIndex - 1))}
+                              disabled={achievementCarouselIndex === 0}
+                              className="p-1 rounded hover:bg-gray-100 disabled:opacity-30"
+                              aria-label="Previous"
+                            >
+                              <ChevronLeft className="w-4 h-4" />
+                            </button>
+                            <span className="text-xs text-gray-600">
+                              {achievementCarouselIndex + 1} / {shareableAchievements.length}
+                            </span>
+                            <button
+                              onClick={() => setAchievementCarouselIndex(Math.min(shareableAchievements.length - 1, achievementCarouselIndex + 1))}
+                              disabled={achievementCarouselIndex === shareableAchievements.length - 1}
+                              className="p-1 rounded hover:bg-gray-100 disabled:opacity-30"
+                              aria-label="Next"
+                            >
+                              <ChevronRight className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </div>
+
+                        <div className="p-4 border-2 border-gray-200 rounded-lg hover:border-[#F9A03F] transition-colors">
+                          <div className="flex items-start space-x-4 mb-3">
+                            <div className="text-4xl">{shareableAchievements[achievementCarouselIndex].image}</div>
+                            <div className="flex-1">
+                              <div className="flex items-center space-x-2 mb-1">
+                                <h5 className="text-sm text-gray-900">{shareableAchievements[achievementCarouselIndex].title}</h5>
+                                <Badge variant="outline" className="text-xs capitalize">
+                                  {shareableAchievements[achievementCarouselIndex].type}
+                                </Badge>
+                              </div>
+                              <p className="text-xs text-gray-600 mb-2">{shareableAchievements[achievementCarouselIndex].description}</p>
+                              <p className="text-xs text-gray-500">{shareableAchievements[achievementCarouselIndex].date}</p>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center space-x-2">
+                            <button
+                              onClick={() => toggleAchievement(shareableAchievements[achievementCarouselIndex].id)}
+                              className={`flex-1 px-4 py-2 rounded-lg transition-colors flex items-center justify-center space-x-2 text-sm ${
+                                selectedAchievements.includes(shareableAchievements[achievementCarouselIndex].id)
+                                  ? 'bg-[#3B6A52] text-white'
+                                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                              }`}
+                            >
+                              <Check className="w-4 h-4" />
+                              <span>{selectedAchievements.includes(shareableAchievements[achievementCarouselIndex].id) ? 'Added' : 'Add to Profile'}</span>
+                            </button>
+                            <button
+                              onClick={() => handleOpenShareModal(shareableAchievements[achievementCarouselIndex].type as any)}
+                              className="flex-1 bg-[#0A66C2] text-white px-4 py-2 rounded-lg hover:bg-[#084d8f] transition-colors flex items-center justify-center space-x-2 text-sm"
+                            >
+                              <Share2 className="w-4 h-4" />
+                              <span>Share on LinkedIn</span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </CollapsibleContent>
+            </div>
+          </Collapsible>
         </div>
       </div>
+
+      {/* Share Composer Modal */}
+      <Dialog open={isShareModalOpen} onOpenChange={setIsShareModalOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center space-x-2">
+              <Linkedin className="w-5 h-5 text-[#0A66C2]" />
+              <span>Share Your Success on LinkedIn</span>
+            </DialogTitle>
+            <DialogDescription>
+              Tell your network about your achievement
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            {/* Post Type Selector */}
+            <div>
+              <Label className="text-sm mb-2 block">Post Type</Label>
+              <div className="flex items-center space-x-2">
+                <button
+                  onClick={() => setSharePostType('capstone')}
+                  className={`flex-1 px-4 py-2 rounded-lg border transition-colors ${
+                    sharePostType === 'capstone'
+                      ? 'border-[#0A66C2] bg-[#0A66C2]/10 text-[#0A66C2]'
+                      : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+                  }`}
+                >
+                  Capstone
+                </button>
+                <button
+                  onClick={() => setSharePostType('badge')}
+                  className={`flex-1 px-4 py-2 rounded-lg border transition-colors ${
+                    sharePostType === 'badge'
+                      ? 'border-[#0A66C2] bg-[#0A66C2]/10 text-[#0A66C2]'
+                      : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+                  }`}
+                >
+                  Badge
+                </button>
+                <button
+                  onClick={() => setSharePostType('milestone')}
+                  className={`flex-1 px-4 py-2 rounded-lg border transition-colors ${
+                    sharePostType === 'milestone'
+                      ? 'border-[#0A66C2] bg-[#0A66C2]/10 text-[#0A66C2]'
+                      : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+                  }`}
+                >
+                  Milestone
+                </button>
+              </div>
+            </div>
+
+            {/* Penny's Suggested Post */}
+            <div className="p-3 bg-gradient-to-br from-[#F5F3E8] to-white border border-[#F9A03F]/20 rounded-lg">
+              <div className="flex items-center space-x-2 mb-2">
+                <Sparkles className="w-4 h-4 text-[#F9A03F]" />
+                <span className="text-xs text-gray-700">Penny's suggested post (you can edit)</span>
+              </div>
+            </div>
+
+            {/* Text Area */}
+            <div>
+              <Textarea
+                value={sharePostText}
+                onChange={(e) => setSharePostText(e.target.value)}
+                rows={8}
+                className="w-full resize-none"
+                placeholder="Write your post..."
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                {sharePostText.length} characters
+              </p>
+            </div>
+
+            {/* Media Upload Placeholder */}
+            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-[#0A66C2] transition-colors">
+              <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+              <p className="text-sm text-gray-600">Add media (optional)</p>
+              <p className="text-xs text-gray-500">Upload image or attach Capstone PDF</p>
+            </div>
+
+            {/* Actions */}
+            <div className="flex items-center space-x-3 pt-4">
+              <button
+                onClick={() => setIsShareModalOpen(false)}
+                className="flex-1 bg-gray-100 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-200 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => handleCopyToClipboard(sharePostText, 'Post')}
+                className="flex-1 bg-gray-700 text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-colors flex items-center justify-center space-x-2"
+              >
+                <Copy className="w-4 h-4" />
+                <span>Copy to Clipboard</span>
+              </button>
+              <button
+                onClick={handlePostToLinkedIn}
+                className="flex-1 bg-[#0A66C2] text-white px-6 py-3 rounded-lg hover:bg-[#084d8f] transition-colors flex items-center justify-center space-x-2"
+              >
+                <Linkedin className="w-4 h-4" />
+                <span>Post to LinkedIn</span>
+              </button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

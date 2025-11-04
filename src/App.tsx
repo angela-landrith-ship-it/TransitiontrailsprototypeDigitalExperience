@@ -13,6 +13,8 @@ import { Profile } from './components/Profile';
 import { SelfAssessment } from './components/SelfAssessment';
 import { ProgramCalendar } from './components/ProgramCalendar';
 import { LearningCenter } from './components/LearningCenter';
+import { Community } from './components/Community';
+import { Toaster } from './components/ui/sonner';
 
 export type PageType = 
   | 'learner' 
@@ -26,7 +28,8 @@ export type PageType =
   | 'profile'
   | 'self-assessment'
   | 'program-calendar'
-  | 'learning-center';
+  | 'learning-center'
+  | 'community';
 
 export default function App() {
   const [activePage, setActivePage] = useState<PageType>('learner');
@@ -58,6 +61,8 @@ export default function App() {
         return <ProgramCalendar onNavigate={setActivePage} />;
       case 'learning-center':
         return <LearningCenter onNavigate={setActivePage} />;
+      case 'community':
+        return <Community onNavigate={setActivePage} />;
       default:
         return <LearnerHome onNavigate={setActivePage} />;
     }
@@ -84,6 +89,9 @@ export default function App() {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
         </svg>
       </button>
+
+      {/* Toast Notifications */}
+      <Toaster position="bottom-right" />
     </div>
   );
 }
