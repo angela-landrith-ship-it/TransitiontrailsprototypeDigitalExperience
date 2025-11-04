@@ -1,8 +1,12 @@
-import { ArrowLeft, User, Mail, Calendar, Award, BookOpen, Target, Edit, Linkedin, TrendingUp, Brain, CheckCircle, AlertCircle, ChevronDown, ChevronUp, Sparkles, Clock, Trophy, Zap, Briefcase, Star, BookMarked } from 'lucide-react';
+import { ArrowLeft, User, Mail, Calendar, Award, BookOpen, Target, Edit, Linkedin, TrendingUp, Brain, CheckCircle, AlertCircle, ChevronDown, ChevronUp, Sparkles, Clock, Trophy, Zap, Briefcase, Star, BookMarked, Upload, FileText, Download, Eye, MessageSquare, ThumbsUp, X as XIcon, Check, Loader2, RefreshCw } from 'lucide-react';
 import { PageType } from '../App';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './ui/collapsible';
 import { useState } from 'react';
+import { Switch } from './ui/switch';
+import { Label } from './ui/label';
+import { Textarea } from './ui/textarea';
+import { Badge } from './ui/badge';
 
 interface ProfileProps {
   onNavigate: (page: PageType) => void;
@@ -18,12 +22,25 @@ export function Profile({ onNavigate }: ProfileProps) {
   const [isCertsOpen, setIsCertsOpen] = useState(true);
   const [isActivityOpen, setIsActivityOpen] = useState(false);
   const [isLearningHistoryOpen, setIsLearningHistoryOpen] = useState(true);
+  const [isResumeBuilderOpen, setIsResumeBuilderOpen] = useState(true);
   
   // Badge filter state
   const [badgeFilter, setBadgeFilter] = useState<'all' | 'trailhead' | 'transition-trails'>('all');
   
   // Learning History filter state
   const [learningHistoryFilter, setLearningHistoryFilter] = useState<'all' | 'courses' | 'daily-missions' | 'trail-missions' | 'capstone' | 'assignments'>('all');
+  
+  // Resume Builder state
+  const [resumeUploaded, setResumeUploaded] = useState(false);
+  const [resumeFileName, setResumeFileName] = useState('');
+  const [isResumeProcessing, setIsResumeProcessing] = useState(false);
+  const [enhanceFormatting, setEnhanceFormatting] = useState(true);
+  const [addTransitionTrails, setAddTransitionTrails] = useState(true);
+  const [tailorForRole, setTailorForRole] = useState(false);
+  const [targetRole, setTargetRole] = useState('');
+  const [pennyMessages, setPennyMessages] = useState<Array<{sender: 'penny' | 'user', message: string, suggestions?: string[]}>>([]);
+  const [userMessage, setUserMessage] = useState('');
+  const [isRebuilding, setIsRebuilding] = useState(false);
 
   // Pluralsight IQ Assessments
   const skillAssessments = [
@@ -374,6 +391,89 @@ export function Profile({ onNavigate }: ProfileProps) {
     { label: 'Assignment Reminders', enabled: true },
     { label: 'Peer Collaboration Invites', enabled: false },
   ];
+
+  // Resume History
+  const resumeVersions = [
+    {
+      id: 'RES-003',
+      timestamp: 'Mar 10, 2025 2:15 PM',
+      fileName: 'AlexJohnson_Resume_v3.pdf',
+      size: '185 KB',
+      changes: 'Added 3 new achievements, reworded summary paragraph'
+    },
+    {
+      id: 'RES-002',
+      timestamp: 'Feb 28, 2025 11:30 AM',
+      fileName: 'AlexJohnson_Resume_v2.pdf',
+      size: '178 KB',
+      changes: 'Enhanced formatting, added Capstone project details'
+    },
+    {
+      id: 'RES-001',
+      timestamp: 'Feb 14, 2025 9:45 AM',
+      fileName: 'AlexJohnson_Resume_v1.pdf',
+      size: '165 KB',
+      changes: 'Initial upload'
+    }
+  ];
+
+  // Initial Penny suggestions when resume is uploaded
+  const initialPennySuggestions = [
+    {
+      sender: 'penny' as const,
+      message: "I've reviewed your résumé! Here are some suggestions to make it shine:",
+      suggestions: [
+        'Your "Volunteer Coordinator" role could use quantifiable metrics. Try: "Managed 50+ volunteers across 12 community events"',
+        'Consider adding your Salesforce Administrator certification progress (68% complete)',
+        'Your skills section is missing key technologies from your Capstone project: Process Automation, Lightning Web Components'
+      ]
+    }
+  ];
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setResumeFileName(file.name);
+      setIsResumeProcessing(true);
+      
+      // Simulate processing
+      setTimeout(() => {
+        setIsResumeProcessing(false);
+        setResumeUploaded(true);
+        setPennyMessages(initialPennySuggestions);
+      }, 2000);
+    }
+  };
+
+  const handleSendMessage = () => {
+    if (!userMessage.trim()) return;
+    
+    setPennyMessages([...pennyMessages, { sender: 'user', message: userMessage }]);
+    setUserMessage('');
+    
+    // Simulate Penny's response
+    setTimeout(() => {
+      setPennyMessages(prev => [...prev, {
+        sender: 'penny',
+        message: "Great question! I can help with that. Let me suggest some improvements based on your Transition Trails achievements.",
+        suggestions: [
+          'Update your summary to highlight your transition into tech and Salesforce expertise',
+          'Add a "Technical Skills" section featuring: Salesforce (Admin, Flow, Apex), Process Automation, Data Management'
+        ]
+      }]);
+    }, 1000);
+  };
+
+  const handleRebuildResume = () => {
+    setIsRebuilding(true);
+    setTimeout(() => {
+      setIsRebuilding(false);
+      setPennyMessages(prev => [...prev, {
+        sender: 'penny',
+        message: "✨ Your résumé has been rebuilt! I've enhanced the formatting, added your Transition Trails achievements, and optimized for ATS systems. Check the preview on the right!",
+      }]);
+    }, 3000);
+  };
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -1310,6 +1410,289 @@ export function Profile({ onNavigate }: ProfileProps) {
                   <button className="w-full mt-3 text-xs text-[#2C6975] hover:underline text-center">
                     View Full History →
                   </button>
+                </div>
+              </CollapsibleContent>
+            </div>
+          </Collapsible>
+
+          {/* Resume Builder with Penny */}
+          <Collapsible open={isResumeBuilderOpen} onOpenChange={setIsResumeBuilderOpen}>
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200">
+              <CollapsibleTrigger className="w-full p-4 flex items-center justify-between hover:bg-gray-50 rounded-t-xl transition-colors">
+                <h3 className="text-gray-900 flex items-center space-x-2">
+                  <Briefcase className="w-5 h-5 text-[#F9A03F]" />
+                  <span>Build or Improve Your Résumé with Penny</span>
+                </h3>
+                {isResumeBuilderOpen ? <ChevronUp className="w-5 h-5 text-gray-500" /> : <ChevronDown className="w-5 h-5 text-gray-500" />}
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <div className="p-4 pt-0">
+                  {!resumeUploaded ? (
+                    /* Upload Section */
+                    <div className="space-y-4">
+                      <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-[#F9A03F] transition-colors">
+                        <div className="w-16 h-16 rounded-full bg-[#F9A03F]/10 flex items-center justify-center mx-auto mb-4">
+                          <Upload className="w-8 h-8 text-[#F9A03F]" />
+                        </div>
+                        <h4 className="text-gray-900 mb-2">Upload Your Résumé</h4>
+                        <p className="text-sm text-gray-600 mb-4">PDF or DOCX format, up to 5MB</p>
+                        <label className="inline-block">
+                          <input
+                            type="file"
+                            accept=".pdf,.docx"
+                            onChange={handleFileUpload}
+                            className="hidden"
+                          />
+                          <span className="bg-[#2C6975] text-white px-6 py-2 rounded-lg hover:bg-[#234f57] transition-colors cursor-pointer inline-block">
+                            Choose File
+                          </span>
+                        </label>
+                      </div>
+
+                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                        <div className="flex items-start space-x-3">
+                          <Sparkles className="w-5 h-5 text-[#F9A03F] flex-shrink-0 mt-0.5" />
+                          <div>
+                            <p className="text-sm text-gray-900 mb-1">
+                              <span className="font-medium">Penny will help you:</span>
+                            </p>
+                            <ul className="text-sm text-gray-700 space-y-1">
+                              <li>• Rewrite bullets with quantifiable metrics</li>
+                              <li>• Add your Transition Trails achievements automatically</li>
+                              <li>• Tailor your résumé for specific roles</li>
+                              <li>• Optimize formatting for ATS systems</li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ) : isResumeProcessing ? (
+                    /* Processing State */
+                    <div className="py-12 text-center">
+                      <Loader2 className="w-12 h-12 text-[#F9A03F] animate-spin mx-auto mb-4" />
+                      <p className="text-gray-900 mb-2">Penny is reviewing your résumé...</p>
+                      <p className="text-sm text-gray-600">This will just take a moment</p>
+                    </div>
+                  ) : (
+                    /* Main Resume Builder Interface */
+                    <div className="space-y-6">
+                      {/* Upload Status */}
+                      <div className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg">
+                        <div className="flex items-center space-x-3">
+                          <FileText className="w-5 h-5 text-green-600" />
+                          <div>
+                            <p className="text-sm text-gray-900">{resumeFileName}</p>
+                            <Badge variant="outline" className="mt-1 text-xs border-green-300 text-green-700">
+                              Uploaded & Reviewed
+                            </Badge>
+                          </div>
+                        </div>
+                        <button
+                          onClick={() => {
+                            setResumeUploaded(false);
+                            setResumeFileName('');
+                            setPennyMessages([]);
+                          }}
+                          className="text-gray-400 hover:text-gray-600"
+                          aria-label="Remove file"
+                        >
+                          <XIcon className="w-4 h-4" />
+                        </button>
+                      </div>
+
+                      {/* Penny Review Panel */}
+                      <div className="border-2 border-[#2C6975]/30 rounded-lg bg-gradient-to-br from-[#7EB5C1]/10 to-[#2C6975]/5">
+                        <div className="p-4 border-b border-[#2C6975]/20">
+                          <div className="flex items-center justify-between mb-4">
+                            <h4 className="text-gray-900 flex items-center space-x-2">
+                              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#7EB5C1] to-[#2C6975] text-white flex items-center justify-center">
+                                <Sparkles className="w-4 h-4" />
+                              </div>
+                              <span>Penny's Feedback</span>
+                            </h4>
+                          </div>
+
+                          {/* Enhancement Toggles */}
+                          <div className="space-y-3 mb-4">
+                            <div className="flex items-center justify-between p-3 bg-white rounded-lg">
+                              <Label htmlFor="enhance-formatting" className="text-sm cursor-pointer">
+                                Enhance formatting
+                              </Label>
+                              <Switch
+                                id="enhance-formatting"
+                                checked={enhanceFormatting}
+                                onCheckedChange={setEnhanceFormatting}
+                              />
+                            </div>
+                            <div className="flex items-center justify-between p-3 bg-white rounded-lg">
+                              <Label htmlFor="add-achievements" className="text-sm cursor-pointer">
+                                Add Transition Trails achievements
+                              </Label>
+                              <Switch
+                                id="add-achievements"
+                                checked={addTransitionTrails}
+                                onCheckedChange={setAddTransitionTrails}
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <div className="flex items-center justify-between p-3 bg-white rounded-lg">
+                                <Label htmlFor="tailor-role" className="text-sm cursor-pointer">
+                                  Tailor résumé for target role
+                                </Label>
+                                <Switch
+                                  id="tailor-role"
+                                  checked={tailorForRole}
+                                  onCheckedChange={setTailorForRole}
+                                />
+                              </div>
+                              {tailorForRole && (
+                                <input
+                                  type="text"
+                                  value={targetRole}
+                                  onChange={(e) => setTargetRole(e.target.value)}
+                                  placeholder="e.g., Salesforce Administrator"
+                                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#2C6975]"
+                                />
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Chat Interface */}
+                          <div className="bg-white rounded-lg border border-gray-200">
+                            <div className="max-h-80 overflow-y-auto p-4 space-y-4">
+                              {pennyMessages.map((msg, idx) => (
+                                <div key={idx} className={`${msg.sender === 'penny' ? 'flex items-start space-x-2' : 'flex justify-end'}`}>
+                                  {msg.sender === 'penny' && (
+                                    <div className="w-6 h-6 rounded-full bg-gradient-to-br from-[#7EB5C1] to-[#2C6975] text-white flex items-center justify-center flex-shrink-0">
+                                      <Sparkles className="w-3 h-3" />
+                                    </div>
+                                  )}
+                                  <div className={`${msg.sender === 'penny' ? 'bg-gray-50' : 'bg-[#2C6975] text-white'} rounded-lg p-3 max-w-[85%]`}>
+                                    <p className="text-sm">{msg.message}</p>
+                                    {msg.suggestions && (
+                                      <div className="mt-3 space-y-2">
+                                        {msg.suggestions.map((suggestion, sIdx) => (
+                                          <div key={sIdx} className="flex items-start space-x-2 text-sm p-2 bg-white border border-gray-200 rounded">
+                                            <Lightbulb className="w-4 h-4 text-[#F9A03F] flex-shrink-0 mt-0.5" />
+                                            <div className="flex-1">
+                                              <p className="text-gray-700">{suggestion}</p>
+                                              <div className="flex items-center space-x-2 mt-2">
+                                                <button className="text-xs text-[#3B6A52] hover:underline flex items-center space-x-1">
+                                                  <Check className="w-3 h-3" />
+                                                  <span>Accept</span>
+                                                </button>
+                                                <button className="text-xs text-gray-600 hover:underline">
+                                                  Ignore
+                                                </button>
+                                                <button className="text-xs text-[#2C6975] hover:underline">
+                                                  Edit
+                                                </button>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+
+                            {/* Chat Input */}
+                            <div className="p-3 border-t border-gray-200 flex items-center space-x-2">
+                              <input
+                                type="text"
+                                value={userMessage}
+                                onChange={(e) => setUserMessage(e.target.value)}
+                                onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                                placeholder="Ask Penny for help..."
+                                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#2C6975]"
+                              />
+                              <button
+                                onClick={handleSendMessage}
+                                className="bg-[#2C6975] text-white p-2 rounded-lg hover:bg-[#234f57] transition-colors"
+                                aria-label="Send message"
+                              >
+                                <MessageSquare className="w-4 h-4" />
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Rebuild Section */}
+                        <div className="p-4">
+                          <button
+                            onClick={handleRebuildResume}
+                            disabled={isRebuilding}
+                            className="w-full bg-gradient-to-r from-[#F9A03F] to-[#F9A03F]/80 text-white px-6 py-3 rounded-lg hover:from-[#e89135] hover:to-[#e89135]/80 transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+                          >
+                            {isRebuilding ? (
+                              <>
+                                <Loader2 className="w-4 h-4 animate-spin" />
+                                <span>Rebuilding...</span>
+                              </>
+                            ) : (
+                              <>
+                                <Sparkles className="w-4 h-4" />
+                                <span>Rebuild Résumé</span>
+                              </>
+                            )}
+                          </button>
+
+                          {/* Action Buttons */}
+                          <div className="grid grid-cols-3 gap-2 mt-3">
+                            <button className="flex items-center justify-center space-x-1 px-3 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm">
+                              <Eye className="w-4 h-4" />
+                              <span>Preview</span>
+                            </button>
+                            <button className="flex items-center justify-center space-x-1 px-3 py-2 bg-[#2C6975] text-white rounded-lg hover:bg-[#234f57] transition-colors text-sm">
+                              <Download className="w-4 h-4" />
+                              <span>Download</span>
+                            </button>
+                            <button className="flex items-center justify-center space-x-1 px-3 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm">
+                              <Linkedin className="w-4 h-4" />
+                              <span>LinkedIn</span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* History Panel */}
+                      <div>
+                        <h4 className="text-gray-900 mb-3 flex items-center space-x-2">
+                          <Clock className="w-4 h-4 text-[#2C6975]" />
+                          <span>Version History</span>
+                        </h4>
+                        <div className="space-y-2">
+                          {resumeVersions.map((version) => (
+                            <div key={version.id} className="p-3 border border-gray-200 rounded-lg hover:border-[#2C6975] transition-colors">
+                              <div className="flex items-center justify-between mb-2">
+                                <div className="flex items-center space-x-2">
+                                  <FileText className="w-4 h-4 text-gray-400" />
+                                  <p className="text-sm text-gray-900">{version.fileName}</p>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                  <button className="text-gray-400 hover:text-[#2C6975]" aria-label="View">
+                                    <Eye className="w-4 h-4" />
+                                  </button>
+                                  <button className="text-gray-400 hover:text-[#2C6975]" aria-label="Download">
+                                    <Download className="w-4 h-4" />
+                                  </button>
+                                </div>
+                              </div>
+                              <div className="flex items-center justify-between text-xs text-gray-500">
+                                <span>{version.timestamp}</span>
+                                <span>{version.size}</span>
+                              </div>
+                              <p className="text-xs text-gray-600 mt-2 bg-gray-50 p-2 rounded">
+                                {version.changes}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </CollapsibleContent>
             </div>

@@ -187,3 +187,15 @@
 html {
   font-size: var(--font-size);
 }
+
+/* Custom animations for Trailhead badge sync */
+@keyframes slideInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

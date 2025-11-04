@@ -4,7 +4,9 @@ import { SlackFeed } from './SlackFeed';
 import { SkillsIQAssessment } from './SkillsIQAssessment';
 import { PageType } from '../App';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './ui/collapsible';
+import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar';
 import { useState } from 'react';
+import profileImage from 'figma:asset/cc5353a77d95e01a0547378d6a7b5a415082cb97.png';
 
 interface LearnerHomeProps {
   onNavigate: (page: PageType) => void;
@@ -42,6 +44,16 @@ export function LearnerHome({ onNavigate }: LearnerHomeProps) {
     ]
   };
 
+  // Current Learner Info (from Salesforce Experience Cloud User Record)
+  const currentLearner = {
+    name: 'Alex Johnson',
+    email: 'alex.johnson@email.com',
+    profilePicture: profileImage, // From Salesforce Experience Cloud User.SmallPhotoUrl
+    initials: 'AJ',
+    cohort: 'Spring 2025',
+    programStartDate: 'Jan 15, 2025'
+  };
+
   // Current Coach Info
   const currentCoach = {
     name: 'Sarah Martinez',
@@ -56,6 +68,82 @@ export function LearnerHome({ onNavigate }: LearnerHomeProps) {
     { id: 3, title: 'Campfire Session', date: 'Wed', time: '4:00 PM', color: '#F9A03F', type: 'campfire' },
     { id: 4, title: 'Salesforce Admin Fundamentals', date: 'Thu', time: '10:00 AM', color: '#3B6A52', type: 'class' },
     { id: 5, title: 'Office Hours', date: 'Fri', time: '3:00 PM', color: '#9333ea', type: 'office-hours' },
+  ];
+
+  // Penny AI Curated Focus Items - Intelligent prioritization across all activities
+  const pennyFocusItems = [
+    {
+      id: 1,
+      title: 'Submit Week 6 Status Report',
+      source: 'Capstone Project',
+      priority: 'critical',
+      dueDate: 'Today',
+      type: 'task',
+      description: 'Required weekly update for coach and nonprofit partner',
+      action: () => onNavigate('capstone-projects'),
+      icon: Trophy,
+      color: '#F9A03F'
+    },
+    {
+      id: 2,
+      title: 'Fix Critical Bug: Batch Job Null Pointer',
+      source: 'Capstone Project',
+      priority: 'high',
+      dueDate: 'Mar 12',
+      type: 'task',
+      description: 'BUG-001 blocking automation phase completion',
+      action: () => onNavigate('capstone-projects'),
+      icon: Target,
+      color: '#F9A03F'
+    },
+    {
+      id: 3,
+      title: 'Complete Process Automation Module',
+      source: 'Trail Missions',
+      priority: 'high',
+      dueDate: 'Mar 10',
+      type: 'task',
+      description: '90% complete - just 1 module remaining',
+      action: () => onNavigate('trail-missions'),
+      icon: BookOpen,
+      color: '#3B6A52'
+    },
+    {
+      id: 4,
+      title: 'Write 4 Apex Test Classes',
+      source: 'Capstone Project',
+      priority: 'medium',
+      dueDate: 'Mar 21',
+      type: 'task',
+      description: 'Need 85% coverage for deployment (currently 67%)',
+      action: () => onNavigate('capstone-projects'),
+      icon: Target,
+      color: '#2C6975'
+    },
+    {
+      id: 5,
+      title: 'Review PR #48 - Apex Trigger',
+      source: 'Capstone Project',
+      priority: 'medium',
+      dueDate: 'Mar 8',
+      type: 'task',
+      description: 'Open for 2 days with pending checks',
+      action: () => onNavigate('capstone-projects'),
+      icon: Target,
+      color: '#2C6975'
+    },
+    {
+      id: 6,
+      title: 'Complete Data Modeling Quiz',
+      source: 'Learning Center',
+      priority: 'medium',
+      dueDate: 'Mar 11',
+      type: 'task',
+      description: 'Assessment for current learning path',
+      action: () => onNavigate('learning-center'),
+      icon: BookOpen,
+      color: '#7EB5C1'
+    }
   ];
 
   return (
@@ -107,7 +195,12 @@ export function LearnerHome({ onNavigate }: LearnerHomeProps) {
             </div>
           </div>
           <div className="hidden xl:block ml-8">
-            <Trophy className="w-32 h-32 text-[#F9A03F] opacity-50" />
+            <Avatar className="w-32 h-32 border-4 border-white/30 shadow-xl">
+              <AvatarImage src={currentLearner.profilePicture} alt={currentLearner.name} />
+              <AvatarFallback className="bg-white/20 text-white text-3xl">
+                {currentLearner.initials}
+              </AvatarFallback>
+            </Avatar>
           </div>
         </div>
       </div>
@@ -116,97 +209,172 @@ export function LearnerHome({ onNavigate }: LearnerHomeProps) {
       <div className="grid lg:grid-cols-3 gap-6 mb-8">
         {/* Left & Center Columns */}
         <div className="lg:col-span-2 space-y-6">
-          {/* Today's Focus - Daily Missions */}
-          <div>
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-gray-900 flex items-center space-x-2">
-                <Target className="w-5 h-5 text-[#F9A03F]" />
-                <span>Today's Focus</span>
-              </h3>
-              <button 
-                onClick={() => onNavigate('daily-missions')}
-                className="text-sm text-[#2C6975] hover:underline flex items-center space-x-1"
-              >
-                <span>View All</span>
-                <ChevronRight className="w-4 h-4" />
-              </button>
-            </div>
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-              <div className="space-y-4">
-                {dailyMissions.map((mission) => (
-                  <div key={mission.id} className="flex items-center space-x-4">
-                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                      mission.progress === 100 ? 'bg-[#3B6A52] border-[#3B6A52]' : 'border-gray-300'
-                    }`}>
-                      {mission.progress === 100 && (
-                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                        </svg>
-                      )}
-                    </div>
-                    <div className="flex-1">
-                      <p className={`text-sm ${mission.progress === 100 ? 'text-gray-500 line-through' : 'text-gray-900'}`}>
-                        {mission.title}
-                      </p>
-                      <p className="text-xs text-gray-500">{mission.due}</p>
-                    </div>
+          {/* Penny AI Focus Widget - Intelligent Priority & Event Curation */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            {/* Header */}
+            <div className="p-6 bg-gradient-to-r from-[#F9A03F]/10 to-[#F9A03F]/5 border-b border-gray-200">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#F9A03F] to-[#e89135] text-white flex items-center justify-center shadow-md">
+                    <Sparkles className="w-6 h-6" />
                   </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* This Week's Sessions - Calendar Widget */}
-          <Collapsible open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-              <div className="p-6 flex items-center justify-between">
-                <CollapsibleTrigger className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
-                  <div className="w-10 h-10 rounded-lg bg-[#2C6975] text-white flex items-center justify-center">
-                    <Calendar className="w-6 h-6" />
+                  <div>
+                    <h3 className="text-gray-900 flex items-center space-x-2">
+                      <span>Penny's Focus Recommendations</span>
+                    </h3>
+                    <p className="text-sm text-gray-600">Personalized priorities from across your learning journey</p>
                   </div>
-                  <div className="text-left">
-                    <h3 className="text-gray-900">This Week's Sessions</h3>
-                    <p className="text-sm text-gray-600">5 sessions scheduled</p>
-                  </div>
-                  <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform ml-2 ${isCalendarOpen ? 'rotate-180' : ''}`} />
-                </CollapsibleTrigger>
+                </div>
                 <button
-                  onClick={() => onNavigate('program-calendar')}
-                  className="px-4 py-2 bg-[#2C6975] text-white rounded-lg hover:bg-[#234d56] transition-colors text-sm"
+                  onClick={() => onNavigate('penny-chat')}
+                  className="px-4 py-2 bg-[#F9A03F] text-white rounded-lg hover:bg-[#e89135] transition-colors text-sm flex items-center space-x-2"
                 >
-                  View Full Calendar
+                  <MessageSquare className="w-4 h-4" />
+                  <span>Ask Penny</span>
                 </button>
               </div>
-              
-              <CollapsibleContent>
-                <div className="px-6 pb-6 space-y-2">
-                  {upcomingSessions.map((session) => (
-                    <div 
-                      key={session.id}
-                      className="p-4 rounded-lg border-l-4 hover:bg-gray-50 transition-colors"
-                      style={{ borderColor: session.color, backgroundColor: `${session.color}10` }}
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-3">
-                          <div className="w-12 text-center">
-                            <p className="text-xs text-gray-600">{session.date}</p>
-                            <p className="text-sm text-gray-900">{session.time}</p>
+            </div>
+
+            {/* Split View Content */}
+            <div className="grid md:grid-cols-2 divide-x divide-gray-200">
+              {/* Left: Priorities & Tasks */}
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h4 className="text-gray-900 flex items-center space-x-2">
+                    <Target className="w-4 h-4 text-[#2C6975]" />
+                    <span>Your Priorities</span>
+                  </h4>
+                  <span className="text-xs text-gray-500">{pennyFocusItems.length} items</span>
+                </div>
+
+                <div className="space-y-3">
+                  {pennyFocusItems.map((item) => {
+                    const ItemIcon = item.icon;
+                    return (
+                      <button
+                        key={item.id}
+                        onClick={item.action}
+                        className="w-full text-left p-4 rounded-lg border border-gray-200 hover:border-[#2C6975] hover:bg-gray-50 transition-all group"
+                      >
+                        <div className="flex items-start space-x-3">
+                          <div
+                            className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                            style={{ backgroundColor: `${item.color}15` }}
+                          >
+                            <ItemIcon className="w-4 h-4" style={{ color: item.color }} />
                           </div>
-                          <div>
-                            <p className="text-sm text-gray-900">{session.title}</p>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-start justify-between gap-2 mb-1">
+                              <p className="text-sm text-gray-900 group-hover:text-[#2C6975] transition-colors">
+                                {item.title}
+                              </p>
+                              {item.priority === 'critical' && (
+                                <span className="px-2 py-0.5 bg-red-100 text-red-700 rounded-full text-xs flex-shrink-0">
+                                  Critical
+                                </span>
+                              )}
+                              {item.priority === 'high' && (
+                                <span className="px-2 py-0.5 bg-[#F9A03F]/20 text-[#F9A03F] rounded-full text-xs flex-shrink-0">
+                                  High
+                                </span>
+                              )}
+                            </div>
+                            <p className="text-xs text-gray-600 mb-2">{item.description}</p>
+                            <div className="flex items-center space-x-3 text-xs text-gray-500">
+                              <span className="flex items-center space-x-1">
+                                <Clock className="w-3 h-3" />
+                                <span>Due: {item.dueDate}</span>
+                              </span>
+                              <span className="px-2 py-0.5 bg-gray-100 rounded text-xs">
+                                {item.source}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <button
+                  onClick={() => onNavigate('daily-missions')}
+                  className="w-full mt-4 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm flex items-center justify-center space-x-2"
+                >
+                  <span>View All Tasks</span>
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* Right: Upcoming Events */}
+              <div className="p-6 bg-gray-50/50">
+                <div className="flex items-center justify-between mb-4">
+                  <h4 className="text-gray-900 flex items-center space-x-2">
+                    <Calendar className="w-4 h-4 text-[#2C6975]" />
+                    <span>This Week's Sessions</span>
+                  </h4>
+                  <span className="text-xs text-gray-500">{upcomingSessions.length} scheduled</span>
+                </div>
+
+                <div className="space-y-2">
+                  {upcomingSessions.map((session) => (
+                    <div
+                      key={session.id}
+                      className="p-3 rounded-lg border-l-4 bg-white hover:shadow-sm transition-all"
+                      style={{ borderColor: session.color }}
+                    >
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="flex items-center space-x-3 flex-1 min-w-0">
+                          <div className="text-center flex-shrink-0">
+                            <p className="text-xs text-gray-600">{session.date}</p>
+                            <p className="text-xs text-gray-900">{session.time}</p>
+                          </div>
+                          <div className="min-w-0">
+                            <p className="text-sm text-gray-900 truncate">{session.title}</p>
                             <p className="text-xs text-gray-500 capitalize">{session.type.replace('-', ' ')}</p>
                           </div>
                         </div>
-                        <button className="px-3 py-1.5 bg-white border border-gray-300 rounded-lg text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+                        <button
+                          className="px-3 py-1.5 text-xs rounded-lg transition-colors flex-shrink-0"
+                          style={{
+                            backgroundColor: session.color,
+                            color: 'white'
+                          }}
+                        >
                           Join
                         </button>
                       </div>
                     </div>
                   ))}
                 </div>
-              </CollapsibleContent>
+
+                <button
+                  onClick={() => onNavigate('program-calendar')}
+                  className="w-full mt-4 px-4 py-2 bg-[#2C6975] text-white rounded-lg hover:bg-[#234d56] transition-colors text-sm flex items-center justify-center space-x-2"
+                >
+                  <span>View Full Calendar</span>
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
             </div>
-          </Collapsible>
+
+            {/* Penny Insight Footer */}
+            <div className="px-6 py-4 bg-gradient-to-r from-blue-50 to-blue-50/50 border-t border-blue-100">
+              <div className="flex items-start space-x-3">
+                <Sparkles className="w-5 h-5 text-[#F9A03F] flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-sm text-gray-900 mb-1">
+                    <span className="font-medium">Penny's Insight:</span> You have 2 critical items due this week. Focus on your status report and the batch job bug to stay on track for capstone completion.
+                  </p>
+                  <button
+                    onClick={() => onNavigate('penny-chat')}
+                    className="text-sm text-[#2C6975] hover:underline"
+                  >
+                    Get personalized guidance →
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
 
           {/* Capstone Project - Featured */}
           <div className="bg-gradient-to-br from-[#F9A03F]/10 to-[#F9A03F]/5 border-2 border-[#F9A03F]/30 rounded-xl p-6">
