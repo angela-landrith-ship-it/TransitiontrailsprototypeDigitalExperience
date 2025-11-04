@@ -12,16 +12,18 @@ export function PennyChat({ isOpen, onClose }: PennyChatProps) {
     {
       id: 1,
       sender: 'penny',
-      text: 'Hi there! I\'m Penny, your AI learning assistant. How can I help you today?',
+      text: "Hi! I'm Penny, your AI learning assistant for The Guided Trail program. I can help with your Capstone project, answer questions about Salesforce concepts, review your code, or guide you through any part of the program. What would you like to work on?",
       time: '9:45 AM'
     }
   ]);
 
   const quickQuestions = [
-    'Explain Process Builder',
-    'Help with my assignment',
-    'Show my progress',
-    'Connect to coach'
+    'Help with my Capstone project',
+    'Explain Apex triggers',
+    'How do I earn more points?',
+    'Review my data model',
+    'Best practices for LWC',
+    'Connect to my coach'
   ];
 
   const handleSend = () => {

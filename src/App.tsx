@@ -4,18 +4,69 @@ import { CoachDashboard } from './components/CoachDashboard';
 import { AdminPanel } from './components/AdminPanel';
 import { PennyChat } from './components/PennyChat';
 import { Navigation } from './components/Navigation';
+import { TrailMissions } from './components/TrailMissions';
+import { MyProgram } from './components/MyProgram';
+import { DailyMissions } from './components/DailyMissions';
+import { CapstoneProjects } from './components/CapstoneProjects';
+import { SkillsAssessment } from './components/SkillsAssessment';
+import { Profile } from './components/Profile';
+import { SelfAssessment } from './components/SelfAssessment';
+import { ProgramCalendar } from './components/ProgramCalendar';
+
+export type PageType = 
+  | 'learner' 
+  | 'coach' 
+  | 'admin' 
+  | 'trail-missions' 
+  | 'my-program' 
+  | 'daily-missions' 
+  | 'capstone-projects' 
+  | 'skills-assessment'
+  | 'profile'
+  | 'self-assessment'
+  | 'program-calendar';
 
 export default function App() {
-  const [activeFrame, setActiveFrame] = useState<'learner' | 'coach' | 'admin'>('learner');
+  const [activePage, setActivePage] = useState<PageType>('learner');
   const [isPennyChatOpen, setIsPennyChatOpen] = useState(false);
+
+  const renderPage = () => {
+    switch (activePage) {
+      case 'learner':
+        return <LearnerHome onNavigate={setActivePage} />;
+      case 'coach':
+        return <CoachDashboard />;
+      case 'admin':
+        return <AdminPanel />;
+      case 'trail-missions':
+        return <TrailMissions onNavigate={setActivePage} />;
+      case 'my-program':
+        return <MyProgram onNavigate={setActivePage} />;
+      case 'daily-missions':
+        return <DailyMissions onNavigate={setActivePage} />;
+      case 'capstone-projects':
+        return <CapstoneProjects onNavigate={setActivePage} />;
+      case 'skills-assessment':
+        return <SkillsAssessment onNavigate={setActivePage} />;
+      case 'profile':
+        return <Profile onNavigate={setActivePage} />;
+      case 'self-assessment':
+        return <SelfAssessment onNavigate={setActivePage} />;
+      case 'program-calendar':
+        return <ProgramCalendar onNavigate={setActivePage} />;
+      default:
+        return <LearnerHome onNavigate={setActivePage} />;
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#F5F3E8]">
-      <Navigation activeFrame={activeFrame} setActiveFrame={setActiveFrame} />
+      <Navigation 
+        activePage={activePage} 
+        setActivePage={setActivePage} 
+      />
       
-      {activeFrame === 'learner' && <LearnerHome />}
-      {activeFrame === 'coach' && <CoachDashboard />}
-      {activeFrame === 'admin' && <AdminPanel />}
+      {renderPage()}
       
       <PennyChat isOpen={isPennyChatOpen} onClose={() => setIsPennyChatOpen(false)} />
       
