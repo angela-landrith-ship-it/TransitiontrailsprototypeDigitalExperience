@@ -73,10 +73,16 @@ export function Navigation({ activePage, setActivePage }: NavigationProps) {
               Capstone
             </button>
             <button 
-              onClick={() => setActivePage('assignments')}
+              onClick={() => setActivePage('trail-missions')}
               className="text-[#2C6975] hover:underline"
             >
-              Assignments
+              Trail Missions
+            </button>
+            <button 
+              onClick={() => setActivePage('learning-center')}
+              className="text-[#2C6975] hover:underline"
+            >
+              Learning Center
             </button>
             <a href="https://slack.com" target="_blank" rel="noopener noreferrer" className="text-[#2C6975] hover:underline">
               Slack

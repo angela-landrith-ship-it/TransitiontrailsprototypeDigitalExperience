@@ -12,6 +12,7 @@ import { SkillsAssessment } from './components/SkillsAssessment';
 import { Profile } from './components/Profile';
 import { SelfAssessment } from './components/SelfAssessment';
 import { ProgramCalendar } from './components/ProgramCalendar';
+import { LearningCenter } from './components/LearningCenter';
 
 export type PageType = 
   | 'learner' 
@@ -24,7 +25,8 @@ export type PageType =
   | 'skills-assessment'
   | 'profile'
   | 'self-assessment'
-  | 'program-calendar';
+  | 'program-calendar'
+  | 'learning-center';
 
 export default function App() {
   const [activePage, setActivePage] = useState<PageType>('learner');
@@ -54,6 +56,8 @@ export default function App() {
         return <SelfAssessment onNavigate={setActivePage} />;
       case 'program-calendar':
         return <ProgramCalendar onNavigate={setActivePage} />;
+      case 'learning-center':
+        return <LearningCenter onNavigate={setActivePage} />;
       default:
         return <LearnerHome onNavigate={setActivePage} />;
     }

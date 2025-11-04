@@ -1,7 +1,7 @@
 import { Trophy, Target, BookOpen, MessageSquare, TrendingUp, Clock, Award, Calendar, Users, Sparkles, ChevronRight, CheckCircle, ExternalLink, ChevronDown } from 'lucide-react';
 import { ProgressRing } from './ProgressRing';
-import { SkillsChart } from './SkillsChart';
 import { SlackFeed } from './SlackFeed';
+import { SkillsIQAssessment } from './SkillsIQAssessment';
 import { PageType } from '../App';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './ui/collapsible';
 import { useState } from 'react';
@@ -61,8 +61,8 @@ export function LearnerHome({ onNavigate }: LearnerHomeProps) {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Hero Banner */}
-      <div className="bg-gradient-to-r from-[#2C6975] to-[#7EB5C1] rounded-2xl shadow-lg p-8 mb-8 text-white">
-        <div className="flex items-center justify-between">
+      <div className="bg-gradient-to-r from-[#2C6975] to-[#7EB5C1] rounded-2xl shadow-lg p-8 mb-8 text-white relative overflow-hidden">
+        <div className="flex items-start justify-between relative z-10">
           <div className="flex-1">
             <h2 className="text-3xl mb-2">Welcome back, Alex!</h2>
             <p className="text-blue-100 mb-1">The Guided Trail • Spring 2025 Cohort</p>
@@ -91,18 +91,23 @@ export function LearnerHome({ onNavigate }: LearnerHomeProps) {
               </div>
               
               <div className="flex items-center space-x-3">
-                <div className="w-12 h-12 rounded-lg bg-white/20 flex items-center justify-center">
+                <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0">
                   <Users className="w-7 h-7 text-white" />
                 </div>
                 <div>
                   <p className="text-sm opacity-90">Your Coach</p>
-                  <p>{currentCoach.name}</p>
+                  <p className="text-lg">{currentCoach.name}</p>
+                  <button 
+                    className="mt-2 text-xs bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-lg transition-colors backdrop-blur-sm border border-white/30"
+                  >
+                    Schedule 1:1 Session
+                  </button>
                 </div>
               </div>
             </div>
           </div>
           <div className="hidden xl:block ml-8">
-            <Trophy className="w-32 h-32 text-[#F9A03F] opacity-80" />
+            <Trophy className="w-32 h-32 text-[#F9A03F] opacity-50" />
           </div>
         </div>
       </div>
@@ -154,8 +159,8 @@ export function LearnerHome({ onNavigate }: LearnerHomeProps) {
           {/* This Week's Sessions - Calendar Widget */}
           <Collapsible open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-              <CollapsibleTrigger className="w-full p-6 flex items-center justify-between hover:bg-gray-50 transition-colors">
-                <div className="flex items-center space-x-3">
+              <div className="p-6 flex items-center justify-between">
+                <CollapsibleTrigger className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
                   <div className="w-10 h-10 rounded-lg bg-[#2C6975] text-white flex items-center justify-center">
                     <Calendar className="w-6 h-6" />
                   </div>
@@ -163,20 +168,15 @@ export function LearnerHome({ onNavigate }: LearnerHomeProps) {
                     <h3 className="text-gray-900">This Week's Sessions</h3>
                     <p className="text-sm text-gray-600">5 sessions scheduled</p>
                   </div>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onNavigate('program-calendar');
-                    }}
-                    className="px-4 py-2 bg-[#2C6975] text-white rounded-lg hover:bg-[#234d56] transition-colors text-sm"
-                  >
-                    View Full Calendar
-                  </button>
-                  <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform ${isCalendarOpen ? 'rotate-180' : ''}`} />
-                </div>
-              </CollapsibleTrigger>
+                  <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform ml-2 ${isCalendarOpen ? 'rotate-180' : ''}`} />
+                </CollapsibleTrigger>
+                <button
+                  onClick={() => onNavigate('program-calendar')}
+                  className="px-4 py-2 bg-[#2C6975] text-white rounded-lg hover:bg-[#234d56] transition-colors text-sm"
+                >
+                  View Full Calendar
+                </button>
+              </div>
               
               <CollapsibleContent>
                 <div className="px-6 pb-6 space-y-2">
@@ -277,11 +277,60 @@ export function LearnerHome({ onNavigate }: LearnerHomeProps) {
             </div>
           </div>
 
-          {/* Trail Missions - Collapsible */}
-          <Collapsible open={isTrailMissionsOpen} onOpenChange={setIsTrailMissionsOpen}>
+          {/* Skills IQ Assessment */}
+          <SkillsIQAssessment onNavigate={onNavigate} />
+        </div>
+
+        {/* Right Sidebar */}
+        <div className="space-y-6">
+          {/* Points Breakdown - Collapsible */}
+          <Collapsible open={isPointsOpen} onOpenChange={setIsPointsOpen}>
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
               <CollapsibleTrigger className="w-full p-6 flex items-center justify-between hover:bg-gray-50 transition-colors">
                 <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#F9A03F] to-[#F9A03F]/70 text-white flex items-center justify-center">
+                    <Award className="w-6 h-6" />
+                  </div>
+                  <div className="text-left">
+                    <h3 className="text-gray-900">Points Breakdown</h3>
+                    <p className="text-sm text-gray-600">{pointsSystem.earned} / {pointsSystem.total} points earned ({Math.round((pointsSystem.earned / pointsSystem.total) * 100)}%)</p>
+                  </div>
+                </div>
+                <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform ${isPointsOpen ? 'rotate-180' : ''}`} />
+              </CollapsibleTrigger>
+              
+              <CollapsibleContent>
+                <div className="px-6 pb-6 space-y-3">
+                  {pointsSystem.breakdown.map((item, index) => {
+                    const percentage = Math.round((item.earned / item.total) * 100);
+                    return (
+                      <div key={index} className="space-y-2">
+                        <div className="flex items-center justify-between text-sm">
+                          <div className="flex items-center space-x-2">
+                            <span className="text-gray-900">{item.category}</span>
+                            <span className="text-xs text-gray-500">({item.percentage}% of program)</span>
+                          </div>
+                          <span className="text-gray-600">{item.earned} / {item.total}</span>
+                        </div>
+                        <div className="w-full bg-gray-100 rounded-full h-2">
+                          <div 
+                            className="bg-[#F9A03F] h-2 rounded-full transition-all duration-500"
+                            style={{ width: `${percentage}%` }}
+                          ></div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </CollapsibleContent>
+            </div>
+          </Collapsible>
+
+          {/* Trail Missions - Collapsible */}
+          <Collapsible open={isTrailMissionsOpen} onOpenChange={setIsTrailMissionsOpen}>
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+              <div className="p-6 flex items-center justify-between">
+                <CollapsibleTrigger className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
                   <div className="w-10 h-10 rounded-lg bg-[#2C6975] text-white flex items-center justify-center">
                     <BookOpen className="w-6 h-6" />
                   </div>
@@ -289,21 +338,16 @@ export function LearnerHome({ onNavigate }: LearnerHomeProps) {
                     <h3 className="text-gray-900">Trail Missions</h3>
                     <p className="text-sm text-gray-600">3 active learning paths</p>
                   </div>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onNavigate('trail-missions');
-                    }}
-                    className="px-4 py-2 bg-[#2C6975] text-white rounded-lg hover:bg-[#234d56] transition-colors text-sm flex items-center space-x-1"
-                  >
-                    <span>View All</span>
-                    <ChevronRight className="w-4 h-4" />
-                  </button>
-                  <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform ${isTrailMissionsOpen ? 'rotate-180' : ''}`} />
-                </div>
-              </CollapsibleTrigger>
+                  <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform ml-2 ${isTrailMissionsOpen ? 'rotate-180' : ''}`} />
+                </CollapsibleTrigger>
+                <button
+                  onClick={() => onNavigate('trail-missions')}
+                  className="px-4 py-2 bg-[#2C6975] text-white rounded-lg hover:bg-[#234d56] transition-colors text-sm flex items-center space-x-1"
+                >
+                  <span>View All</span>
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
               
               <CollapsibleContent>
                 <div className="px-6 pb-6 space-y-4">
@@ -350,96 +394,15 @@ export function LearnerHome({ onNavigate }: LearnerHomeProps) {
             </div>
           </Collapsible>
 
-          {/* Points Breakdown - Collapsible */}
-          <Collapsible open={isPointsOpen} onOpenChange={setIsPointsOpen}>
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-              <CollapsibleTrigger className="w-full p-6 flex items-center justify-between hover:bg-gray-50 transition-colors">
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#F9A03F] to-[#F9A03F]/70 text-white flex items-center justify-center">
-                    <Award className="w-6 h-6" />
-                  </div>
-                  <div className="text-left">
-                    <h3 className="text-gray-900">Points Breakdown</h3>
-                    <p className="text-sm text-gray-600">{pointsSystem.earned} / {pointsSystem.total} points earned ({Math.round((pointsSystem.earned / pointsSystem.total) * 100)}%)</p>
-                  </div>
-                </div>
-                <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform ${isPointsOpen ? 'rotate-180' : ''}`} />
-              </CollapsibleTrigger>
-              
-              <CollapsibleContent>
-                <div className="px-6 pb-6 space-y-3">
-                  {pointsSystem.breakdown.map((item, index) => {
-                    const percentage = Math.round((item.earned / item.total) * 100);
-                    return (
-                      <div key={index} className="space-y-2">
-                        <div className="flex items-center justify-between text-sm">
-                          <div className="flex items-center space-x-2">
-                            <span className="text-gray-900">{item.category}</span>
-                            <span className="text-xs text-gray-500">({item.percentage}% of program)</span>
-                          </div>
-                          <span className="text-gray-600">{item.earned} / {item.total}</span>
-                        </div>
-                        <div className="w-full bg-gray-100 rounded-full h-2">
-                          <div 
-                            className="bg-[#F9A03F] h-2 rounded-full transition-all duration-500"
-                            style={{ width: `${percentage}%` }}
-                          ></div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </CollapsibleContent>
-            </div>
-          </Collapsible>
-        </div>
-
-        {/* Right Sidebar */}
-        <div className="space-y-6">
-          {/* Coach Card */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h3 className="text-gray-900 mb-4 flex items-center space-x-2">
-              <Users className="w-5 h-5 text-[#2C6975]" />
-              <span>Your Coach</span>
-            </h3>
-            <div className="flex items-start space-x-3 mb-4">
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#2C6975] to-[#7EB5C1] text-white flex items-center justify-center flex-shrink-0">
-                <span>{currentCoach.avatar}</span>
-              </div>
-              <div className="flex-1">
-                <p className="text-gray-900">{currentCoach.name}</p>
-                <p className="text-sm text-gray-600">{currentCoach.title}</p>
-                <p className="text-xs text-gray-500 mt-1">{currentCoach.slackId}</p>
-              </div>
-            </div>
-            <button className="w-full bg-[#2C6975] text-white px-4 py-2 rounded-lg hover:bg-[#234d56] transition-colors text-sm">
-              Schedule 1:1 Session
-            </button>
-          </div>
-
           {/* Quick Links */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <h3 className="text-gray-900 mb-4">Quick Links</h3>
             <div className="space-y-2">
               <button 
-                onClick={() => onNavigate('assignments')}
-                className="w-full text-left px-4 py-3 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-between"
-              >
-                <span className="text-sm text-gray-900">Assignments</span>
-                <ChevronRight className="w-4 h-4 text-gray-400" />
-              </button>
-              <button 
                 onClick={() => onNavigate('program-calendar')}
                 className="w-full text-left px-4 py-3 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-between"
               >
                 <span className="text-sm text-gray-900">Program Calendar</span>
-                <ChevronRight className="w-4 h-4 text-gray-400" />
-              </button>
-              <button 
-                onClick={() => onNavigate('skills-assessment')}
-                className="w-full text-left px-4 py-3 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-between"
-              >
-                <span className="text-sm text-gray-900">Skills Assessment</span>
                 <ChevronRight className="w-4 h-4 text-gray-400" />
               </button>
               <a 
@@ -452,23 +415,6 @@ export function LearnerHome({ onNavigate }: LearnerHomeProps) {
                 <ExternalLink className="w-4 h-4 text-gray-400" />
               </a>
             </div>
-          </div>
-
-          {/* Skills Assessment */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-gray-900 flex items-center space-x-2">
-                <TrendingUp className="w-5 h-5 text-[#3B6A52]" />
-                <span>Skills Progress</span>
-              </h3>
-            </div>
-            <SkillsChart />
-            <button 
-              onClick={() => onNavigate('skills-assessment')}
-              className="w-full mt-4 bg-[#3B6A52] text-white px-4 py-2 rounded-lg hover:bg-[#2d5240] transition-colors text-sm"
-            >
-              Take Assessment
-            </button>
           </div>
 
           {/* Slack Feed */}
