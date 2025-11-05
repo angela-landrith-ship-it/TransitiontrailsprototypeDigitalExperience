@@ -8,6 +8,8 @@ Complete index of all documentation for the Transition Trails Digital Experience
 |----------|---------|----------|
 | [README.md](./README.md) | Project overview and getting started | Everyone |
 | [FEATURES.md](./FEATURES.md) | Detailed feature documentation | Developers, Product |
+| [ENHANCEMENTS_COMPLETE.md](./ENHANCEMENTS_COMPLETE.md) | **NEW:** Complete UI/UX enhancements (v2.0) | Everyone |
+| [NAVIGATION_ENHANCEMENTS.md](./NAVIGATION_ENHANCEMENTS.md) | **NEW:** Navigation & Penny widget details | Developers, Designers |
 | [API_INTEGRATION.md](./API_INTEGRATION.md) | API integration specifications | Developers |
 | [DEPLOYMENT.md](./DEPLOYMENT.md) | Deployment and setup guide | DevOps, Admins |
 | [CONTRIBUTING.md](./CONTRIBUTING.md) | Contribution guidelines | Contributors |
@@ -315,7 +317,39 @@ Documentation improvements are valuable contributions! See our [Contributing Gui
 
 ---
 
-**Last Updated**: November 4, 2025
-**Version**: 1.0.0
+## 🎉 **Version 2.1 - Sharing & Engagement Rewards**
+
+**LATEST DOCUMENTATION:**
+- **[SHARING_REWARDS_IMPLEMENTATION.md](./SHARING_REWARDS_IMPLEMENTATION.md)** - 🆕 Complete sharing & engagement system
+- **[SHARING_REWARDS_QUICK_GUIDE.md](./SHARING_REWARDS_QUICK_GUIDE.md)** - 🆕 User-friendly quick start guide
+- **[ENHANCEMENTS_COMPLETE.md](./ENHANCEMENTS_COMPLETE.md)** - Complete summary of all 10 UI/UX enhancements
+- **[NAVIGATION_ENHANCEMENTS.md](./NAVIGATION_ENHANCEMENTS.md)** - Navigation system and Penny widget implementation
+
+**What's New in v2.1:**
+- 🎊 **Share to LinkedIn** - AI-generated posts with 3 tone options
+- 🏆 **Trail Impact Meter** - Circular gauge with gamification
+- 📊 **Engagement Points** - Earn points for sharing, commenting, and engaging
+- 🎖️ **Badge System** - 4 achievement badges (Engager → Champion)
+- 📈 **Leaderboard** - Weekly top 10 trailblazers
+- ✨ **Penny Integration** - Context-aware post generation
+- 🎉 **Celebration Animations** - Confetti and rewards
+
+**What's New in v2.0:**
+- ✅ Smart sticky navigation with scroll behavior
+- ✅ Context-aware Penny AI floating widget
+- ✅ Beautiful Academy Home with hero section
+- ✅ Enhanced Capstone page with Penny Summary generator
+- ✅ Redesigned Community with Slack channel cards
+- ✅ Coach Hub with Sky Blue theme differentiation
+- ✅ Complete accessibility compliance (WCAG AA)
+- ✅ Production-ready micro-interactions
+- ✅ Mobile-responsive throughout
+
+See [ENHANCEMENTS_COMPLETE.md](./ENHANCEMENTS_COMPLETE.md) and [SHARING_REWARDS_IMPLEMENTATION.md](./SHARING_REWARDS_IMPLEMENTATION.md) for full details!
+
+---
+
+**Last Updated**: November 5, 2025
+**Version**: 2.0.0
 
 **Need help? Start with [README.md](./README.md) or ask in [Slack](https://transitiontrails.slack.com)!**

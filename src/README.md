@@ -6,6 +6,23 @@ A comprehensive learning management and career transition platform built for Sal
 ![React](https://img.shields.io/badge/React-18.x-61DAFB)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-4.0-38B2AC)
+![Version](https://img.shields.io/badge/Version-2.0-success)
+![Status](https://img.shields.io/badge/Status-Production%20Ready-brightgreen)
+
+## 🎉 **NEW in Version 2.0!**
+
+We've completely redesigned the user experience with:
+
+✨ **Smart Navigation** - Auto-hiding sticky nav that appears when you need it  
+🤖 **Context-Aware Penny** - AI assistant that changes personality per page  
+🎨 **Beautiful Academy** - Hero section with interactive course categories  
+📊 **Enhanced Capstone** - AI-powered summary generator with LinkedIn sharing  
+💬 **Redesigned Community** - Slack channel cards and trending conversations  
+👥 **Coach Hub Refresh** - Sky Blue theme with Penny coaching insights  
+♿ **WCAG AA Compliant** - Fully accessible to all users  
+📱 **Mobile Responsive** - Perfect experience on all devices  
+
+**[→ See What's New in v2.0](./ENHANCEMENTS_COMPLETE.md)** | **[→ Quick Start Guide](./QUICK_START_V2.md)**
 
 ## 🌟 Overview
 

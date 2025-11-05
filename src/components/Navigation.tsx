@@ -1,6 +1,6 @@
-import { Home, Users, Settings, MessageCircle, Bell, ChevronDown, GraduationCap, Sparkles } from 'lucide-react';
+import { Home, Users, Settings, MessageCircle, Bell, ChevronDown, GraduationCap, Sparkles, Menu, X, ChevronRight } from 'lucide-react';
 import { PageType } from '../App';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Badge } from './ui/badge';
 
 interface NavigationProps {
@@ -11,12 +11,38 @@ interface NavigationProps {
 export function Navigation({ activePage, setActivePage }: NavigationProps) {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showLearningDropdown, setShowLearningDropdown] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [lastScrollY, setLastScrollY] = useState(0);
+  const [navVisible, setNavVisible] = useState(true);
   
+  // Scroll behavior: hide on scroll down, show on scroll up
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      setIsScrolled(currentScrollY > 10);
+      
+      if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        // Scrolling down
+        setNavVisible(false);
+      } else {
+        // Scrolling up
+        setNavVisible(true);
+      }
+      
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [lastScrollY]);
+
   // Role management (in production, this would come from user context/auth)
   const userRole = {
     isLearner: true,
-    isCoach: true, // Set to true for demo - would be based on actual user role
-    isAdmin: true, // Set to true for demo - would be based on actual user role
+    isCoach: true,
+    isAdmin: true,
   };
   
   // Slack notifications (unread count)
@@ -33,247 +59,360 @@ export function Navigation({ activePage, setActivePage }: NavigationProps) {
   ];
 
   const isLearningPage = activePage === 'trail-missions' || activePage === 'learning-center' || activePage === 'capstone-projects';
+
+  // Page titles for breadcrumbs
+  const pageTitles: Record<PageType, string> = {
+    'learner': 'Home',
+    'learning-center': 'Learning Center',
+    'trail-missions': 'Trail Missions',
+    'capstone-projects': 'Capstone Projects',
+    'community': 'Community',
+    'profile': 'My Profile',
+    'coach-dashboard': 'Coach Hub',
+    'admin-panel': 'Admin Panel',
+    'self-assessment': 'Self Assessment',
+    'skills-assessment': 'Skills Assessment',
+    'skills-iq-assessment': 'Skills IQ Assessment',
+  };
+
+  // Breadcrumb logic
+  const getBreadcrumbs = () => {
+    const breadcrumbs = [{ label: 'Home', page: 'learner' as PageType }];
+    
+    if (activePage !== 'learner') {
+      if (isLearningPage) {
+        breadcrumbs.push({ label: 'Learning', page: activePage });
+      } else {
+        breadcrumbs.push({ label: pageTitles[activePage], page: activePage });
+      }
+    }
+    
+    return breadcrumbs;
+  };
+
+  const breadcrumbs = getBreadcrumbs();
   
   return (
-    <header className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <button 
-            onClick={() => setActivePage('learner')}
-            className="flex items-center space-x-3 hover:opacity-80 transition-opacity"
-          >
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#2C6975] to-[#F9A03F] flex items-center justify-center">
-              <span className="text-white">TT</span>
-            </div>
-            <div className="hidden sm:block">
-              <h1 className="text-gray-900">Transition Trails</h1>
-              <p className="text-xs text-gray-500">Digital Experience Portal</p>
-            </div>
-          </button>
-
-          {/* Primary Navigation */}
-          <nav className="flex items-center space-x-1">
-            {/* Home */}
-            <button
+    <>
+      {/* Sticky Navigation */}
+      <header
+        className={`bg-gradient-to-r from-[#3B6A52] to-[#2C6975] border-b border-[#2C6975]/30 sticky top-0 z-50 transition-all duration-300 ${
+          isScrolled ? 'shadow-lg' : 'shadow-sm'
+        } ${
+          navVisible ? 'translate-y-0' : '-translate-y-full'
+        }`}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-14">
+            {/* Logo */}
+            <button 
               onClick={() => setActivePage('learner')}
-              className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${
-                activePage === 'learner'
-                  ? 'bg-[#2C6975] text-white'
-                  : 'text-gray-600 hover:bg-gray-100'
-              }`}
+              className="flex items-center space-x-3 hover:opacity-80 transition-all duration-150 group"
             >
-              <Home className="w-4 h-4" />
-              <span className="hidden md:inline">Home</span>
+              <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-white/20 to-white/10 flex items-center justify-center border border-white/20">
+                <span className="text-white text-sm">TT</span>
+              </div>
+              <div className="hidden sm:block">
+                <h1 className="text-white text-sm group-hover:text-[#F9A03F] transition-colors duration-150">
+                  Transition Trails
+                </h1>
+              </div>
             </button>
 
-            {/* Community */}
-            <button
-              onClick={() => setActivePage('community')}
-              className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors relative ${
-                activePage === 'community'
-                  ? 'bg-[#2C6975] text-white'
-                  : 'text-gray-600 hover:bg-gray-100'
-              }`}
-            >
-              <MessageCircle className="w-4 h-4" />
-              <span className="hidden md:inline">Community</span>
-              {slackNotifications.length > 0 && (
-                <span className="absolute -top-1 -right-1 w-5 h-5 bg-[#F9A03F] text-white text-xs rounded-full flex items-center justify-center animate-pulse">
-                  {slackNotifications.length}
-                </span>
-              )}
-            </button>
-
-            {/* Learning Dropdown */}
-            <div className="relative">
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex items-center space-x-1">
+              {/* Home */}
               <button
-                onClick={() => setShowLearningDropdown(!showLearningDropdown)}
-                onMouseEnter={() => setShowLearningDropdown(true)}
-                className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${
-                  isLearningPage
-                    ? 'bg-[#2C6975] text-white'
-                    : 'text-gray-600 hover:bg-gray-100'
+                onClick={() => setActivePage('learner')}
+                className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-150 text-sm ${
+                  activePage === 'learner'
+                    ? 'bg-white/20 text-white'
+                    : 'text-white/80 hover:text-white hover:bg-white/10 hover:underline decoration-[#F9A03F]'
                 }`}
               >
-                <GraduationCap className="w-4 h-4" />
-                <span className="hidden md:inline">Learning</span>
-                <ChevronDown className={`w-3 h-3 transition-transform ${showLearningDropdown ? 'rotate-180' : ''}`} />
+                <Home className="w-4 h-4" />
+                <span>Home</span>
               </button>
 
-              {/* Dropdown Menu */}
-              {showLearningDropdown && (
-                <>
-                  <div 
-                    className="fixed inset-0 z-40" 
-                    onClick={() => setShowLearningDropdown(false)}
-                    onMouseEnter={() => setShowLearningDropdown(false)}
-                  ></div>
-                  <div 
-                    className="absolute top-full right-0 mt-2 w-72 bg-white rounded-lg shadow-lg border border-gray-200 z-50"
-                    onMouseLeave={() => setShowLearningDropdown(false)}
-                  >
-                    <div className="p-2">
-                      {learningPages.map((page) => (
-                        <button
-                          key={page.id}
-                          onClick={() => {
-                            setActivePage(page.id);
-                            setShowLearningDropdown(false);
-                          }}
-                          className={`w-full flex items-start space-x-3 p-3 rounded-lg transition-colors text-left ${
-                            activePage === page.id
-                              ? 'bg-[#2C6975]/10 border border-[#2C6975]'
-                              : 'hover:bg-gray-50'
-                          }`}
-                        >
-                          <span className="text-2xl">{page.icon}</span>
-                          <div className="flex-1 min-w-0">
-                            <p className={`text-sm ${activePage === page.id ? 'text-[#2C6975]' : 'text-gray-900'}`}>
-                              {page.label}
-                            </p>
-                            <p className="text-xs text-gray-500 mt-0.5">
-                              {page.description}
-                            </p>
-                          </div>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </>
-              )}
-            </div>
-
-            {/* Coach Hub (Role-Based) */}
-            {userRole.isCoach && (
+              {/* Community */}
               <button
-                onClick={() => setActivePage('coach')}
-                className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${
-                  activePage === 'coach'
-                    ? 'bg-[#2C6975] text-white'
-                    : 'text-gray-600 hover:bg-gray-100'
+                onClick={() => setActivePage('community')}
+                className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-150 relative text-sm ${
+                  activePage === 'community'
+                    ? 'bg-white/20 text-white'
+                    : 'text-white/80 hover:text-white hover:bg-white/10 hover:underline decoration-[#F9A03F]'
                 }`}
               >
-                <Users className="w-4 h-4" />
-                <span className="hidden lg:inline">Coach Hub</span>
-              </button>
-            )}
-
-            {/* Admin Panel (Role-Based) */}
-            {userRole.isAdmin && (
-              <button
-                onClick={() => setActivePage('admin')}
-                className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${
-                  activePage === 'admin'
-                    ? 'bg-[#2C6975] text-white'
-                    : 'text-gray-600 hover:bg-gray-100'
-                }`}
-              >
-                <Settings className="w-4 h-4" />
-                <span className="hidden lg:inline">Admin</span>
-              </button>
-            )}
-          </nav>
-
-          {/* Right Side Actions */}
-          <div className="flex items-center space-x-3">
-            {/* Notification Bell */}
-            <div className="relative">
-              <button
-                onClick={() => setShowNotifications(!showNotifications)}
-                className="relative text-gray-600 hover:text-[#2C6975] transition-colors p-2"
-                aria-label="Notifications"
-              >
-                <Bell className="w-5 h-5" />
+                <MessageCircle className="w-4 h-4" />
+                <span>Community</span>
                 {slackNotifications.length > 0 && (
-                  <span className="absolute top-0 right-0 w-4 h-4 bg-[#F9A03F] text-white text-xs rounded-full flex items-center justify-center animate-pulse">
+                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-[#F9A03F] text-white text-xs rounded-full flex items-center justify-center">
                     {slackNotifications.length}
                   </span>
                 )}
               </button>
 
-              {/* Notification Dropdown */}
-              {showNotifications && (
-                <>
-                  <div 
-                    className="fixed inset-0 z-40" 
-                    onClick={() => setShowNotifications(false)}
-                  ></div>
-                  <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
-                    <div className="p-3 border-b border-gray-200">
-                      <div className="flex items-center justify-between">
-                        <h3 className="text-sm text-gray-900">Notifications</h3>
-                        <Badge variant="outline" className="text-xs">
-                          From Slack
-                        </Badge>
-                      </div>
+              {/* Learning Dropdown */}
+              <div className="relative">
+                <button
+                  onClick={() => setShowLearningDropdown(!showLearningDropdown)}
+                  onMouseEnter={() => setShowLearningDropdown(true)}
+                  onMouseLeave={() => setShowLearningDropdown(false)}
+                  className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-150 text-sm ${
+                    isLearningPage
+                      ? 'bg-white/20 text-white'
+                      : 'text-white/80 hover:text-white hover:bg-white/10 hover:underline decoration-[#F9A03F]'
+                  }`}
+                >
+                  <GraduationCap className="w-4 h-4" />
+                  <span>Learning</span>
+                  <ChevronDown className={`w-3 h-3 transition-transform duration-150 ${showLearningDropdown ? 'rotate-180' : ''}`} />
+                </button>
+
+                {/* Dropdown Menu */}
+                {showLearningDropdown && (
+                  <div
+                    onMouseEnter={() => setShowLearningDropdown(true)}
+                    onMouseLeave={() => setShowLearningDropdown(false)}
+                    className="absolute top-full left-0 mt-2 w-72 bg-white rounded-xl shadow-xl border border-gray-200 py-2 animate-in fade-in slide-in-from-top-2 duration-150"
+                  >
+                    {learningPages.map((page) => (
+                      <button
+                        key={page.id}
+                        onClick={() => {
+                          setActivePage(page.id);
+                          setShowLearningDropdown(false);
+                        }}
+                        className={`w-full text-left px-4 py-3 hover:bg-gray-50 transition-all duration-150 ${
+                          activePage === page.id ? 'bg-[#2C6975]/5' : ''
+                        }`}
+                      >
+                        <div className="flex items-center space-x-3">
+                          <span className="text-2xl">{page.icon}</span>
+                          <div className="flex-1">
+                            <p className="text-sm text-gray-900">{page.label}</p>
+                            <p className="text-xs text-gray-500">{page.description}</p>
+                          </div>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Profile */}
+              <button
+                onClick={() => setActivePage('profile')}
+                className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-150 text-sm ${
+                  activePage === 'profile'
+                    ? 'bg-white/20 text-white'
+                    : 'text-white/80 hover:text-white hover:bg-white/10 hover:underline decoration-[#F9A03F]'
+                }`}
+              >
+                <Users className="w-4 h-4" />
+                <span>Profile</span>
+              </button>
+
+              {/* Coach Hub - Role based */}
+              {userRole.isCoach && (
+                <button
+                  onClick={() => setActivePage('coach-dashboard')}
+                  className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-150 text-sm ${
+                    activePage === 'coach-dashboard'
+                      ? 'bg-white/20 text-white'
+                      : 'text-white/80 hover:text-white hover:bg-white/10 hover:underline decoration-[#F9A03F]'
+                  }`}
+                >
+                  <Sparkles className="w-4 h-4" />
+                  <span>Coach Hub</span>
+                </button>
+              )}
+
+              {/* Admin - Role based */}
+              {userRole.isAdmin && (
+                <button
+                  onClick={() => setActivePage('admin-panel')}
+                  className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-150 text-sm ${
+                    activePage === 'admin-panel'
+                      ? 'bg-white/20 text-white'
+                      : 'text-white/80 hover:text-white hover:bg-white/10 hover:underline decoration-[#F9A03F]'
+                  }`}
+                >
+                  <Settings className="w-4 h-4" />
+                  <span>Admin</span>
+                </button>
+              )}
+            </nav>
+
+            {/* Notifications & Mobile Menu */}
+            <div className="flex items-center space-x-2">
+              {/* Notifications */}
+              <div className="relative hidden md:block">
+                <button
+                  onClick={() => setShowNotifications(!showNotifications)}
+                  className="p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-150 relative"
+                  aria-label="Notifications"
+                >
+                  <Bell className="w-5 h-5" />
+                  {slackNotifications.length > 0 && (
+                    <span className="absolute top-1 right-1 w-2 h-2 bg-[#F9A03F] rounded-full"></span>
+                  )}
+                </button>
+
+                {showNotifications && (
+                  <div className="absolute top-full right-0 mt-2 w-80 bg-white rounded-xl shadow-xl border border-gray-200 py-2 animate-in fade-in slide-in-from-top-2 duration-150">
+                    <div className="px-4 py-2 border-b border-gray-200">
+                      <h3 className="text-sm text-gray-900">Notifications</h3>
                     </div>
                     <div className="max-h-96 overflow-y-auto">
                       {slackNotifications.map((notification) => (
-                        <button
+                        <div
                           key={notification.id}
-                          onClick={() => {
-                            setShowNotifications(false);
-                            setActivePage('community');
-                          }}
-                          className="w-full p-3 hover:bg-gray-50 transition-colors text-left border-b border-gray-100 last:border-b-0"
+                          className="px-4 py-3 hover:bg-gray-50 cursor-pointer transition-colors duration-150"
                         >
-                          <div className="flex items-start space-x-2">
-                            <div className={`w-2 h-2 rounded-full flex-shrink-0 mt-2 ${
-                              notification.type === 'mention' ? 'bg-[#F9A03F]' :
-                              notification.type === 'dm' ? 'bg-[#7EB5C1]' :
-                              'bg-[#3B6A52]'
-                            }`}></div>
-                            <div className="flex-1 min-w-0">
-                              <p className="text-sm text-gray-900">{notification.message}</p>
-                              <p className="text-xs text-gray-500 mt-1">{notification.time}</p>
-                            </div>
-                          </div>
-                        </button>
+                          <p className="text-sm text-gray-900">{notification.message}</p>
+                          <p className="text-xs text-gray-500 mt-1">{notification.time}</p>
+                        </div>
                       ))}
                     </div>
-                    <div className="p-2 border-t border-gray-200">
-                      <button
-                        onClick={() => {
-                          setShowNotifications(false);
-                          setActivePage('community');
-                        }}
-                        className="w-full text-xs text-[#2C6975] hover:underline text-center py-1"
-                      >
-                        View all in Community →
-                      </button>
-                    </div>
                   </div>
-                </>
-              )}
-            </div>
-
-            {/* User Avatar / Profile */}
-            <button
-              onClick={() => setActivePage('profile')}
-              className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors ${
-                activePage === 'profile'
-                  ? 'bg-[#2C6975]/10 text-[#2C6975]'
-                  : 'text-gray-600 hover:bg-gray-100'
-              }`}
-            >
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#2C6975] to-[#7EB5C1] flex items-center justify-center text-white text-sm">
-                AJ
+                )}
               </div>
-              <span className="hidden xl:inline text-sm">Alex Johnson</span>
-            </button>
 
-            {/* Penny AI Quick Access (Header Button) */}
-            <button
-              className="hidden md:flex items-center space-x-2 px-3 py-2 bg-gradient-to-r from-[#F9A03F] to-[#e89135] text-white rounded-lg hover:from-[#e89135] hover:to-[#d97f25] transition-all shadow-sm hover:shadow-md"
-              title="Ask Penny AI"
-            >
-              <Sparkles className="w-4 h-4" />
-              <span className="text-sm hidden lg:inline">Penny</span>
-            </button>
+              {/* Mobile Menu Toggle */}
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="md:hidden p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-150"
+                aria-label="Menu"
+              >
+                {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-    </header>
+
+        {/* Breadcrumbs - Show on secondary pages */}
+        {breadcrumbs.length > 1 && (
+          <div className="border-t border-white/10 bg-white/5">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
+              <nav className="flex items-center space-x-2 text-sm">
+                {breadcrumbs.map((crumb, idx) => (
+                  <div key={idx} className="flex items-center space-x-2">
+                    {idx > 0 && <ChevronRight className="w-3 h-3 text-white/40" />}
+                    <button
+                      onClick={() => setActivePage(crumb.page)}
+                      className={`transition-all duration-150 ${
+                        idx === breadcrumbs.length - 1
+                          ? 'text-white'
+                          : 'text-white/60 hover:text-white hover:underline'
+                      }`}
+                    >
+                      {crumb.label}
+                    </button>
+                  </div>
+                ))}
+              </nav>
+            </div>
+          </div>
+        )}
+      </header>
+
+      {/* Mobile Menu Slide-in */}
+      {mobileMenuOpen && (
+        <div className="md:hidden fixed inset-0 z-40 bg-black/50 animate-in fade-in duration-150">
+          <div className="absolute right-0 top-0 h-full w-64 bg-white shadow-xl animate-in slide-in-from-right duration-300">
+            <div className="p-4 space-y-2">
+              <button
+                onClick={() => {
+                  setActivePage('learner');
+                  setMobileMenuOpen(false);
+                }}
+                className={`w-full text-left px-4 py-3 rounded-lg transition-colors duration-150 ${
+                  activePage === 'learner' ? 'bg-[#2C6975] text-white' : 'text-gray-700 hover:bg-gray-100'
+                }`}
+              >
+                <Home className="w-4 h-4 inline mr-2" />
+                Home
+              </button>
+
+              <button
+                onClick={() => {
+                  setActivePage('community');
+                  setMobileMenuOpen(false);
+                }}
+                className={`w-full text-left px-4 py-3 rounded-lg transition-colors duration-150 ${
+                  activePage === 'community' ? 'bg-[#2C6975] text-white' : 'text-gray-700 hover:bg-gray-100'
+                }`}
+              >
+                <MessageCircle className="w-4 h-4 inline mr-2" />
+                Community
+              </button>
+
+              <div className="border-t border-gray-200 pt-2 mt-2">
+                <p className="px-4 py-2 text-xs text-gray-500 uppercase">Learning</p>
+                {learningPages.map((page) => (
+                  <button
+                    key={page.id}
+                    onClick={() => {
+                      setActivePage(page.id);
+                      setMobileMenuOpen(false);
+                    }}
+                    className={`w-full text-left px-4 py-3 rounded-lg transition-colors duration-150 ${
+                      activePage === page.id ? 'bg-[#2C6975] text-white' : 'text-gray-700 hover:bg-gray-100'
+                    }`}
+                  >
+                    <span className="mr-2">{page.icon}</span>
+                    {page.label}
+                  </button>
+                ))}
+              </div>
+
+              <button
+                onClick={() => {
+                  setActivePage('profile');
+                  setMobileMenuOpen(false);
+                }}
+                className={`w-full text-left px-4 py-3 rounded-lg transition-colors duration-150 ${
+                  activePage === 'profile' ? 'bg-[#2C6975] text-white' : 'text-gray-700 hover:bg-gray-100'
+                }`}
+              >
+                <Users className="w-4 h-4 inline mr-2" />
+                Profile
+              </button>
+
+              {userRole.isCoach && (
+                <button
+                  onClick={() => {
+                    setActivePage('coach-dashboard');
+                    setMobileMenuOpen(false);
+                  }}
+                  className={`w-full text-left px-4 py-3 rounded-lg transition-colors duration-150 ${
+                    activePage === 'coach-dashboard' ? 'bg-[#2C6975] text-white' : 'text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
+                  <Sparkles className="w-4 h-4 inline mr-2" />
+                  Coach Hub
+                </button>
+              )}
+
+              {userRole.isAdmin && (
+                <button
+                  onClick={() => {
+                    setActivePage('admin-panel');
+                    setMobileMenuOpen(false);
+                  }}
+                  className={`w-full text-left px-4 py-3 rounded-lg transition-colors duration-150 ${
+                    activePage === 'admin-panel' ? 'bg-[#2C6975] text-white' : 'text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
+                  <Settings className="w-4 h-4 inline mr-2" />
+                  Admin
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

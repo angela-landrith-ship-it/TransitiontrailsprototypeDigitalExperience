@@ -11,15 +11,18 @@ import { Profile } from './components/Profile';
 import { SelfAssessment } from './components/SelfAssessment';
 import { LearningCenter } from './components/LearningCenter';
 import { Community } from './components/Community';
+import { PennyFloatingWidget } from './components/PennyFloatingWidget';
+import { SkillsIQAssessment } from './components/SkillsIQAssessment';
 import { Toaster } from './components/ui/sonner';
 
 export type PageType = 
   | 'learner' 
-  | 'coach' 
-  | 'admin' 
+  | 'coach-dashboard'
+  | 'admin-panel'
   | 'trail-missions' 
   | 'capstone-projects' 
   | 'skills-assessment'
+  | 'skills-iq-assessment'
   | 'profile'
   | 'self-assessment'
   | 'learning-center'
@@ -29,13 +32,27 @@ export default function App() {
   const [activePage, setActivePage] = useState<PageType>('learner');
   const [isPennyChatOpen, setIsPennyChatOpen] = useState(false);
 
+  // Determine Penny context based on active page
+  const getPennyContext = (): 'learning' | 'coaching' | 'profile' | 'default' => {
+    if (activePage === 'learning-center' || activePage === 'trail-missions' || activePage === 'capstone-projects') {
+      return 'learning';
+    }
+    if (activePage === 'coach-dashboard') {
+      return 'coaching';
+    }
+    if (activePage === 'profile') {
+      return 'profile';
+    }
+    return 'default';
+  };
+
   const renderPage = () => {
     switch (activePage) {
       case 'learner':
         return <LearnerHome onNavigate={setActivePage} />;
-      case 'coach':
+      case 'coach-dashboard':
         return <CoachDashboard />;
-      case 'admin':
+      case 'admin-panel':
         return <AdminPanel />;
       case 'trail-missions':
         return <TrailMissions onNavigate={setActivePage} />;
@@ -43,6 +60,8 @@ export default function App() {
         return <CapstoneProjects onNavigate={setActivePage} />;
       case 'skills-assessment':
         return <SkillsAssessment onNavigate={setActivePage} />;
+      case 'skills-iq-assessment':
+        return <SkillsIQAssessment onNavigate={setActivePage} />;
       case 'profile':
         return <Profile onNavigate={setActivePage} />;
       case 'self-assessment':
@@ -65,18 +84,8 @@ export default function App() {
       
       {renderPage()}
       
-      <PennyChat isOpen={isPennyChatOpen} onClose={() => setIsPennyChatOpen(false)} />
-      
-      {/* Floating Penny Button */}
-      <button
-        onClick={() => setIsPennyChatOpen(true)}
-        className="fixed bottom-6 right-6 w-16 h-16 rounded-full bg-gradient-to-br from-[#2C6975] to-[#7EB5C1] text-white shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center z-40"
-        aria-label="Open Penny AI Assistant"
-      >
-        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-        </svg>
-      </button>
+      {/* Context-aware Penny Floating Widget */}
+      <PennyFloatingWidget context={getPennyContext()} currentPage={activePage} />
 
       {/* Toast Notifications */}
       <Toaster position="bottom-right" />

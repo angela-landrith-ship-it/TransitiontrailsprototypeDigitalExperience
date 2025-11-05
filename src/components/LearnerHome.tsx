@@ -1,6 +1,7 @@
 import { Trophy, Target, BookOpen, MessageSquare, TrendingUp, Clock, Award, Calendar, Users, Sparkles, ChevronRight, CheckCircle, ExternalLink, ChevronDown, ArrowRight } from 'lucide-react';
 import { ProgressRing } from './ProgressRing';
 import { SkillsIQAssessment } from './SkillsIQAssessment';
+import { TrailImpactMeter } from './TrailImpactMeter';
 import { PageType } from '../App';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './ui/collapsible';
 import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar';
@@ -492,6 +493,9 @@ export function LearnerHome({ onNavigate }: LearnerHomeProps) {
               </CollapsibleContent>
             </div>
           </Collapsible>
+
+          {/* Trail Impact Meter - Engagement Rewards */}
+          <TrailImpactMeter currentPoints={47} showLeaderboard={true} />
 
           {/* Trail Missions - Collapsible */}
           <Collapsible open={isTrailMissionsOpen} onOpenChange={setIsTrailMissionsOpen}>
