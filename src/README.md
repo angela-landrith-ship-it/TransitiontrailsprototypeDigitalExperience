@@ -22,7 +22,17 @@ We've completely redesigned the user experience with:
 ♿ **WCAG AA Compliant** - Fully accessible to all users  
 📱 **Mobile Responsive** - Perfect experience on all devices  
 
-**[→ See What's New in v2.0](./ENHANCEMENTS_COMPLETE.md)** | **[→ Quick Start Guide](./QUICK_START_V2.md)**
+### 🆕 **Visitor Trail Experience** (Latest Feature!)
+
+🌐 **Public Landing Page** - Welcome prospective learners before enrollment  
+📚 **Free Preview Courses** - 3 introductory courses with exploration points  
+💬 **Public Community** - Access to public Slack channels and events  
+📅 **Event Calendar** - RSVP for webinars, workshops, and open houses  
+🎯 **Gamified Conversion** - Earn points to unlock full Academy access  
+🔒 **Locked Feature Previews** - Beautiful modals showcasing premium features  
+🔄 **Demo Mode Toggle** - Easy switching between visitor and enrolled views  
+
+**[→ See What's New in v2.0](./ENHANCEMENTS_COMPLETE.md)** | **[→ Quick Start Guide](./QUICK_START_V2.md)** | **[→ Visitor Trail Guide](./VISITOR_TRAIL_QUICK_START.md)**
 
 ## 🌟 Overview
 
@@ -37,7 +47,8 @@ Transition Trails is a digital experience portal designed for career changers tr
 
 ## 🎯 Target Users
 
-- **Learners**: Career changers transitioning from nonprofit/non-tech roles to Salesforce careers
+- **Visitors**: Prospective learners exploring the platform with limited access (NEW!)
+- **Learners**: Enrolled career changers transitioning from nonprofit/non-tech roles to Salesforce careers
 - **Coaches**: Learning coaches providing bi-weekly feedback and 1:1 support
 - **Admins**: Program administrators managing cohorts, content, and analytics
 - **Partners**: Nonprofit partners providing capstone project opportunities

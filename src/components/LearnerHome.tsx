@@ -209,6 +209,75 @@ export function LearnerHome({ onNavigate }: LearnerHomeProps) {
       <div className="grid lg:grid-cols-3 gap-6 mb-8">
         {/* Left & Center Columns */}
         <div className="lg:col-span-2 space-y-6">
+          {/* Capstone Project - Featured */}
+          <div className="bg-gradient-to-br from-[#F9A03F]/10 to-[#F9A03F]/5 border-2 border-[#F9A03F]/30 rounded-xl p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 rounded-lg bg-[#F9A03F] text-white flex items-center justify-center">
+                  <Trophy className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="text-gray-900">Your Capstone Project</h3>
+                  <p className="text-sm text-gray-600">40% of your total program points</p>
+                </div>
+              </div>
+              <button
+                onClick={() => onNavigate('capstone-projects')}
+                className="px-4 py-2 bg-[#F9A03F] text-white rounded-lg hover:bg-[#e69135] transition-colors flex items-center space-x-2"
+              >
+                <span>View Full Details</span>
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+            
+            <div className="bg-white rounded-xl p-6 shadow-sm">
+              <div className="flex items-start justify-between mb-4">
+                <div className="flex-1">
+                  <h4 className="text-gray-900 mb-2">Community Service Volunteer Management System</h4>
+                  <p className="text-sm text-gray-600 mb-3">
+                    Building a Salesforce application to manage volunteer programs for Hearts & Hands Community Services
+                  </p>
+                  <div className="flex items-center space-x-6 text-sm text-gray-600">
+                    <div className="flex items-center space-x-2">
+                      <Clock className="w-4 h-4" />
+                      <span>Due: Apr 8, 2025</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Target className="w-4 h-4" />
+                      <span>520 / 1,400 points</span>
+                    </div>
+                  </div>
+                </div>
+                <ProgressRing progress={37} size={80} color="#F9A03F" />
+              </div>
+              
+              <div className="grid grid-cols-2 gap-3 mb-4">
+                <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-sm text-gray-700">Completed Phases</span>
+                    <CheckCircle className="w-4 h-4 text-green-600" />
+                  </div>
+                  <p className="text-xl text-gray-900">2 / 7</p>
+                </div>
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-sm text-gray-700">Current Phase</span>
+                    <Sparkles className="w-4 h-4 text-blue-600" />
+                  </div>
+                  <p className="text-sm text-gray-900">Automation & Logic</p>
+                </div>
+              </div>
+              
+              <button
+                onClick={() => onNavigate('capstone-projects')}
+                className="w-full py-2 border-2 border-[#F9A03F] text-[#F9A03F] rounded-lg hover:bg-[#F9A03F] hover:text-white transition-colors flex items-center justify-center space-x-2"
+              >
+                <span>Open Project Workspace</span>
+                <ExternalLink className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+
           {/* Penny AI Focus Widget - Intelligent Priority & Event Curation */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
             {/* Header */}
@@ -376,75 +445,6 @@ export function LearnerHome({ onNavigate }: LearnerHomeProps) {
             </div>
           </div>
 
-          {/* Capstone Project - Featured */}
-          <div className="bg-gradient-to-br from-[#F9A03F]/10 to-[#F9A03F]/5 border-2 border-[#F9A03F]/30 rounded-xl p-6">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 rounded-lg bg-[#F9A03F] text-white flex items-center justify-center">
-                  <Trophy className="w-6 h-6" />
-                </div>
-                <div>
-                  <h3 className="text-gray-900">Your Capstone Project</h3>
-                  <p className="text-sm text-gray-600">40% of your total program points</p>
-                </div>
-              </div>
-              <button
-                onClick={() => onNavigate('capstone-projects')}
-                className="px-4 py-2 bg-[#F9A03F] text-white rounded-lg hover:bg-[#e69135] transition-colors flex items-center space-x-2"
-              >
-                <span>View Full Details</span>
-                <ChevronRight className="w-4 h-4" />
-              </button>
-            </div>
-            
-            <div className="bg-white rounded-xl p-6 shadow-sm">
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex-1">
-                  <h4 className="text-gray-900 mb-2">Community Service Volunteer Management System</h4>
-                  <p className="text-sm text-gray-600 mb-3">
-                    Building a Salesforce application to manage volunteer programs for Hearts & Hands Community Services
-                  </p>
-                  <div className="flex items-center space-x-6 text-sm text-gray-600">
-                    <div className="flex items-center space-x-2">
-                      <Clock className="w-4 h-4" />
-                      <span>Due: Apr 8, 2025</span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Target className="w-4 h-4" />
-                      <span>520 / 1,400 points</span>
-                    </div>
-                  </div>
-                </div>
-                <ProgressRing progress={37} size={80} color="#F9A03F" />
-              </div>
-              
-              <div className="grid grid-cols-2 gap-3 mb-4">
-                <div className="bg-green-50 border border-green-200 rounded-lg p-3">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm text-gray-700">Completed Phases</span>
-                    <CheckCircle className="w-4 h-4 text-green-600" />
-                  </div>
-                  <p className="text-xl text-gray-900">2 / 7</p>
-                </div>
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm text-gray-700">Current Phase</span>
-                    <Sparkles className="w-4 h-4 text-blue-600" />
-                  </div>
-                  <p className="text-sm text-gray-900">Automation & Logic</p>
-                </div>
-              </div>
-              
-              <button
-                onClick={() => onNavigate('capstone-projects')}
-                className="w-full py-2 border-2 border-[#F9A03F] text-[#F9A03F] rounded-lg hover:bg-[#F9A03F] hover:text-white transition-colors flex items-center justify-center space-x-2"
-              >
-                <span>Open Project Workspace</span>
-                <ExternalLink className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-
           {/* Skills IQ Assessment */}
           <SkillsIQAssessment onNavigate={onNavigate} />
         </div>
@@ -586,87 +586,6 @@ export function LearnerHome({ onNavigate }: LearnerHomeProps) {
                 <ExternalLink className="w-4 h-4 text-gray-400" />
               </a>
             </div>
-          </div>
-
-          {/* Team Updates - Quick View */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-gray-900 flex items-center space-x-2">
-                <MessageSquare className="w-5 h-5 text-[#2C6975]" />
-                <span>Team Updates</span>
-              </h3>
-              <button
-                onClick={() => onNavigate('community')}
-                className="text-sm text-[#2C6975] hover:underline flex items-center space-x-1"
-              >
-                <span>View all</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
-            </div>
-            
-            {/* Recent Slack Messages Preview */}
-            <div className="space-y-3">
-              <div className="p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer" onClick={() => onNavigate('community')}>
-                <div className="flex items-start space-x-2">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#F9A03F] to-[#e89135] flex items-center justify-center text-white text-xs flex-shrink-0">
-                    SM
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between mb-1">
-                      <p className="text-sm text-gray-900">Sarah Martinez</p>
-                      <span className="text-xs text-gray-500">5m ago</span>
-                    </div>
-                    <p className="text-xs text-gray-600 line-clamp-2">
-                      Great job on this week's assignments everyone! Don't forget our group session tomorrow at 2pm.
-                    </p>
-                    <p className="text-xs text-[#2C6975] mt-1">#cohort-spring-25</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer" onClick={() => onNavigate('community')}>
-                <div className="flex items-start space-x-2">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#2C6975] to-[#7EB5C1] flex items-center justify-center text-white text-xs flex-shrink-0">
-                    JK
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between mb-1">
-                      <p className="text-sm text-gray-900">Jordan Kim</p>
-                      <span className="text-xs text-gray-500">15m ago</span>
-                    </div>
-                    <p className="text-xs text-gray-600 line-clamp-2">
-                      Can anyone help with Process Builder flows? I'm stuck on the approval logic.
-                    </p>
-                    <p className="text-xs text-[#2C6975] mt-1">#coaching-questions</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer" onClick={() => onNavigate('community')}>
-                <div className="flex items-start space-x-2">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#3B6A52] to-[#7EB5C1] flex items-center justify-center text-white text-xs flex-shrink-0">
-                    PA
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between mb-1">
-                      <p className="text-sm text-gray-900">Program Admin</p>
-                      <span className="text-xs text-gray-500">1h ago</span>
-                    </div>
-                    <p className="text-xs text-gray-600 line-clamp-2">
-                      New resources added to the learning portal - check out the updated Trailhead modules!
-                    </p>
-                    <p className="text-xs text-[#2C6975] mt-1">#team-announcements</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <button
-              onClick={() => onNavigate('community')}
-              className="w-full mt-4 py-2 text-sm text-[#2C6975] hover:bg-gray-50 rounded-lg transition-colors border border-gray-200"
-            >
-              Open Community →
-            </button>
           </div>
         </div>
       </div>

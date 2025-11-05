@@ -1,6 +1,6 @@
-import { Home, Users, Settings, MessageCircle, Bell, ChevronDown, GraduationCap, Sparkles, Menu, X, ChevronRight } from 'lucide-react';
+import { Home, Users, Settings, MessageCircle, Bell, ChevronDown, GraduationCap, Sparkles, Menu, X, ChevronRight, ShoppingBag } from 'lucide-react';
 import { PageType } from '../App';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Badge } from './ui/badge';
 
 interface NavigationProps {
@@ -15,6 +15,7 @@ export function Navigation({ activePage, setActivePage }: NavigationProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [navVisible, setNavVisible] = useState(true);
+  const dropdownTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   
   // Scroll behavior: hide on scroll down, show on scroll up
   useEffect(() => {
@@ -37,6 +38,15 @@ export function Navigation({ activePage, setActivePage }: NavigationProps) {
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, [lastScrollY]);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (dropdownTimeoutRef.current) {
+        clearTimeout(dropdownTimeoutRef.current);
+      }
+    };
+  }, []);
 
   // Role management (in production, this would come from user context/auth)
   const userRole = {
@@ -73,6 +83,12 @@ export function Navigation({ activePage, setActivePage }: NavigationProps) {
     'self-assessment': 'Self Assessment',
     'skills-assessment': 'Skills Assessment',
     'skills-iq-assessment': 'Skills IQ Assessment',
+    'merch-store': 'Trail Shop',
+    'order-history': 'My Orders',
+    'visitor-home': 'Home',
+    'visitor-learning': 'Learning Center',
+    'visitor-community': 'Community',
+    'visitor-events': 'Events',
   };
 
   // Breadcrumb logic
@@ -152,12 +168,38 @@ export function Navigation({ activePage, setActivePage }: NavigationProps) {
                 )}
               </button>
 
+              {/* Trail Shop */}
+              <button
+                onClick={() => setActivePage('merch-store')}
+                className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-150 text-sm ${
+                  activePage === 'merch-store' || activePage === 'order-history'
+                    ? 'bg-white/20 text-white'
+                    : 'text-white/80 hover:text-white hover:bg-white/10 hover:underline decoration-[#F9A03F]'
+                }`}
+              >
+                <ShoppingBag className="w-4 h-4" />
+                <span>Trail Shop</span>
+              </button>
+
               {/* Learning Dropdown */}
-              <div className="relative">
+              <div 
+                className="relative"
+                onMouseEnter={() => {
+                  // Clear any pending close timeout
+                  if (dropdownTimeoutRef.current) {
+                    clearTimeout(dropdownTimeoutRef.current);
+                  }
+                  setShowLearningDropdown(true);
+                }}
+                onMouseLeave={() => {
+                  // Delay closing to allow mouse movement to dropdown
+                  dropdownTimeoutRef.current = setTimeout(() => {
+                    setShowLearningDropdown(false);
+                  }, 200);
+                }}
+              >
                 <button
                   onClick={() => setShowLearningDropdown(!showLearningDropdown)}
-                  onMouseEnter={() => setShowLearningDropdown(true)}
-                  onMouseLeave={() => setShowLearningDropdown(false)}
                   className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-150 text-sm ${
                     isLearningPage
                       ? 'bg-white/20 text-white'
@@ -171,31 +213,33 @@ export function Navigation({ activePage, setActivePage }: NavigationProps) {
 
                 {/* Dropdown Menu */}
                 {showLearningDropdown && (
-                  <div
-                    onMouseEnter={() => setShowLearningDropdown(true)}
-                    onMouseLeave={() => setShowLearningDropdown(false)}
-                    className="absolute top-full left-0 mt-2 w-72 bg-white rounded-xl shadow-xl border border-gray-200 py-2 animate-in fade-in slide-in-from-top-2 duration-150"
-                  >
-                    {learningPages.map((page) => (
-                      <button
-                        key={page.id}
-                        onClick={() => {
-                          setActivePage(page.id);
-                          setShowLearningDropdown(false);
-                        }}
-                        className={`w-full text-left px-4 py-3 hover:bg-gray-50 transition-all duration-150 ${
-                          activePage === page.id ? 'bg-[#2C6975]/5' : ''
-                        }`}
-                      >
-                        <div className="flex items-center space-x-3">
-                          <span className="text-2xl">{page.icon}</span>
-                          <div className="flex-1">
-                            <p className="text-sm text-gray-900">{page.label}</p>
-                            <p className="text-xs text-gray-500">{page.description}</p>
+                  <div className="absolute top-full left-0 pt-1 w-72 z-50">
+                    <div className="bg-white rounded-xl shadow-xl border border-gray-200 py-2 animate-in fade-in slide-in-from-top-2 duration-150">
+                      {learningPages.map((page) => (
+                        <button
+                          key={page.id}
+                          onClick={() => {
+                            setActivePage(page.id);
+                            setShowLearningDropdown(false);
+                            if (dropdownTimeoutRef.current) {
+                              clearTimeout(dropdownTimeoutRef.current);
+                            }
+                          }}
+                          className={`w-full text-left px-4 py-3 hover:bg-[#F9A03F]/5 hover:border-l-4 hover:border-[#F9A03F] transition-all duration-150 group ${
+                            activePage === page.id ? 'bg-[#2C6975]/5 border-l-4 border-[#2C6975]' : ''
+                          }`}
+                        >
+                          <div className="flex items-center space-x-3">
+                            <span className="text-2xl">{page.icon}</span>
+                            <div className="flex-1">
+                              <p className="text-sm text-gray-900 group-hover:text-[#F9A03F] transition-colors">{page.label}</p>
+                              <p className="text-xs text-gray-500">{page.description}</p>
+                            </div>
+                            <ChevronRight className="w-4 h-4 text-gray-400 opacity-0 group-hover:opacity-100 group-hover:text-[#F9A03F] transition-all" />
                           </div>
-                        </div>
-                      </button>
-                    ))}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>

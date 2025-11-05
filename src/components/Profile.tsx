@@ -11,6 +11,9 @@ import { Label } from './ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from './ui/dialog';
 import { toast } from 'sonner@2.0.3';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './ui/collapsible';
+import { BadgeSystem } from './BadgeSystem';
+import { EventCredits } from './EventCredits';
+import { PennyPromptSuggestions } from './PennyEncouragement';
 
 interface ProfileProps {
   onNavigate: (page: PageType) => void;
@@ -399,18 +402,22 @@ export function Profile({ onNavigate }: ProfileProps) {
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-3 mb-8">
+          <TabsList className="grid w-full grid-cols-4 mb-8">
             <TabsTrigger value="resume-linkedin" className="flex items-center space-x-2">
               <Briefcase className="w-4 h-4" />
               <span>Resume & LinkedIn</span>
             </TabsTrigger>
             <TabsTrigger value="skills-certs" className="flex items-center space-x-2">
               <Award className="w-4 h-4" />
-              <span>Skills & Certifications</span>
+              <span>Skills & Certs</span>
+            </TabsTrigger>
+            <TabsTrigger value="badges-credits" className="flex items-center space-x-2">
+              <Trophy className="w-4 h-4" />
+              <span>Badges & Credits</span>
             </TabsTrigger>
             <TabsTrigger value="goals-assessments" className="flex items-center space-x-2">
               <Target className="w-4 h-4" />
-              <span>Goals & Assessments</span>
+              <span>Goals</span>
             </TabsTrigger>
           </TabsList>
 
@@ -1533,6 +1540,77 @@ export function Profile({ onNavigate }: ProfileProps) {
                       ))}
                     </div>
                   </div>
+                </div>
+              </div>
+            </div>
+          </TabsContent>
+
+          {/* TAB: Badges & Credits */}
+          <TabsContent value="badges-credits" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Main Content */}
+              <div className="lg:col-span-2 space-y-6">
+                {/* Import Badge System */}
+                <BadgeSystem currentPoints={userProfile.points} />
+
+                {/* Event Credits */}
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                  <EventCredits 
+                    events={[
+                      {
+                        id: '1',
+                        name: 'Trail Talk: Building on Experience Cloud',
+                        date: new Date('2025-10-28'),
+                        points: 5,
+                        category: 'workshop'
+                      },
+                      {
+                        id: '2',
+                        name: 'Penny AI Workshop: Effective Prompting',
+                        date: new Date('2025-10-21'),
+                        points: 10,
+                        category: 'webinar'
+                      },
+                      {
+                        id: '3',
+                        name: 'Community Showcase: Capstone Presentations',
+                        date: new Date('2025-10-14'),
+                        points: 5,
+                        category: 'community'
+                      }
+                    ]}
+                    totalPoints={20}
+                  />
+                </div>
+              </div>
+
+              {/* Sidebar */}
+              <div className="lg:col-span-1">
+                <div className="sticky top-6 space-y-6">
+                  {/* Points Summary */}
+                  <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <h3 className="text-lg text-gray-900 mb-4">Points Summary</h3>
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <span className="text-sm text-gray-600">Current Points</span>
+                        <span className="text-lg text-gray-900">{userProfile.points}</span>
+                      </div>
+                      <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <span className="text-sm text-gray-600">Goal</span>
+                        <span className="text-lg text-gray-900">{userProfile.totalPoints}</span>
+                      </div>
+                      <div className="flex items-center justify-between p-3 bg-[#F9A03F]/10 rounded-lg">
+                        <span className="text-sm text-gray-700">Progress</span>
+                        <span className="text-lg text-[#F9A03F]">{Math.round((userProfile.points / userProfile.totalPoints) * 100)}%</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Penny Prompts */}
+                  <PennyPromptSuggestions 
+                    currentPoints={userProfile.points} 
+                    maxPoints={userProfile.totalPoints} 
+                  />
                 </div>
               </div>
             </div>

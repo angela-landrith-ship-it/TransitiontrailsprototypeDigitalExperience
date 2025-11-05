@@ -13,7 +13,15 @@ import { LearningCenter } from './components/LearningCenter';
 import { Community } from './components/Community';
 import { PennyFloatingWidget } from './components/PennyFloatingWidget';
 import { SkillsIQAssessment } from './components/SkillsIQAssessment';
+import { VisitorLanding } from './components/VisitorLanding';
+import { VisitorLearningCenter } from './components/VisitorLearningCenter';
+import { VisitorCommunity } from './components/VisitorCommunity';
+import { VisitorEvents } from './components/VisitorEvents';
+import { VisitorNavigation } from './components/VisitorNavigation';
+import { LockedFeatureModal } from './components/LockedFeatureModal';
 import { Toaster } from './components/ui/sonner';
+import { MerchStore } from './components/MerchStore';
+import { OrderHistory } from './components/OrderHistory';
 
 export type PageType = 
   | 'learner' 
@@ -26,11 +34,52 @@ export type PageType =
   | 'profile'
   | 'self-assessment'
   | 'learning-center'
-  | 'community';
+  | 'community'
+  | 'merch-store'
+  | 'order-history'
+  | 'visitor-home'
+  | 'visitor-learning'
+  | 'visitor-community'
+  | 'visitor-events';
+
+type UserMode = 'visitor' | 'enrolled';
 
 export default function App() {
-  const [activePage, setActivePage] = useState<PageType>('learner');
+  const [userMode, setUserMode] = useState<UserMode>('visitor');
+  const [activePage, setActivePage] = useState<PageType>('visitor-home');
   const [isPennyChatOpen, setIsPennyChatOpen] = useState(false);
+  const [lockedFeature, setLockedFeature] = useState<'capstone' | 'skills' | 'coach' | null>(null);
+
+  const handleEnrollment = () => {
+    setUserMode('enrolled');
+    setActivePage('learner');
+  };
+
+  const handleSignIn = () => {
+    setUserMode('enrolled');
+    setActivePage('learner');
+  };
+
+  const handleSwitchToVisitor = () => {
+    setUserMode('visitor');
+    setActivePage('visitor-home');
+  };
+
+  const handleVisitorStartTrail = () => {
+    setActivePage('visitor-learning');
+  };
+
+  const handleVisitorNavigate = (page: string) => {
+    if (page === 'capstone-projects') {
+      setLockedFeature('capstone');
+    } else if (page === 'skills-assessment' || page === 'skills-iq-assessment') {
+      setLockedFeature('skills');
+    } else if (page === 'coach-dashboard') {
+      setLockedFeature('coach');
+    } else {
+      setActivePage(page as PageType);
+    }
+  };
 
   // Determine Penny context based on active page
   const getPennyContext = (): 'learning' | 'coaching' | 'profile' | 'default' => {
@@ -47,6 +96,32 @@ export default function App() {
   };
 
   const renderPage = () => {
+    // Visitor Mode Pages
+    if (userMode === 'visitor') {
+      switch (activePage) {
+        case 'visitor-home':
+          return <VisitorLanding onStartTrail={handleVisitorStartTrail} onNavigate={handleVisitorNavigate} />;
+        case 'visitor-learning':
+          return <VisitorLearningCenter onEnroll={handleEnrollment} />;
+        case 'visitor-community':
+          return <VisitorCommunity onEnroll={handleEnrollment} />;
+        case 'visitor-events':
+          return <VisitorEvents onEnroll={handleEnrollment} />;
+        case 'merch-store':
+          return (
+            <MerchStore 
+              isAuthenticated={false}
+              currentPoints={0}
+              onPointsRedeem={(points) => console.log('Redeeming points:', points)}
+              onAddToCart={(productId) => console.log('Added to cart:', productId)}
+            />
+          );
+        default:
+          return <VisitorLanding onStartTrail={handleVisitorStartTrail} onNavigate={handleVisitorNavigate} />;
+      }
+    }
+
+    // Enrolled User Pages
     switch (activePage) {
       case 'learner':
         return <LearnerHome onNavigate={setActivePage} />;
@@ -70,6 +145,23 @@ export default function App() {
         return <LearningCenter onNavigate={setActivePage} />;
       case 'community':
         return <Community onNavigate={setActivePage} />;
+      case 'merch-store':
+        return (
+          <MerchStore 
+            isAuthenticated={userMode === 'enrolled'}
+            currentPoints={2380}
+            onPointsRedeem={(points) => console.log('Redeeming points:', points)}
+            onAddToCart={(productId) => console.log('Added to cart:', productId)}
+          />
+        );
+      case 'order-history':
+        return (
+          <OrderHistory 
+            currentPoints={2380}
+            totalPointsEarned={3500}
+            totalPointsSpent={1120}
+          />
+        );
       default:
         return <LearnerHome onNavigate={setActivePage} />;
     }
@@ -77,15 +169,83 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#F5F3E8]">
-      <Navigation 
-        activePage={activePage} 
-        setActivePage={setActivePage} 
-      />
+      {/* Mode Toggle - Development/Demo Tool (Remove in production) */}
+      <div className="fixed bottom-4 left-4 z-50 group">
+        <div className="bg-white rounded-lg shadow-lg border-2 border-gray-300 overflow-hidden hover:shadow-xl transition-shadow">
+          <div className="bg-gray-800 text-white px-3 py-1 text-xs flex items-center justify-between">
+            <span>Demo Mode</span>
+            <span className="text-gray-400">🔄</span>
+          </div>
+          <div className="p-2 flex gap-2">
+            <button
+              onClick={handleSwitchToVisitor}
+              className={`px-3 py-1.5 text-xs rounded transition-all ${
+                userMode === 'visitor'
+                  ? 'bg-[#7EB5C1] text-white shadow-sm'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+              title="View as a visitor exploring the platform"
+            >
+              👤 Visitor
+            </button>
+            <button
+              onClick={handleSignIn}
+              className={`px-3 py-1.5 text-xs rounded transition-all ${
+                userMode === 'enrolled'
+                  ? 'bg-[#2C6975] text-white shadow-sm'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+              title="View as an enrolled learner"
+            >
+              🎓 Enrolled
+            </button>
+          </div>
+          <div className="px-2 pb-2 pt-0">
+            <div className="text-xs text-gray-500 bg-gray-50 rounded px-2 py-1">
+              {userMode === 'visitor' 
+                ? '✓ Visitor Trail active' 
+                : '✓ Full access enabled'}
+            </div>
+          </div>
+        </div>
+        {/* Tooltip */}
+        <div className="absolute bottom-full left-0 mb-2 hidden group-hover:block">
+          <div className="bg-gray-900 text-white text-xs rounded px-3 py-2 whitespace-nowrap">
+            Toggle between visitor and enrolled experiences
+            <div className="absolute top-full left-4 -mt-1 w-2 h-2 bg-gray-900 transform rotate-45"></div>
+          </div>
+        </div>
+      </div>
+
+      {/* Navigation - Different for Visitor vs Enrolled */}
+      {userMode === 'visitor' ? (
+        <VisitorNavigation 
+          activePage={activePage} 
+          setActivePage={setActivePage}
+          onSignIn={handleSignIn}
+        />
+      ) : (
+        <Navigation 
+          activePage={activePage} 
+          setActivePage={setActivePage} 
+        />
+      )}
       
       {renderPage()}
       
-      {/* Context-aware Penny Floating Widget */}
-      <PennyFloatingWidget context={getPennyContext()} currentPage={activePage} />
+      {/* Context-aware Penny Floating Widget - Only for enrolled users */}
+      {userMode === 'enrolled' && (
+        <PennyFloatingWidget context={getPennyContext()} currentPage={activePage} />
+      )}
+
+      {/* Locked Feature Modal */}
+      {lockedFeature && (
+        <LockedFeatureModal 
+          feature={lockedFeature}
+          onClose={() => setLockedFeature(null)}
+          onEnroll={handleEnrollment}
+        />
+      )}
 
       {/* Toast Notifications */}
       <Toaster position="bottom-right" />
