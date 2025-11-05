@@ -5,13 +5,10 @@ import { AdminPanel } from './components/AdminPanel';
 import { PennyChat } from './components/PennyChat';
 import { Navigation } from './components/Navigation';
 import { TrailMissions } from './components/TrailMissions';
-import { MyProgram } from './components/MyProgram';
-import { DailyMissions } from './components/DailyMissions';
 import { CapstoneProjects } from './components/CapstoneProjects';
 import { SkillsAssessment } from './components/SkillsAssessment';
 import { Profile } from './components/Profile';
 import { SelfAssessment } from './components/SelfAssessment';
-import { ProgramCalendar } from './components/ProgramCalendar';
 import { LearningCenter } from './components/LearningCenter';
 import { Community } from './components/Community';
 import { Toaster } from './components/ui/sonner';
@@ -21,13 +18,10 @@ export type PageType =
   | 'coach' 
   | 'admin' 
   | 'trail-missions' 
-  | 'my-program' 
-  | 'daily-missions' 
   | 'capstone-projects' 
   | 'skills-assessment'
   | 'profile'
   | 'self-assessment'
-  | 'program-calendar'
   | 'learning-center'
   | 'community';
 
@@ -45,10 +39,6 @@ export default function App() {
         return <AdminPanel />;
       case 'trail-missions':
         return <TrailMissions onNavigate={setActivePage} />;
-      case 'my-program':
-        return <MyProgram onNavigate={setActivePage} />;
-      case 'daily-missions':
-        return <DailyMissions onNavigate={setActivePage} />;
       case 'capstone-projects':
         return <CapstoneProjects onNavigate={setActivePage} />;
       case 'skills-assessment':
@@ -57,8 +47,6 @@ export default function App() {
         return <Profile onNavigate={setActivePage} />;
       case 'self-assessment':
         return <SelfAssessment onNavigate={setActivePage} />;
-      case 'program-calendar':
-        return <ProgramCalendar onNavigate={setActivePage} />;
       case 'learning-center':
         return <LearningCenter onNavigate={setActivePage} />;
       case 'community':

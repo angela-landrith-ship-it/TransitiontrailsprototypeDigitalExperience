@@ -1,6 +1,5 @@
-import { Trophy, Target, BookOpen, MessageSquare, TrendingUp, Clock, Award, Calendar, Users, Sparkles, ChevronRight, CheckCircle, ExternalLink, ChevronDown } from 'lucide-react';
+import { Trophy, Target, BookOpen, MessageSquare, TrendingUp, Clock, Award, Calendar, Users, Sparkles, ChevronRight, CheckCircle, ExternalLink, ChevronDown, ArrowRight } from 'lucide-react';
 import { ProgressRing } from './ProgressRing';
-import { SlackFeed } from './SlackFeed';
 import { SkillsIQAssessment } from './SkillsIQAssessment';
 import { PageType } from '../App';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './ui/collapsible';
@@ -585,15 +584,85 @@ export function LearnerHome({ onNavigate }: LearnerHomeProps) {
             </div>
           </div>
 
-          {/* Slack Feed */}
+          {/* Team Updates - Quick View */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-gray-900 flex items-center space-x-2">
                 <MessageSquare className="w-5 h-5 text-[#2C6975]" />
                 <span>Team Updates</span>
               </h3>
+              <button
+                onClick={() => onNavigate('community')}
+                className="text-sm text-[#2C6975] hover:underline flex items-center space-x-1"
+              >
+                <span>View all</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
             </div>
-            <SlackFeed />
+            
+            {/* Recent Slack Messages Preview */}
+            <div className="space-y-3">
+              <div className="p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer" onClick={() => onNavigate('community')}>
+                <div className="flex items-start space-x-2">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#F9A03F] to-[#e89135] flex items-center justify-center text-white text-xs flex-shrink-0">
+                    SM
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between mb-1">
+                      <p className="text-sm text-gray-900">Sarah Martinez</p>
+                      <span className="text-xs text-gray-500">5m ago</span>
+                    </div>
+                    <p className="text-xs text-gray-600 line-clamp-2">
+                      Great job on this week's assignments everyone! Don't forget our group session tomorrow at 2pm.
+                    </p>
+                    <p className="text-xs text-[#2C6975] mt-1">#cohort-spring-25</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer" onClick={() => onNavigate('community')}>
+                <div className="flex items-start space-x-2">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#2C6975] to-[#7EB5C1] flex items-center justify-center text-white text-xs flex-shrink-0">
+                    JK
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between mb-1">
+                      <p className="text-sm text-gray-900">Jordan Kim</p>
+                      <span className="text-xs text-gray-500">15m ago</span>
+                    </div>
+                    <p className="text-xs text-gray-600 line-clamp-2">
+                      Can anyone help with Process Builder flows? I'm stuck on the approval logic.
+                    </p>
+                    <p className="text-xs text-[#2C6975] mt-1">#coaching-questions</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer" onClick={() => onNavigate('community')}>
+                <div className="flex items-start space-x-2">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#3B6A52] to-[#7EB5C1] flex items-center justify-center text-white text-xs flex-shrink-0">
+                    PA
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between mb-1">
+                      <p className="text-sm text-gray-900">Program Admin</p>
+                      <span className="text-xs text-gray-500">1h ago</span>
+                    </div>
+                    <p className="text-xs text-gray-600 line-clamp-2">
+                      New resources added to the learning portal - check out the updated Trailhead modules!
+                    </p>
+                    <p className="text-xs text-[#2C6975] mt-1">#team-announcements</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <button
+              onClick={() => onNavigate('community')}
+              className="w-full mt-4 py-2 text-sm text-[#2C6975] hover:bg-gray-50 rounded-lg transition-colors border border-gray-200"
+            >
+              Open Community →
+            </button>
           </div>
         </div>
       </div>
