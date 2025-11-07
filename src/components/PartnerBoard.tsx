@@ -1,3 +1,225 @@
+/**
+ * PARTNER BOARD - REAL-WORLD PROJECT MARKETPLACE
+ * 
+ * =============================================================================
+ * SALESFORCE ARCHITECTURE MAPPING
+ * =============================================================================
+ * 
+ * Experience Page: ExpPage_Projects (Tab: Partner Board)
+ * URL Path: /s/projects/partners
+ * Primary Audiences: Learner (must unlock with 500 points), Partner, Coach, Admin
+ * Parent Component: ProjectsHub.tsx
+ * 
+ * Access Control: Requires Partner_Board_Access__c checkbox on User record
+ * Unlock Flow: Redeem_Partner_Board_Access (deducts 500 points)
+ * 
+ * =============================================================================
+ * SALESFORCE OBJECTS & FIELDS
+ * =============================================================================
+ * 
+ * Primary Object: Partner_Project__c
+ * Key Fields:
+ * - Name (Text, 120) - Project title
+ * - Partner_Organization__c (Lookup: Account) - Partner company/nonprofit
+ * - Partner_Contact__c (Lookup: Contact) - Primary client contact
+ * - Project_Brief__c (Long Text Area) - Detailed project description
+ * - Summary__c (Text Area, 500) - Short summary for card view
+ * - Category__c (Picklist) - Admin, Data, Integration, Custom Development
+ * - Status__c (Picklist) - Open, In Progress, Filled, Completed, On Hold
+ * - Required_Skills__c (Multi-Select Picklist) - Flows, Reports, Apex, LWC, etc.
+ * - Duration__c (Text, 50) - "4-6 weeks", "2-3 months"
+ * - Team_Size__c (Number) - Total team spots (3-5)
+ * - Spots_Available__c (Formula) - Team_Size__c - (COUNT of accepted team members)
+ * - Featured__c (Checkbox) - Display prominently
+ * - Impact_Category__c (Picklist) - Nonprofit, Small Business, Community
+ * - Project_Value__c (Currency) - Estimated value for impact metrics
+ * - Start_Date__c (Date)
+ * - Target_End_Date__c (Date)
+ * - Slack_Channel_Id__c (Text, 50) - Auto-created Slack channel
+ * - Slack_Channel_Link__c (URL)
+ * - Client_Facing__c (Checkbox) - True if deliverable goes to external client
+ * 
+ * Related Object: Account (Partner Organization)
+ * Fields: Name, Logo_URL__c, Website, Industry, BillingCity, BillingState,
+ *         Partner_Type__c (Nonprofit, Small Business, Startup)
+ * 
+ * Related Object: Project_Application__c (Junction Object)
+ * Fields:
+ * - Partner_Project__c (Master-Detail: Partner_Project__c)
+ * - Applicant__c (Lookup: User)
+ * - Application_Date__c (DateTime)
+ * - Status__c (Picklist) - Pending, Accepted, Rejected, Withdrawn
+ * - Cover_Letter__c (Long Text Area)
+ * - Relevant_Skills__c (Text Area)
+ * - Availability__c (Text, 100)
+ * 
+ * Related Object: Project_Team__c (Accepted team members)
+ * Fields:
+ * - Partner_Project__c (Master-Detail: Partner_Project__c)
+ * - Team_Member__c (Lookup: User)
+ * - Role__c (Picklist) - Lead, Developer, Designer, QA
+ * - Join_Date__c (Date)
+ * - Contribution_Points__c (Number) - Points earned on project
+ * 
+ * =============================================================================
+ * CMS CONTENT REFERENCES
+ * =============================================================================
+ * 
+ * - [CMS:partner_board_hero_title] → "Partner Board"
+ * - [CMS:partner_board_description] → "Apply to real-world projects..."
+ * - [CMS:partner_board_locked_message] → Message shown before unlock
+ * - [CMS:partner_logos] → Account.Logo_URL__c (stored in Salesforce Files)
+ * 
+ * Partner Organization Logos:
+ * - Stored as ContentVersion linked to Account
+ * - Field: Account.Logo_URL__c (Formula: ContentVersion public URL)
+ * - If no logo, use default placeholder
+ * 
+ * =============================================================================
+ * APEX CONTROLLERS
+ * =============================================================================
+ * 
+ * PartnerBoardController.cls:
+ * - getAvailableProjects() → Returns Partner_Project__c where Status = 'Open' 
+ *   and Spots_Available > 0
+ * - searchProjects(searchTerm, category) → Filtered SOQL query
+ * - getFeaturedProjects() → Returns projects where Featured__c = true
+ * - getProjectDetails(projectId) → Full project info with partner details
+ * - submitApplication(projectId, coverLetter) → Creates Project_Application__c
+ * - checkPartnerBoardAccess(userId) → Returns User.Partner_Board_Access__c
+ * 
+ * =============================================================================
+ * INTEGRATION POINTS
+ * =============================================================================
+ * 
+ * 1. Slack Channel Auto-Creation:
+ *    - Trigger: Project_Application__c.Status__c = 'Accepted'
+ *    - Service: SlackIntegrationService.createProjectChannel()
+ *    - Channel naming: project-{projectId}
+ *    - Auto-invite: Team members, partner contact, assigned coach
+ *    - Welcome message: Project details, Penny introduction
+ *    - Stored: Partner_Project__c.Slack_Channel_Link__c
+ * 
+ * 2. GitHub Repository (Optional):
+ *    - Some partner projects include code deliverables
+ *    - Auto-created via GitHubIntegrationService if Code_Based__c = true
+ *    - Repository: transition-trails-partner-{partner-slug}
+ *    - Shared access with client organization
+ * 
+ * 3. Points System Integration:
+ *    - Unlock cost: 500 points (one-time)
+ *    - Project completion: Variable points (200-600 based on complexity)
+ *    - Bonus points: Client testimonial (+100), deployed solution (+150)
+ * 
+ * 4. Partner Portal Access:
+ *    - Partners see their own projects only (filtered by Account)
+ *    - Can view applications, accept/reject applicants
+ *    - Experience Cloud Partner Community profile
+ * 
+ * =============================================================================
+ * FLOWS & AUTOMATION
+ * =============================================================================
+ * 
+ * 1. Flow: Unlock_Partner_Board
+ *    Trigger: User clicks "Unlock Partner Board" (LockedFeatureModal)
+ *    Actions:
+ *      - Check points balance >= 500
+ *      - Create Points_Transaction__c (Redeemed, -500 points)
+ *      - Update User.Partner_Board_Access__c = true
+ *      - Send congratulations email
+ *      - Create badge award (Partner Explorer)
+ * 
+ * 2. Flow: Submit_Partner_Application
+ *    Trigger: User submits application via ProjectDetailModal
+ *    Actions:
+ *      - Create Project_Application__c record
+ *      - Send email to partner contact
+ *      - Send confirmation email to applicant
+ *      - Create Chatter post on project
+ * 
+ * 3. Flow: Accept_Team_Member
+ *    Trigger: Partner accepts application (Status = 'Accepted')
+ *    Actions:
+ *      - Create Project_Team__c record
+ *      - Update Partner_Project__c.Spots_Available__c (formula recalculates)
+ *      - Create Slack channel (via Apex callout)
+ *      - Send welcome email with Slack link
+ *      - Notify coach of new assignment
+ * 
+ * 4. Trigger: ProjectTeamTrigger (After Insert)
+ *    Action: If first team member, call SlackIntegrationService.createProjectChannel()
+ * 
+ * =============================================================================
+ * GAMIFICATION & UNLOCK SYSTEM
+ * =============================================================================
+ * 
+ * Unlock Requirements:
+ * - Points cost: 500 (one-time unlock)
+ * - Alternative: Complete capstone project (auto-unlocks)
+ * - Field: User.Partner_Board_Access__c (Checkbox)
+ * 
+ * Points Awarded:
+ * - Project completion: 200-600 points (based on Partner_Project__c.Points_Value__c)
+ * - Milestones: 50 points per completed phase
+ * - Client testimonial: +100 bonus
+ * - Deployed to production: +150 bonus
+ * - Early completion: +50 bonus
+ * 
+ * Badges:
+ * - Partner Explorer: Unlock Partner Board
+ * - Impact Maker: Complete first partner project
+ * - Community Champion: Complete 3 partner projects
+ * 
+ * =============================================================================
+ * SEARCH & FILTERING
+ * =============================================================================
+ * 
+ * Client-Side (React Prototype):
+ * - Search by: title, summary, partner name
+ * - Filter by: category, duration, team size, featured
+ * 
+ * Server-Side (Salesforce):
+ * - SOQL WHERE clauses on Partner_Project__c
+ * - Use SOSL for full-text search across Name, Summary__c, Partner_Organization__r.Name
+ * - Example SOSL: FIND {volunteer} IN ALL FIELDS RETURNING Partner_Project__c
+ * 
+ * =============================================================================
+ * LWC COMPONENT MAPPING
+ * =============================================================================
+ * 
+ * React Components → LWC:
+ * - <PartnerBoard> → <c-partner-board>
+ * - <ProjectDetailModal> → <c-project-detail-modal>
+ * - Search/filter → Lightning data table with server-side filtering
+ * 
+ * =============================================================================
+ * PARTNER EXPERIENCE (Separate View)
+ * =============================================================================
+ * 
+ * Partner Audience sees:
+ * - Only their organization's projects
+ * - Application queue (pending applicants)
+ * - Accept/reject applicants
+ * - Project progress dashboard
+ * - Team communication (Slack integration)
+ * - Deliverable review/approval
+ * 
+ * Partner Page: ExpPage_Partner_Dashboard
+ * Object: Same Partner_Project__c, filtered by Account
+ * 
+ * =============================================================================
+ * ACCESSIBILITY
+ * =============================================================================
+ * 
+ * - Search input has aria-label
+ * - Filter buttons keyboard navigable
+ * - Project cards announce status to screen readers
+ * - Modal dialogs trap focus
+ * - High contrast mode support
+ * 
+ * =============================================================================
+ */
+
 import { useState } from 'react';
 import { Search, Filter, Users, Clock, TrendingUp, ExternalLink, Star } from 'lucide-react';
 import { Badge } from './ui/badge';

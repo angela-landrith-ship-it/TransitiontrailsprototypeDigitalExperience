@@ -1,3 +1,295 @@
+/**
+ * TRAILBUILD SUMMIT - BIANNUAL VIRTUAL CODE-A-THON
+ * 
+ * =============================================================================
+ * SALESFORCE ARCHITECTURE MAPPING
+ * =============================================================================
+ * 
+ * Experience Page: ExpPage_TrailBuild
+ * URL Path: /s/trailbuild
+ * Primary Audiences: All (Visitor, Learner, Coach, Partner, Sponsor)
+ * Event Model: Biannual (Spring & Fall)
+ * 
+ * =============================================================================
+ * SALESFORCE OBJECTS & FIELDS
+ * =============================================================================
+ * 
+ * Primary Object: TrailBuild_Event__c
+ * Key Fields:
+ * - Name (Text, 120) - "TrailBuild Summit Fall 2025"
+ * - Event_Date__c (Date) - Event start date
+ * - Event_End_Date__c (Date) - 3-day event (Fri-Sun)
+ * - Status__c (Picklist) - Planning, Registration Open, In Progress, Completed
+ * - Event_Type__c (Picklist) - Virtual, Hybrid
+ * - Max_Attendees__c (Number) - Capacity limit
+ * - Current_Attendees__c (Rollup Count) - COUNT(TrailBuild_Registration__c WHERE Status = 'Confirmed')
+ * - Registration_Opens__c (DateTime)
+ * - Registration_Closes__c (DateTime)
+ * - Description__c (Rich Text Area) - Event overview
+ * - Theme__c (Text, 255) - "Build for Good", "Tech for Impact", etc.
+ * - Zoom_Link__c (URL) - Main event Zoom room
+ * - Slack_Channel__c (Text, 50) - #trailbuild-summit-fall-2025
+ * - Kickoff_Video_URL__c (URL) - Welcome video link
+ * - Prize_Pool__c (Currency) - Total prizes for winning teams
+ * - Featured__c (Checkbox) - Show on homepage
+ * 
+ * Related Object: TrailBuild_Registration__c
+ * Fields:
+ * - TrailBuild_Event__c (Master-Detail: TrailBuild_Event__c)
+ * - Participant__c (Lookup: User)
+ * - Registration_Date__c (DateTime) - Auto: NOW()
+ * - Status__c (Picklist) - Pending, Confirmed, Cancelled, Waitlist
+ * - Skill_Level__c (Picklist) - Beginner, Intermediate, Advanced
+ * - Preferred_Track__c (Picklist) - Admin, Developer, Designer, QA
+ * - Team_Assignment__c (Lookup: TrailBuild_Team__c) - Assigned later
+ * - Badge_Tier__c (Text, 50) - TrailBuilder Bronze, Silver, Gold
+ * - Participation_Points__c (Number) - Points earned during event
+ * 
+ * Related Object: TrailBuild_Team__c
+ * Fields:
+ * - TrailBuild_Event__c (Master-Detail: TrailBuild_Event__c)
+ * - Name (Text, 80) - "Team Phoenix", "Code Crusaders"
+ * - Team_Number__c (Auto-Number) - TEAM-{000}
+ * - Project__c (Lookup: TrailBuild_Project__c)
+ * - Team_Lead__c (Lookup: User)
+ * - Team_Size__c (Number) - 4-6 members
+ * - Slack_Channel__c (Text, 50) - #trailbuild-team-phoenix
+ * - GitHub_Repo__c (URL) - Auto-created repository
+ * - Submission_Link__c (URL) - Link to deliverable
+ * - Submission_Date__c (DateTime)
+ * - Final_Score__c (Number) - Judging score
+ * - Award_Tier__c (Picklist) - Winner, Runner-Up, Honorable Mention
+ * 
+ * Related Object: TrailBuild_Project__c (Partner projects for event)
+ * Fields:
+ * - TrailBuild_Event__c (Master-Detail: TrailBuild_Event__c)
+ * - Partner_Organization__c (Lookup: Account)
+ * - Title__c (Text, 120)
+ * - Description__c (Rich Text Area)
+ * - Required_Skills__c (Multi-Select Picklist)
+ * - Difficulty__c (Picklist) - Beginner, Intermediate, Advanced
+ * - Assigned_Teams__c (Rollup Count)
+ * - Max_Teams__c (Number) - 1-2 teams per project
+ * 
+ * Related Object: Event_Sponsor__c (Sponsors for prizes/branding)
+ * Fields:
+ * - TrailBuild_Event__c (Master-Detail: TrailBuild_Event__c)
+ * - Sponsor_Account__c (Lookup: Account)
+ * - Sponsorship_Tier__c (Picklist) - Platinum, Gold, Silver, Bronze
+ * - Logo_URL__c (URL)
+ * - Contribution_Amount__c (Currency)
+ * - Benefits__c (Long Text Area) - Logo placement, shoutouts
+ * 
+ * =============================================================================
+ * CMS CONTENT REFERENCES
+ * =============================================================================
+ * 
+ * - [CMS:trailbuild_hero_title] → "TrailBuild Summit"
+ * - [CMS:trailbuild_hero_subtitle] → "Build for Good — A 3-day virtual code-a-thon..."
+ * - [CMS:trailbuild_event_theme] → Current event theme
+ * - [CMS:trailbuild_past_events_gallery] → Image carousel of past summits
+ * - [CMS:trailbuild_faq] → Frequently asked questions
+ * - [CMS:sponsor_logos] → Sponsor images (Account.Logo_URL__c)
+ * 
+ * =============================================================================
+ * APEX CONTROLLERS
+ * =============================================================================
+ * 
+ * TrailBuildSummitController.cls:
+ * - getUpcomingEvent() → Returns next TrailBuild_Event__c
+ * - registerForEvent(eventId, userId) → Creates TrailBuild_Registration__c
+ * - getRegistrationStatus(eventId, userId) → Check if user registered
+ * - getEventProjects(eventId) → Returns available TrailBuild_Project__c
+ * - getEventSponsors(eventId) → Returns Event_Sponsor__c records
+ * - getMyTeam(eventId, userId) → Returns assigned TrailBuild_Team__c
+ * - submitProject(teamId, submissionLink) → Records submission
+ * 
+ * =============================================================================
+ * INTEGRATION POINTS
+ * =============================================================================
+ * 
+ * 1. Slack Integration:
+ *    - Main event channel: Auto-created on event creation
+ *    - Team channels: Auto-created on team assignment
+ *    - Penny TrailBuild Coordinator posts updates, reminders
+ *    - Slack webhook: POST daily summaries, winner announcements
+ * 
+ * 2. GitHub Repository Integration:
+ *    - Each team gets a repository: transition-trails-trailbuild-{event}-{team}
+ *    - Auto-created via GitHubIntegrationService on team formation
+ *    - Template includes: README, project brief, folder structure
+ *    - Teams have write access; judges have read access
+ * 
+ * 3. Zoom Integration:
+ *    - Main event room: TrailBuild_Event__c.Zoom_Link__c
+ *    - Breakout rooms: Generated via Zoom API for team workspaces
+ *    - Stored: TrailBuild_Team__c.Team_Zoom_Link__c
+ * 
+ * 4. Penny AI - TrailBuild Coordinator Mode:
+ *    - <PennyTrailBuildMode> component (third mode, amber glow)
+ *    - Context-aware for event coordination
+ *    - Proactive suggestions: Team formation, project selection, timelines
+ *    - Real-time progress tracking across all teams
+ *    - API: POST /services/apexrest/penny/trailbuild-guidance
+ * 
+ * 5. Badge System Integration:
+ *    - Auto-award TrailBuilder Bronze on registration
+ *    - TrailBuilder Silver: Submit project
+ *    - TrailBuilder Gold: Winning team
+ *    - Stored: TrailBuild_Registration__c.Badge_Tier__c
+ *    - Creates Badge_Award__c records
+ * 
+ * =============================================================================
+ * FLOWS & AUTOMATION
+ * =============================================================================
+ * 
+ * 1. Flow: Register_For_TrailBuild
+ *    Trigger: User submits registration form
+ *    Actions:
+ *      - Create TrailBuild_Registration__c (Status = 'Confirmed')
+ *      - Award TrailBuilder Bronze badge (Badge_Award__c)
+ *      - Send confirmation email
+ *      - Add to Slack event channel
+ *      - Award 50 registration bonus points
+ * 
+ * 2. Flow: Assign_Teams
+ *    Trigger: Admin clicks "Generate Teams" (before event)
+ *    Actions:
+ *      - Query registrations, group by skill level
+ *      - Create TrailBuild_Team__c records (4-6 per team)
+ *      - Assign team lead (most experienced or random)
+ *      - Create Slack team channels
+ *      - Create GitHub repositories
+ *      - Send team assignment emails
+ * 
+ * 3. Flow: Submit_TrailBuild_Project
+ *    Trigger: Team lead clicks "Submit Project"
+ *    Actions:
+ *      - Update TrailBuild_Team__c.Submission_Link__c
+ *      - Set Submission_Date__c = NOW()
+ *      - Award TrailBuilder Silver badges to all team members
+ *      - Award 200 submission points to each member
+ *      - Send submission confirmation email
+ *      - Post to Slack: "Team {Name} submitted!"
+ * 
+ * 4. Flow: Announce_Winners
+ *    Trigger: Admin updates Award_Tier__c on winning teams
+ *    Actions:
+ *      - Award TrailBuilder Gold badges to winning team
+ *      - Award bonus points: 500 (Winner), 300 (Runner-Up), 150 (Honorable)
+ *      - Send congratulations email
+ *      - Post to Slack with @channel mention
+ *      - Update user profiles with achievement
+ * 
+ * 5. Trigger: TrailBuildRegistrationTrigger (After Insert)
+ *    Action: Check capacity, if full → set Status = 'Waitlist'
+ * 
+ * =============================================================================
+ * GAMIFICATION & POINTS
+ * =============================================================================
+ * 
+ * Points Breakdown:
+ * - Registration: +50 points
+ * - Attend kickoff: +25 points
+ * - Submit project: +200 points
+ * - Winner: +500 bonus
+ * - Runner-Up: +300 bonus
+ * - Honorable Mention: +150 bonus
+ * - Community vote favorite: +100 bonus
+ * 
+ * Badges:
+ * - TrailBuilder Bronze: Register for event
+ * - TrailBuilder Silver: Submit project
+ * - TrailBuilder Gold: Winning team
+ * 
+ * =============================================================================
+ * EVENT TIMELINE
+ * =============================================================================
+ * 
+ * Pre-Event (2 months before):
+ * - Announce event, open registration
+ * - Partner organizations submit project briefs
+ * - Sponsors sign up, branding added
+ * 
+ * 2 Weeks Before:
+ * - Close registration
+ * - Assign teams (Flow: Assign_Teams)
+ * - Send team introductions
+ * - Create Slack channels, GitHub repos
+ * 
+ * Day 1 (Friday):
+ * - Kickoff session (Zoom)
+ * - Project selection by teams
+ * - Team planning sessions
+ * - Penny TrailBuild Coordinator activated
+ * 
+ * Day 2-3 (Sat-Sun):
+ * - Teams work on projects
+ * - Office hours with coaches
+ * - Penny provides guidance
+ * 
+ * Day 3 (Sunday evening):
+ * - Project submissions close
+ * - Teams present demos (5 min each)
+ * - Judging and winner announcement
+ * 
+ * =============================================================================
+ * PENNY TRAILBUILD COORDINATOR MODE
+ * =============================================================================
+ * 
+ * Third Mode Activation:
+ * - Only active during TrailBuild Summit events
+ * - Visual: Animated amber glow (different from Guide/Assistant modes)
+ * - Icon: Coordination/team icon
+ * - Context: Entire event + team progress
+ * 
+ * Coordinator Capabilities:
+ * - Track all team progress in real-time
+ * - Identify blockers across teams
+ * - Suggest resource allocation
+ * - Coordinate coach support
+ * - Remind teams of deadlines
+ * - Celebrate milestones (Slack posts)
+ * - Generate event summary reports
+ * 
+ * =============================================================================
+ * SPONSOR INTEGRATION
+ * =============================================================================
+ * 
+ * Sponsor Tiers:
+ * - Platinum ($5,000+): Logo on all materials, keynote mention, prize
+ * - Gold ($2,500+): Logo on event page, social media shoutout
+ * - Silver ($1,000+): Logo in footer, thank you post
+ * - Bronze ($500+): Listed in sponsor section
+ * 
+ * Sponsor Dashboard:
+ * - View event metrics (registrations, submissions)
+ * - Access to demo recordings
+ * - Post-event impact report
+ * 
+ * =============================================================================
+ * LWC COMPONENT MAPPING
+ * =============================================================================
+ * 
+ * React Components → LWC:
+ * - <TrailBuildSummit> → <c-trailbuild-summit>
+ * - <TrailBuildRegistration> → <c-trailbuild-registration>
+ * - <TrailBuildWorkspace> → <c-trailbuild-workspace>
+ * - <PennyTrailBuildMode> → <c-penny-trailbuild-mode>
+ * 
+ * =============================================================================
+ * ACCESSIBILITY
+ * =============================================================================
+ * 
+ * - Countdown timer has aria-live announcements
+ * - Registration form fully keyboard navigable
+ * - Team workspace accessible to screen readers
+ * - Video captions for all recordings
+ * - Alt text on all sponsor logos
+ * 
+ * =============================================================================
+ */
+
 import { useState, useEffect } from 'react';
 import { Calendar, Users, Zap, Trophy, Clock, CheckCircle2, Sparkles, PlayCircle, Award, ExternalLink } from 'lucide-react';
 import { Badge } from './ui/badge';

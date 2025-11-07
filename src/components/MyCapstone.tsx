@@ -1,7 +1,194 @@
+/**
+ * MY CAPSTONE PROJECT
+ * 
+ * =============================================================================
+ * SALESFORCE ARCHITECTURE MAPPING
+ * =============================================================================
+ * 
+ * Experience Page: ExpPage_Projects (Tab: My Capstone)
+ * URL Path: /s/projects/capstone
+ * Primary Audience: Learner
+ * Parent Component: ProjectsHub.tsx
+ * 
+ * =============================================================================
+ * SALESFORCE OBJECTS & FIELDS
+ * =============================================================================
+ * 
+ * Primary Object: Project__c (Type = 'Capstone')
+ * Key Fields:
+ * - Name (Text, 120) - Project title
+ * - Description__c (Long Text Area) - Project overview
+ * - Status__c (Picklist) - Planning, Active, Testing, Completed, Submitted
+ * - Progress_Percentage__c (Formula) - Auto-calculated from phase completion
+ * - Current_Phase__c (Picklist) - Problem Statement, Goals, PRD, Solution Design,
+ *                                  Data Model, Automation, Testing, Deployment
+ * - Points_Value__c (Number) - 1,400 total points (40% of program)
+ * - Points_Earned__c (Number) - Points accumulated based on phase completion
+ * - Start_Date__c (Date)
+ * - Due_Date__c (Date)
+ * - Submission_Date__c (DateTime)
+ * - Repo_Link__c (URL) - GitHub repository (auto-created)
+ * - Linear_Project_Link__c (URL) - Linear project workspace
+ * - Partner_Organization__c (Lookup: Account) - For partner-based capstones
+ * - Latest_PDF__c (Lookup: ContentVersion) - Generated deliverable
+ * 
+ * Related Objects:
+ * - Project_Phase__c (Child of Project__c)
+ *   Fields: Phase_Name__c, Status__c, Points_Value__c, Due_Date__c, 
+ *           Completion_Date__c, Deliverables__c
+ * 
+ * - Project_Task__c (Child of Project__c)
+ *   Fields: Title__c, Description__c, Status__c, Priority__c, Assigned_To__c,
+ *           Due_Date__c, GitHub_Issue_Number__c
+ * 
+ * - Project_Deliverable__c (Child of Project__c)
+ *   Fields: Deliverable_Type__c (PRD, Design Doc, Code, Test Plan, PDF),
+ *           File__c (Lookup: ContentVersion), Status__c
+ * 
+ * =============================================================================
+ * CMS CONTENT REFERENCES
+ * =============================================================================
+ * 
+ * - [CMS:capstone_hero_title] → "Your Capstone Project"
+ * - [CMS:capstone_description] → "Build a comprehensive Salesforce solution..."
+ * - [CMS:capstone_completion_message] → Congratulations text on 100%
+ * - [CMS:capstone_phase_instructions] → Instructions for each phase
+ * 
+ * =============================================================================
+ * APEX CONTROLLERS
+ * =============================================================================
+ * 
+ * CapstoneProjectController.cls:
+ * - getCapstoneProject() → Returns current learner's active Capstone Project__c
+ * - getProjectPhases() → Returns Project_Phase__c records ordered by sequence
+ * - updatePhaseStatus(phaseId, status) → Marks phase complete, awards points
+ * - generateProjectPDF(projectId) → Triggers VF page rendering to PDF
+ * - submitCapstoneForReview(projectId) → Updates status, notifies coach
+ * 
+ * =============================================================================
+ * INTEGRATION POINTS
+ * =============================================================================
+ * 
+ * 1. GitHub Repository Integration:
+ *    - Auto-created on Project__c creation via ProjectTrigger
+ *    - GitHubIntegrationService.createRepository(projectName, projectId)
+ *    - Repository naming: transition-trails-capstone-{projectId}
+ *    - Folder structure: /docs, /code, /assets, /tests
+ *    - Stored in: Project__c.Repo_Link__c
+ * 
+ * 2. Linear Project Management:
+ *    - Manual setup: Learner creates Linear project
+ *    - Copies Linear URL to Project__c.Linear_Project_Link__c
+ *    - Linear's native GitHub integration syncs commits to issues
+ * 
+ * 3. Penny AI Assistant Integration:
+ *    - <PennyGuideMode> component provides context-aware guidance
+ *    - AI tracks phase completion, identifies blockers
+ *    - Proactive suggestions for testing, code quality
+ *    - API: POST /services/apexrest/penny/capstone-guidance
+ * 
+ * 4. PDF Generation (Branded Deliverable):
+ *    - Visualforce Page: CapstoneProjectPDF
+ *    - Flow: Generate_Capstone_PDF (triggered by button)
+ *    - Template includes: Transition Trails logo, project summary, phases,
+ *      deliverables, team info, coach feedback
+ *    - Stored as ContentVersion linked to Project__c
+ * 
+ * =============================================================================
+ * FLOWS & AUTOMATION
+ * =============================================================================
+ * 
+ * 1. Trigger: ProjectTrigger (After Insert)
+ *    Action: Queue GitHub repo creation (CreateGitHubRepoQueueable)
+ * 
+ * 2. Flow: Complete_Project_Phase
+ *    Trigger: Project_Phase__c.Status__c = 'Completed'
+ *    Actions:
+ *      - Award points (create Points_Transaction__c)
+ *      - Update Project__c.Progress_Percentage__c
+ *      - Send notification to coach
+ *      - Update Current_Phase__c to next phase
+ * 
+ * 3. Flow: Submit_Capstone_For_Review
+ *    Trigger: "Complete Capstone" button
+ *    Actions:
+ *      - Update Project__c.Status__c = 'Submitted'
+ *      - Set Submission_Date__c = NOW()
+ *      - Create chatter post for coach
+ *      - Award completion bonus points
+ *      - Unlock Partner_Board (if not already unlocked)
+ * 
+ * 4. Flow: Generate_Capstone_PDF
+ *    Trigger: "Generate PDF Summary" button
+ *    Actions:
+ *      - Render Visualforce page to PDF
+ *      - Create ContentVersion
+ *      - Link to Project__c.Latest_PDF__c
+ *      - Send email with PDF attachment
+ * 
+ * =============================================================================
+ * GAMIFICATION & POINTS
+ * =============================================================================
+ * 
+ * Total Points: 1,400 (40% of program total 3,500)
+ * 
+ * Phase Breakdown:
+ * - Problem Statement: 150 points
+ * - Project Goals: 150 points
+ * - Product Requirements (PRD): 200 points
+ * - Solution Design: 200 points
+ * - Data Model & Objects: 200 points
+ * - Automation & Logic: 250 points
+ * - Testing & Quality: 150 points
+ * - Deployment & Documentation: 100 points
+ * 
+ * Bonus Points:
+ * - Early submission: +50 points
+ * - 95%+ test coverage: +50 points
+ * - Partner integration: +100 points
+ * 
+ * =============================================================================
+ * TESTING EMPHASIS (Non-Developer Education)
+ * =============================================================================
+ * 
+ * Penny AI provides proactive guidance on:
+ * - Writing Apex test classes (target: 85%+ coverage)
+ * - User Acceptance Testing (UAT) checklist
+ * - Manual testing scenarios
+ * - QA best practices (regression testing, edge cases)
+ * - Test data setup and teardown
+ * 
+ * Educational Resources:
+ * - Integrated Trailhead modules on testing
+ * - Example test classes from coach
+ * - Penny suggests test scenarios based on code
+ * 
+ * =============================================================================
+ * LWC COMPONENT MAPPING
+ * =============================================================================
+ * 
+ * React Component → LWC:
+ * - <MyCapstone> → <c-my-capstone>
+ * - <PennyGuideMode> → <c-penny-guide-mode>
+ * - Progress calculation → Apex formula field
+ * 
+ * =============================================================================
+ * ACCESSIBILITY
+ * =============================================================================
+ * 
+ * - Phase buttons keyboard navigable
+ * - ARIA labels on completion status
+ * - Screen reader announcements on phase completion
+ * - Focus management on modal open/close
+ * 
+ * =============================================================================
+ */
+
 import { useState } from 'react';
 import { CheckCircle, Circle, FileText, Target, Lightbulb, Code, ArrowRight, Sparkles } from 'lucide-react';
 import { Badge } from './ui/badge';
 import { PennyGuideMode } from './PennyGuideMode';
+import { GitHubRepositoryLink, LinearProjectLink, PDFGenerationButton } from './integrations';
 
 interface MyCapstoneProps {
   onComplete?: () => void;
@@ -18,6 +205,20 @@ export function MyCapstone({ onComplete, capstoneComplete = false, onNavigateToP
   ]);
 
   const progress = (sections.filter(s => s.complete).length / sections.length) * 100;
+
+  // Mock project data (in production, comes from Salesforce Project__c)
+  const capstoneProject = {
+    id: 'a0x5e000000ABC123',
+    name: 'Community Service Volunteer Management System',
+    repoUrl: 'https://github.com/transition-trails/capstone-a0x5e000000ABC123',
+    repoName: 'transition-trails-capstone-a0x5e',
+    linearUrl: 'https://linear.app/transition-trails/project/volunteer-mgmt-8e2f',
+    linearProjectName: 'Volunteer Management System',
+    commitCount: 42,
+    linearIssueCount: 24,
+    linearCompletedIssues: 18,
+    linearInProgressIssues: 4,
+  };
 
   return (
     <div className="space-y-6">
@@ -100,6 +301,56 @@ export function MyCapstone({ onComplete, capstoneComplete = false, onNavigateToP
             <ArrowRight className="w-5 h-5" />
           </button>
         )}
+      </div>
+
+      {/* Integration Tools - GitHub, Linear, PDF */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {/* GitHub Repository */}
+        <GitHubRepositoryLink
+          repoUrl={capstoneProject.repoUrl}
+          repoName={capstoneProject.repoName}
+          description="Capstone project code repository"
+          commitCount={capstoneProject.commitCount}
+          contributors={1}
+          variant="card"
+          showStats={true}
+        />
+
+        {/* Linear Project Management */}
+        <LinearProjectLink
+          linearUrl={capstoneProject.linearUrl}
+          projectName={capstoneProject.linearProjectName}
+          issueCount={capstoneProject.linearIssueCount}
+          completedIssues={capstoneProject.linearCompletedIssues}
+          inProgressIssues={capstoneProject.linearInProgressIssues}
+          currentSprint="Sprint 3"
+          variant="card"
+          showStats={true}
+        />
+
+        {/* PDF Generation */}
+        <div className="bg-white rounded-lg border border-gray-200 p-4">
+          <div className="flex items-start space-x-3 mb-4">
+            <div className="w-12 h-12 rounded-lg bg-red-50 flex items-center justify-center flex-shrink-0">
+              <FileText className="w-6 h-6 text-red-600" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <h4 className="text-gray-900 mb-1">Project Summary</h4>
+              <p className="text-sm text-gray-600 mb-2">Generate branded PDF deliverable</p>
+            </div>
+          </div>
+          <PDFGenerationButton
+            recordId={capstoneProject.id}
+            recordType="capstone"
+            fileName={`Capstone_Summary_${capstoneProject.name}.pdf`}
+            variant="outline"
+            size="md"
+            showIcon={true}
+          />
+          <p className="mt-3 text-xs text-gray-500">
+            💡 PDF includes Transition Trails branding, project summary, deliverables, and coach feedback
+          </p>
+        </div>
       </div>
 
       {/* Capstone Completion Card */}

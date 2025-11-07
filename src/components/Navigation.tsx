@@ -1,3 +1,255 @@
+/**
+ * NAVIGATION - GLOBAL HEADER & MENU SYSTEM
+ * 
+ * =============================================================================
+ * SALESFORCE ARCHITECTURE MAPPING
+ * =============================================================================
+ * 
+ * Component Type: Global Header (appears on all Experience Cloud pages)
+ * Experience Builder: Theme Layout Header component
+ * Audiences: All (adapts based on user role)
+ * 
+ * =============================================================================
+ * ROLE-BASED VISIBILITY
+ * =============================================================================
+ * 
+ * Navigation items shown based on Experience Cloud Audience:
+ * 
+ * Visitor:
+ * - Logo (home link)
+ * - Learning (public resources only)
+ * - Events
+ * - Community
+ * - Sign In / Sign Up buttons
+ * 
+ * Learner:
+ * - Logo (home link)
+ * - Home
+ * - Learning (dropdown: Trail Missions, Learning Center, Capstone Projects)
+ * - Projects (dropdown: My Capstone, Partner Board, Team Projects, TrailBuild Summit)
+ * - Community
+ * - Shop
+ * - Profile menu (avatar dropdown)
+ * - Notifications bell
+ * - Penny AI widget
+ * 
+ * Coach:
+ * - All Learner items +
+ * - Coach Dashboard
+ * - Team Analytics
+ * 
+ * Admin:
+ * - All Learner & Coach items +
+ * - Admin Panel
+ * - System Settings
+ * 
+ * =============================================================================
+ * SALESFORCE DATA SOURCES
+ * =============================================================================
+ * 
+ * User Context (from Experience Cloud):
+ * - User.Name
+ * - User.SmallPhotoUrl (profile picture)
+ * - User.UserRole.Name (determines visibility)
+ * - User.Total_Points__c (shown in profile menu)
+ * - User.Contact.Cohort__c
+ * 
+ * Notifications:
+ * - Query: SELECT * FROM Notification__c 
+ *          WHERE Recipient__c = :currentUserId 
+ *          AND Read__c = false
+ *          ORDER BY CreatedDate DESC LIMIT 10
+ * 
+ * Custom Object: Notification__c
+ * Fields:
+ * - Recipient__c (Lookup: User)
+ * - Type__c (Picklist) - Mention, Direct Message, Session Reminder, System
+ * - Message__c (Text, 255)
+ * - Link__c (URL) - Deep link to relevant page
+ * - Read__c (Checkbox)
+ * - Created_Date__c (DateTime)
+ * - Source__c (Text, 100) - "Slack", "Penny AI", "System", "Coach"
+ * 
+ * =============================================================================
+ * CMS CONTENT REFERENCES
+ * =============================================================================
+ * 
+ * Logo:
+ * - [CMS:nav_logo_image] → Transition Trails badge logo
+ * - Stored as Static Resource: TransitionTrailsLogo
+ * - Alt text: "Transition Trails Academy"
+ * 
+ * Dropdown Descriptions:
+ * - [CMS:nav_learning_dropdown_desc] → "Explore your learning path"
+ * - [CMS:nav_projects_dropdown_desc] → "Build real-world solutions"
+ * 
+ * =============================================================================
+ * NAVIGATION STRUCTURE
+ * =============================================================================
+ * 
+ * Primary Navigation (Top Level):
+ * 1. Home → /s/home (learner dashboard)
+ * 2. Learning (Dropdown) →
+ *    - Trail Missions → /s/trail-missions
+ *    - Learning Center → /s/learning
+ *    - Capstone Projects → /s/projects/capstone
+ * 3. Projects (Dropdown) →
+ *    - My Capstone → /s/projects/capstone
+ *    - Partner Board → /s/projects/partners
+ *    - My Team Projects → /s/projects/teams
+ *    - TrailBuild Summit → /s/trailbuild
+ * 4. Community → /s/community
+ * 5. Shop → /s/shop
+ * 
+ * Utility Navigation (Right Side):
+ * - Notifications Bell (badge count)
+ * - Profile Menu (Avatar) →
+ *   - Profile → /s/profile
+ *   - Points Balance → Display only
+ *   - Order History → /s/shop/orders
+ *   - Settings → /s/settings
+ *   - Log Out → Authentication logout
+ * 
+ * Mobile Navigation:
+ * - Hamburger menu (all items stacked)
+ * - Full-screen overlay on open
+ * - Collapsible dropdowns
+ * 
+ * =============================================================================
+ * APEX CONTROLLERS
+ * =============================================================================
+ * 
+ * NavigationController.cls:
+ * - getCurrentUser() → Returns User record with profile picture, points, role
+ * - getUnreadNotifications() → Returns Notification__c where Read__c = false
+ * - markNotificationRead(notificationId) → Updates Notification__c.Read__c = true
+ * - getUserRole() → Returns current user's Experience Cloud profile/role
+ * 
+ * =============================================================================
+ * INTEGRATION POINTS
+ * =============================================================================
+ * 
+ * 1. Slack Notifications:
+ *    - Webhook from Slack to Salesforce when user mentioned
+ *    - Creates Notification__c record (Type = 'Mention', Source = 'Slack')
+ *    - Deep link to Slack message
+ * 
+ * 2. Penny AI Widget:
+ *    - Floating widget in bottom-right (PennyFloatingWidget)
+ *    - Click opens PennyChat modal
+ *    - Badge shows unread AI suggestions count
+ * 
+ * 3. Profile Picture:
+ *    - User.SmallPhotoUrl from Salesforce Chatter
+ *    - Fallback to initials if no photo
+ *    - Upload via profile settings
+ * 
+ * 4. Points Display:
+ *    - Real-time query: User.Total_Points__c
+ *    - Updated by Points_Transaction__c trigger
+ *    - Shown in profile dropdown
+ * 
+ * =============================================================================
+ * RESPONSIVE BEHAVIOR
+ * =============================================================================
+ * 
+ * Desktop (1024px+):
+ * - Full horizontal nav with dropdowns
+ * - Hover-triggered dropdowns (300ms delay)
+ * - Profile menu on right
+ * 
+ * Tablet (768px - 1023px):
+ * - Condensed nav items
+ * - Click-triggered dropdowns
+ * 
+ * Mobile (< 768px):
+ * - Hamburger menu icon
+ * - Full-screen overlay menu
+ * - Stacked items
+ * - Logo always visible
+ * 
+ * =============================================================================
+ * SCROLL BEHAVIOR
+ * =============================================================================
+ * 
+ * - Hide on scroll down (when scrollY > 100px)
+ * - Show on scroll up (sticky positioning)
+ * - Shadow appears when scrollY > 10px
+ * - Maintains accessibility (focus trap when visible)
+ * 
+ * Implementation:
+ * - Uses IntersectionObserver or scroll event listener
+ * - CSS transforms for smooth hide/show
+ * - z-index: 50 to stay above content
+ * 
+ * =============================================================================
+ * NOTIFICATION SYSTEM
+ * =============================================================================
+ * 
+ * Notification Types:
+ * 1. Slack Mentions → Deep link to Slack
+ * 2. Direct Messages → Open message thread
+ * 3. Session Reminders → Calendar event link
+ * 4. System Announcements → Modal or page
+ * 5. Penny AI Suggestions → Open PennyChat
+ * 6. Coach Feedback → Assessment page
+ * 
+ * Badge Count:
+ * - Shows unread count (max 9, then "9+")
+ * - Red badge on bell icon
+ * - Real-time updates via Platform Events (optional)
+ * 
+ * Dropdown:
+ * - Last 10 notifications
+ * - "Mark all as read" button
+ * - "See all notifications" → /s/notifications
+ * 
+ * =============================================================================
+ * PROFILE MENU ITEMS
+ * =============================================================================
+ * 
+ * Avatar Dropdown:
+ * - User name & cohort
+ * - Points balance (e.g., "2,380 points")
+ * - Separator
+ * - My Profile → /s/profile
+ * - Order History → /s/shop/orders (if has orders)
+ * - Settings → /s/settings
+ * - Separator
+ * - Log Out → Triggers auth logout
+ * 
+ * =============================================================================
+ * ACCESSIBILITY
+ * =============================================================================
+ * 
+ * - Skip to main content link (hidden, focus-visible)
+ * - ARIA labels on all icon buttons
+ * - Keyboard navigation (tab, arrow keys in dropdowns)
+ * - Focus trap in mobile menu
+ * - Escape key closes dropdowns
+ * - Screen reader announcements for notifications
+ * - High contrast mode support
+ * 
+ * =============================================================================
+ * LWC IMPLEMENTATION NOTES
+ * =============================================================================
+ * 
+ * In Experience Cloud:
+ * - Use Theme Layout component for header
+ * - Navigation Menu component for links
+ * - Custom LWC for notifications bell
+ * - Custom LWC for profile menu
+ * - Audience targeting controls visibility
+ * 
+ * Example LWC Structure:
+ * - <c-global-navigation>
+ *   - <c-navigation-menu role={userRole}>
+ *   - <c-notification-bell userId={userId}>
+ *   - <c-profile-menu userId={userId}>
+ * 
+ * =============================================================================
+ */
+
 import { Home, Users, Settings, MessageCircle, Bell, ChevronDown, GraduationCap, Sparkles, Menu, X, ChevronRight, ShoppingBag, User, LogOut } from 'lucide-react';
 import { PageType } from '../App';
 import { useState, useEffect, useRef } from 'react';

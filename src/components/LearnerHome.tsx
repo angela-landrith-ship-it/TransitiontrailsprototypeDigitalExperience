@@ -1,3 +1,149 @@
+/**
+ * LEARNER HOME DASHBOARD
+ * 
+ * =============================================================================
+ * SALESFORCE ARCHITECTURE MAPPING
+ * =============================================================================
+ * 
+ * Experience Page: ExpPage_Home
+ * URL Path: /s/home
+ * Primary Audience: Learner
+ * Secondary Audiences: None (Learner-only view)
+ * 
+ * =============================================================================
+ * SALESFORCE OBJECTS & FIELDS
+ * =============================================================================
+ * 
+ * Primary Objects:
+ * - Trail__c (Active learning trail for current user)
+ *   Fields: Name, Status__c, Progress_Percentage__c, Current_Week__c, 
+ *           Total_Points_Earned__c, Start_Date__c, Target_Completion_Date__c
+ * 
+ * - User (Current learner and coach)
+ *   Fields: Name, Email, SmallPhotoUrl, Contact.Cohort__c, Contact.Program_Start_Date__c
+ * 
+ * - Coach_Assignment__c (Learner's assigned coach)
+ *   Fields: Coach__c (Lookup: User), Learner__c (Lookup: User), 
+ *           Assignment_Date__c, Status__c
+ * 
+ * - Points_Transaction__c (All points earned/redeemed)
+ *   Queries: Rollup by Transaction_Type__c and Source__c
+ *   Fields: Points__c, Transaction_Type__c, Source__c, Transaction_Date__c
+ * 
+ * - Project__c (Capstone project)
+ *   Fields: Name, Description__c, Status__c, Progress_Percentage__c, 
+ *           Points_Value__c, Points_Earned__c, Due_Date__c, Current_Phase__c,
+ *           Repo_Link__c, Linear_Project_Link__c
+ * 
+ * - Event__c (Upcoming sessions, meetings, standups)
+ *   Fields: Name, Event_Date__c, Event_Time__c, Event_Type__c, Zoom_Link__c,
+ *           Calendar_Color__c
+ * 
+ * - Task (Penny's curated focus items - from multiple sources)
+ *   Custom query combining: Project__c tasks, Trail_Module__c assignments,
+ *   Assessment__c deadlines, and custom Task records
+ * 
+ * =============================================================================
+ * CMS CONTENT REFERENCES
+ * =============================================================================
+ * 
+ * Hero Banner:
+ * - [CMS:learner_home_hero_title] → "Welcome back, {User.FirstName}!"
+ * - [CMS:learner_home_cohort_label] → "The Guided Trail • {Contact.Cohort__c}"
+ * - [CMS:learner_home_program_description] → "Salesforce Admin & Development Program"
+ * 
+ * Profile Images:
+ * - User.SmallPhotoUrl → Learner profile picture
+ * - Coach__r.SmallPhotoUrl → Coach profile picture
+ * 
+ * Quick Links:
+ * - [CMS:quick_links_calendar_url] → Calendar external link
+ * - [CMS:quick_links_slack_url] → Slack workspace URL
+ * 
+ * =============================================================================
+ * APEX CONTROLLERS & DATA SOURCES
+ * =============================================================================
+ * 
+ * LearnerHomeController.cls:
+ * - getCurrentTrail() → Returns active Trail__c record with progress
+ * - getPointsBreakdown() → Aggregates Points_Transaction__c by Source__c
+ * - getCapstoneProject() → Returns active Project__c (Type = 'Capstone')
+ * - getUpcomingSessions() → Returns next 5 Event__c records ordered by date
+ * - getPennyFocusItems() → Custom SOQL combining tasks from multiple objects
+ * - getCoachInfo() → Returns Coach__c from Coach_Assignment__c
+ * 
+ * =============================================================================
+ * INTEGRATION POINTS
+ * =============================================================================
+ * 
+ * 1. Penny AI Integration:
+ *    - AI-curated focus items (critical path detection)
+ *    - Click "Ask Penny" → Opens PennyChat component
+ *    - API: POST /services/apexrest/penny/focus-recommendations
+ * 
+ * 2. Capstone GitHub Repository:
+ *    - Project__c.Repo_Link__c → Opens GitHub repo in new tab
+ *    - Auto-created via GitHubIntegrationService.cls on project creation
+ * 
+ * 3. Calendar Integration:
+ *    - "View Full Calendar" → Experience Cloud calendar page
+ *    - Events synced from Event__c object
+ * 
+ * 4. Slack Deep Links:
+ *    - Quick Links → Opens team Slack workspace
+ *    - URL stored in Custom Metadata: Slack_Workspace_URL__mdt
+ * 
+ * =============================================================================
+ * FLOWS & AUTOMATION
+ * =============================================================================
+ * 
+ * 1. Flow: Update_Trail_Progress
+ *    Trigger: Module completion
+ *    Action: Recalculates Trail__c.Progress_Percentage__c
+ * 
+ * 2. Flow: Award_Points
+ *    Trigger: Task completion, module finish, assessment submission
+ *    Action: Creates Points_Transaction__c record
+ * 
+ * 3. Flow: Schedule_Coaching_Session
+ *    Trigger: "Schedule 1:1 Session" button click
+ *    Action: Creates Event__c, sends calendar invite
+ * 
+ * =============================================================================
+ * LWC COMPONENT MAPPING
+ * =============================================================================
+ * 
+ * React Component → LWC Component:
+ * - <ProgressRing> → <c-progress-ring>
+ * - <SkillsIQAssessment> → <c-skills-iq-assessment>
+ * - <TrailImpactMeter> → <c-trail-impact-meter>
+ * - <CommunityEngagementMeter> → <c-community-engagement-meter>
+ * 
+ * =============================================================================
+ * RESPONSIVE DESIGN
+ * =============================================================================
+ * 
+ * Breakpoints:
+ * - Mobile: < 768px (single column, collapsible sections)
+ * - Tablet: 768px - 1023px (2-column grid)
+ * - Desktop: 1024px+ (3-column grid with sidebar)
+ * 
+ * Grid: 12-column system
+ * Margins: 16px (mobile) / 40px (tablet) / 80px (desktop)
+ * 
+ * =============================================================================
+ * ACCESSIBILITY
+ * =============================================================================
+ * 
+ * - ARIA labels on all interactive elements
+ * - Keyboard navigation support (tab order)
+ * - Focus indicators on buttons (ring-2)
+ * - Alt text on all images
+ * - Semantic HTML (nav, main, section)
+ * 
+ * =============================================================================
+ */
+
 import { Trophy, Target, BookOpen, MessageSquare, TrendingUp, Clock, Award, Calendar, Users, Sparkles, ChevronRight, CheckCircle, ExternalLink, ChevronDown, ArrowRight, Heart } from 'lucide-react';
 import { ProgressRing } from './ProgressRing';
 import { SkillsIQAssessment } from './SkillsIQAssessment';
@@ -8,6 +154,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './ui/collap
 import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar';
 import { useState } from 'react';
 import profileImage from 'figma:asset/f5ce76cc9cdd7a0e710f2a4ab182ac3c118f5ea0.png';
+import { CMS, CMSWithVars } from './CMSContent';
 
 interface LearnerHomeProps {
   onNavigate: (page: PageType) => void;
@@ -157,21 +304,21 @@ export function LearnerHome({ onNavigate }: LearnerHomeProps) {
         <div className="flex items-start justify-between relative z-10">
           <div className="flex-1">
             <div className="mb-2">
-              <h2 className="text-3xl mb-2">Welcome back, Alex!</h2>
-              <p className="text-blue-100 mb-1">The Guided Trail • Spring 2025 Cohort</p>
-              <p className="text-blue-100/80 text-sm mb-4">Salesforce Admin & Development Program</p>
+              <h2 className="text-3xl mb-2">{CMSWithVars('learner_home_welcome_title', { name: currentLearner.name.split(' ')[0] })}</h2>
+              <p className="text-blue-100 mb-1">{CMSWithVars('learner_home_cohort_label', { cohort: currentLearner.cohort })}</p>
+              <p className="text-blue-100/80 text-sm mb-4">{CMS('learner_home_program_label')}</p>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
               <div className="flex-1">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm">Overall Progress</span>
+                  <span className="text-sm">{CMS('learner_home_progress_label')}</span>
                   <span className="text-sm">68%</span>
                 </div>
                 <div className="w-full bg-white/20 rounded-full h-3">
                   <div className="bg-[#F9A03F] h-3 rounded-full" style={{ width: '68%' }}></div>
                 </div>
-                <p className="text-xs text-blue-100/70 mt-1">Week 7 of 12</p>
+                <p className="text-xs text-blue-100/70 mt-1">{CMSWithVars('learner_home_week_label', { current: '7', total: '12' })}</p>
               </div>
               
               <div className="flex items-center space-x-3">
@@ -179,7 +326,7 @@ export function LearnerHome({ onNavigate }: LearnerHomeProps) {
                   <Trophy className="w-7 h-7 text-[#F9A03F]" />
                 </div>
                 <div>
-                  <p className="text-sm opacity-90">Points Earned</p>
+                  <p className="text-sm opacity-90">{CMS('learner_home_points_label')}</p>
                   <p className="text-xl">{pointsSystem.earned} / {pointsSystem.total}</p>
                 </div>
               </div>
@@ -189,12 +336,12 @@ export function LearnerHome({ onNavigate }: LearnerHomeProps) {
                   <Users className="w-7 h-7 text-white" />
                 </div>
                 <div>
-                  <p className="text-sm opacity-90">Your Coach</p>
+                  <p className="text-sm opacity-90">{CMS('learner_home_coach_label')}</p>
                   <p className="text-lg">{currentCoach.name}</p>
                   <button 
                     className="mt-2 text-xs bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-lg transition-colors backdrop-blur-sm border border-white/30"
                   >
-                    Schedule 1:1 Session
+                    {CMS('learner_home_btn_schedule_session')}
                   </button>
                 </div>
               </div>
@@ -226,9 +373,9 @@ export function LearnerHome({ onNavigate }: LearnerHomeProps) {
                   </div>
                   <div>
                     <h3 className="text-gray-900 flex items-center space-x-2">
-                      <span>Penny's Focus Recommendations</span>
+                      <span>{CMS('learner_home_penny_focus_title')}</span>
                     </h3>
-                    <p className="text-sm text-gray-600">Personalized priorities from across your learning journey</p>
+                    <p className="text-sm text-gray-600">{CMS('learner_home_penny_focus_description')}</p>
                   </div>
                 </div>
                 <button
@@ -236,7 +383,7 @@ export function LearnerHome({ onNavigate }: LearnerHomeProps) {
                   className="px-4 py-2 bg-[#F9A03F] text-white rounded-lg hover:bg-[#e89135] transition-colors text-sm flex items-center space-x-2"
                 >
                   <MessageSquare className="w-4 h-4" />
-                  <span>Ask Penny</span>
+                  <span>{CMS('learner_home_btn_ask_penny')}</span>
                 </button>
               </div>
             </div>
@@ -281,12 +428,12 @@ export function LearnerHome({ onNavigate }: LearnerHomeProps) {
                                   </p>
                                   {item.priority === 'critical' && (
                                     <span className="px-2 py-0.5 bg-red-100 text-red-700 rounded-full text-xs flex-shrink-0">
-                                      Critical
+                                      {CMS('learner_home_priority_critical')}
                                     </span>
                                   )}
                                   {item.priority === 'high' && (
                                     <span className="px-2 py-0.5 bg-[#F9A03F]/20 text-[#F9A03F] rounded-full text-xs flex-shrink-0">
-                                      High
+                                      {CMS('learner_home_priority_high')}
                                     </span>
                                   )}
                                 </div>

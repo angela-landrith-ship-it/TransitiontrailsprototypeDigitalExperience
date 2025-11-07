@@ -1,3 +1,277 @@
+/**
+ * COACH DASHBOARD
+ * 
+ * =============================================================================
+ * SALESFORCE ARCHITECTURE MAPPING
+ * =============================================================================
+ * 
+ * Experience Page: ExpPage_Coach
+ * URL Path: /s/coach
+ * Primary Audience: Coach
+ * Secondary Audiences: Admin (full access to all coaches)
+ * 
+ * =============================================================================
+ * SALESFORCE OBJECTS & FIELDS
+ * =============================================================================
+ * 
+ * Primary Object: Coach_Assignment__c (Junction between Coach and Learners)
+ * Key Fields:
+ * - Coach__c (Lookup: User) - The coach (UserRole = 'Coach Community')
+ * - Learner__c (Lookup: User) - The assigned learner
+ * - Assignment_Date__c (Date)
+ * - Status__c (Picklist) - Active, On Hold, Completed, Transferred
+ * - Next_Check_In__c (Date) - Upcoming 1:1 session
+ * - Last_Interaction__c (DateTime) - Auto-updated on communication
+ * - Notes__c (Long Text Area) - Coach's private notes about learner
+ * 
+ * Related Object: User (Learners)
+ * Query: Learners assigned to current coach
+ * Fields: Name, Email, SmallPhotoUrl, Trail__r.Name, Trail__r.Progress_Percentage__c,
+ *         LastLoginDate, Total_Points__c
+ * 
+ * Related Object: Trail__c (Learner progress)
+ * Fields: Status__c, Progress_Percentage__c, Current_Week__c, 
+ *         Total_Points_Earned__c, Overdue_Tasks__c (Rollup Count)
+ * 
+ * Related Object: Assessment__c (Bi-weekly coach feedback)
+ * Fields:
+ * - Learner__c (Lookup: User)
+ * - Coach__c (Lookup: User)
+ * - Assessment_Date__c (Date)
+ * - Assessment_Type__c (Picklist) - Bi-Weekly Check-In, Skills Assessment, Final Review
+ * - Technical_Skills_Rating__c (Number, 1-5)
+ * - Soft_Skills_Rating__c (Number, 1-5)
+ * - Engagement_Level__c (Picklist) - Excellent, Good, Fair, Needs Improvement
+ * - Strengths__c (Long Text Area)
+ * - Areas_For_Growth__c (Long Text Area)
+ * - Action_Items__c (Long Text Area)
+ * - Next_Steps__c (Long Text Area)
+ * - Points_Awarded__c (Number) - Points for completing assessment
+ * 
+ * Related Object: Message__c (Coach-Learner communication)
+ * Fields:
+ * - Sender__c (Lookup: User)
+ * - Recipient__c (Lookup: User)
+ * - Subject__c (Text, 255)
+ * - Body__c (Rich Text Area)
+ * - Sent_Date__c (DateTime)
+ * - Read__c (Checkbox)
+ * - Reply_To__c (Lookup: Message__c) - Thread support
+ * 
+ * Related Object: Event (1:1 Sessions)
+ * Fields: Subject, StartDateTime, EndDateTime, WhoId (Learner Contact),
+ *         OwnerId (Coach User), Location (Zoom link), Description
+ * 
+ * =============================================================================
+ * CMS CONTENT REFERENCES
+ * =============================================================================
+ * 
+ * - [CMS:coach_dashboard_welcome] → Welcome message for coaches
+ * - [CMS:coach_best_practices] → Tips for effective coaching
+ * - [CMS:assessment_templates] → Pre-filled assessment templates
+ * 
+ * =============================================================================
+ * APEX CONTROLLERS
+ * =============================================================================
+ * 
+ * CoachDashboardController.cls:
+ * - getMyLearners() → Returns learners assigned to current coach
+ *   Query: SELECT User.Name, Trail__r.Progress_Percentage__c, Trail__r.Status__c
+ *          FROM Coach_Assignment__c 
+ *          WHERE Coach__c = :currentUserId AND Status__c = 'Active'
+ * 
+ * - getLearnerDetails(learnerId) → Full learner profile with trail, projects, assessments
+ * 
+ * - getTeamPerformanceMetrics() → Aggregate metrics across all assigned learners
+ *   - Average progress percentage
+ *   - Completion rates by week
+ *   - Engagement trends
+ *   - At-risk learner count
+ * 
+ * - submitAssessment(learnerId, assessmentData) → Creates Assessment__c record
+ * 
+ * - sendMessage(recipientId, subject, body) → Creates Message__c record
+ * 
+ * - scheduleCheckIn(learnerId, dateTime) → Creates Event record
+ * 
+ * - getUpcomingCheckIns() → Returns scheduled Events for coach
+ * 
+ * - getRecentActivity() → Returns recent learner actions (module completions, 
+ *   project updates, assessment submissions) using custom activity feed
+ * 
+ * =============================================================================
+ * INTEGRATION POINTS
+ * =============================================================================
+ * 
+ * 1. Slack Integration:
+ *    - Send direct messages to learners via Slack API
+ *    - Auto-post check-in reminders to coach's Slack
+ *    - Notify coach when learner completes milestone
+ * 
+ * 2. Calendar Integration (Salesforce Events):
+ *    - Schedule 1:1 sessions
+ *    - Send calendar invites with Zoom links
+ *    - Sync with coach's Google Calendar (optional)
+ * 
+ * 3. Email Notifications:
+ *    - Alert coach when learner is at-risk (3+ overdue tasks)
+ *    - Reminder emails for upcoming check-ins
+ *    - Weekly summary email of team progress
+ * 
+ * 4. Reporting & Analytics:
+ *    - Recharts library for visualizations
+ *    - Data from aggregate SOQL queries
+ *    - Export reports as PDF (Visualforce rendering)
+ * 
+ * =============================================================================
+ * FLOWS & AUTOMATION
+ * =============================================================================
+ * 
+ * 1. Flow: Create_Bi_Weekly_Assessment
+ *    Trigger: Scheduled (every 2 weeks for each active assignment)
+ *    Actions:
+ *      - Create Assessment__c record (Status = 'Pending')
+ *      - Send reminder email to coach
+ *      - Update Coach_Assignment__c.Next_Check_In__c
+ * 
+ * 2. Flow: Alert_At_Risk_Learner
+ *    Trigger: Trail__c.Overdue_Tasks__c >= 3
+ *    Actions:
+ *      - Send email to coach
+ *      - Post to coach's Slack
+ *      - Update learner status indicator
+ * 
+ * 3. Flow: Award_Assessment_Points
+ *    Trigger: Assessment__c.Status__c = 'Completed'
+ *    Actions:
+ *      - Award points to learner (Points_Transaction__c)
+ *      - Send feedback summary email to learner
+ *      - Update Trail__c progress if needed
+ * 
+ * 4. Trigger: MessageTrigger (After Insert)
+ *    Action: Send email notification to recipient
+ * 
+ * =============================================================================
+ * COACH RESPONSIBILITIES & FEATURES
+ * =============================================================================
+ * 
+ * Dashboard Tabs:
+ * 1. Team Overview:
+ *    - List of assigned learners
+ *    - Quick status indicators (on-track, needs-support, at-risk)
+ *    - Recent activity feed
+ *    - Overdue tasks count
+ * 
+ * 2. Performance Analytics:
+ *    - Team progress over time (line chart)
+ *    - Completion rates by week (bar chart)
+ *    - Individual learner comparisons
+ *    - Engagement metrics
+ * 
+ * 3. Assessments:
+ *    - Upcoming bi-weekly assessments
+ *    - Submit new assessment
+ *    - View assessment history
+ *    - Assessment templates
+ * 
+ * 4. Communication:
+ *    - Send messages to learners
+ *    - View message threads
+ *    - Unread messages count
+ *    - Quick Slack links
+ * 
+ * 5. Schedule:
+ *    - Upcoming 1:1 sessions
+ *    - Schedule new check-ins
+ *    - Calendar view
+ *    - Zoom links for sessions
+ * 
+ * =============================================================================
+ * LEARNER STATUS INDICATORS
+ * =============================================================================
+ * 
+ * Status Calculation:
+ * - Excelling: Progress > 80%, 0 overdue tasks, active in last 24 hours
+ * - On Track: Progress > 50%, 0-1 overdue tasks, active in last 3 days
+ * - Needs Support: Progress 30-50%, 2 overdue tasks, active in last 7 days
+ * - At Risk: Progress < 30% OR 3+ overdue tasks OR inactive 7+ days
+ * 
+ * Visual Indicators:
+ * - Green badge: Excelling
+ * - Blue badge: On Track
+ * - Yellow badge: Needs Support
+ * - Red badge: At Risk
+ * 
+ * =============================================================================
+ * BI-WEEKLY ASSESSMENT STRUCTURE
+ * =============================================================================
+ * 
+ * Assessment Components:
+ * 1. Technical Skills (1-5 rating):
+ *    - Salesforce knowledge
+ *    - Problem-solving ability
+ *    - Code quality (if applicable)
+ * 
+ * 2. Soft Skills (1-5 rating):
+ *    - Communication
+ *    - Time management
+ *    - Collaboration
+ * 
+ * 3. Engagement Level (Picklist):
+ *    - Excellent, Good, Fair, Needs Improvement
+ * 
+ * 4. Narrative Feedback:
+ *    - Strengths (what's working well)
+ *    - Areas for growth (constructive feedback)
+ *    - Action items (specific next steps)
+ *    - Next steps (goals for next 2 weeks)
+ * 
+ * Points Awarded:
+ * - Assessment completion: 350 points (10% of program total)
+ * - Auto-awarded on Assessment__c.Status__c = 'Completed'
+ * 
+ * =============================================================================
+ * REPORTING METRICS
+ * =============================================================================
+ * 
+ * Team Performance Dashboard:
+ * - Average progress percentage: AVG(Trail__c.Progress_Percentage__c)
+ * - Completion rate: (Completed modules / Total modules) * 100
+ * - Engagement score: Based on login frequency, activity timestamps
+ * - At-risk count: COUNT(learners WHERE status = 'at-risk')
+ * - Milestone completion rate: Percentage hitting weekly targets
+ * 
+ * Individual Learner Metrics:
+ * - Progress percentage
+ * - Points earned
+ * - Overdue tasks count
+ * - Last activity timestamp
+ * - Assessment scores history
+ * - Module completion velocity (modules per week)
+ * 
+ * =============================================================================
+ * LWC COMPONENT MAPPING
+ * =============================================================================
+ * 
+ * React Components → LWC:
+ * - <CoachDashboard> → <c-coach-dashboard>
+ * - Performance charts → Lightning Charts or Recharts in LWC
+ * - Assessment form → <c-coach-assessment-form>
+ * - Learner list → <c-coach-learner-list>
+ * 
+ * =============================================================================
+ * ACCESSIBILITY
+ * =============================================================================
+ * 
+ * - Status badges have aria-labels
+ * - Learner cards keyboard navigable
+ * - Charts have text alternatives
+ * - Search input has aria-describedby
+ * - Tab navigation follows ARIA practices
+ * 
+ * =============================================================================
+ */
+
 import { useState } from 'react';
 import { Users, TrendingUp, Send, MessageSquare, Plus, Calendar, CheckCircle, Clock, AlertCircle, Sparkles, BarChart3, Target, Award, Search, Eye, Bell, Zap, BookOpen, ChevronRight } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';

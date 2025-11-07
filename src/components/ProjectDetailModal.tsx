@@ -2,6 +2,7 @@ import { X, Users, Clock, Target, CheckCircle2, TrendingUp, Sparkles } from 'luc
 import { Badge } from './ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { ImageWithFallback } from './figma/ImageWithFallback';
+import { SlackChannelLink, GitHubRepositoryLink } from './integrations';
 
 interface ProjectDetailModalProps {
   project: {
@@ -16,6 +17,10 @@ interface ProjectDetailModalProps {
     duration: string;
     teamSize: number;
     spotsAvailable: number;
+    // Integration fields (populated after team formation)
+    slackChannelLink?: string;
+    slackChannelId?: string;
+    githubRepo?: string;
   };
   onClose: () => void;
 }
@@ -214,6 +219,36 @@ export function ProjectDetailModal({ project, onClose }: ProjectDetailModalProps
                     </p>
                   </div>
                 </div>
+
+                {/* Team Collaboration Tools - Shows after joining */}
+                {project.slackChannelLink && (
+                  <div className="mt-6 space-y-4">
+                    <h4 className="text-gray-900">Team Collaboration</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {/* Slack Channel */}
+                      <SlackChannelLink
+                        channelUrl={project.slackChannelLink}
+                        channelName={project.slackChannelId || `project-${project.id}`}
+                        memberCount={project.teamSize}
+                        variant="card"
+                        showMemberCount={true}
+                      />
+
+                      {/* GitHub Repository (if code-based project) */}
+                      {project.githubRepo && (
+                        <GitHubRepositoryLink
+                          repoUrl={project.githubRepo}
+                          repoName={`transition-trails-partner-${project.partnerId}`}
+                          description="Project code repository"
+                          variant="card"
+                        />
+                      )}
+                    </div>
+                    <p className="text-xs text-gray-500">
+                      💡 These collaboration tools are automatically created when you join the team
+                    </p>
+                  </div>
+                )}
               </TabsContent>
             </Tabs>
           </div>

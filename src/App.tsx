@@ -22,6 +22,7 @@ import { LockedFeatureModal } from './components/LockedFeatureModal';
 import { Toaster } from './components/ui/sonner';
 import { MerchStore } from './components/MerchStore';
 import { OrderHistory } from './components/OrderHistory';
+import { AudienceToggle, RoleIndicator, type UserRole } from './components/integrations';
 
 export type PageType = 
   | 'learner' 
@@ -50,6 +51,9 @@ export default function App() {
   const [isPennyChatOpen, setIsPennyChatOpen] = useState(false);
   const [lockedFeature, setLockedFeature] = useState<'capstone' | 'skills' | 'coach' | null>(null);
   const [capstoneComplete, setCapstoneComplete] = useState(false);
+  
+  // Development: Audience/Role Toggle (hidden in production)
+  const [testRole, setTestRole] = useState<UserRole>('learner');
 
   const handleEnrollment = () => {
     setUserMode('enrolled');
@@ -223,6 +227,20 @@ export default function App() {
           </div>
         </div>
       </div>
+
+      {/* Audience/Role Toggle - Salesforce Experience Cloud Testing (Development Only) */}
+      <div className="fixed bottom-24 left-4 z-50">
+        <AudienceToggle
+          currentRole={testRole}
+          onRoleChange={setTestRole}
+          variant="dropdown"
+          label="SF Audience"
+          showInProduction={false}
+        />
+      </div>
+
+      {/* Role Indicator Badge */}
+      <RoleIndicator currentRole={testRole} />
 
       {/* Navigation - Different for Visitor vs Enrolled */}
       {userMode === 'visitor' ? (

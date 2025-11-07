@@ -1,3 +1,255 @@
+/**
+ * MERCH STORE - TRANSITION TRAILS SHOP
+ * 
+ * =============================================================================
+ * SALESFORCE ARCHITECTURE MAPPING
+ * =============================================================================
+ * 
+ * Experience Page: ExpPage_Shop
+ * URL Path: /s/shop
+ * Primary Audiences: Visitor (view only), Learner (full access with points redemption)
+ * 
+ * =============================================================================
+ * SALESFORCE OBJECTS & FIELDS
+ * =============================================================================
+ * 
+ * Primary Object: Product2 (Standard Salesforce Product)
+ * Key Fields:
+ * - Name (Text, 255) - Product name
+ * - ProductCode (Text, 100) - SKU (e.g., "HOODIE-TEAL-L")
+ * - Description (Long Text Area) - Product description
+ * - Family (Picklist) - Apparel, Accessories, Drinkware, Stationery
+ * - IsActive (Checkbox)
+ * - StockKeepingUnit (Text, 180)
+ * - QuantityUnitOfMeasure (Picklist) - Each
+ * 
+ * Custom Fields on Product2:
+ * - Points_Value__c (Number) - Points redeemable (1 point = $0.10 discount)
+ * - Image_URL__c (URL) - Product image from Salesforce Files
+ * - Available_Sizes__c (Multi-Select Picklist) - S, M, L, XL, 2XL
+ * - Available_Colors__c (Multi-Select Picklist) - Teal, Sky Blue, Forest Green, etc.
+ * - Stock_Quantity__c (Number) - Current inventory
+ * - Member_Only__c (Checkbox) - Requires authenticated learner
+ * - Featured__c (Checkbox) - Show prominently on homepage
+ * - Stripe_Price_ID__c (Text, 100) - Stripe price object ID
+ * 
+ * Related Object: PricebookEntry (Standard)
+ * Fields: Product2Id, UnitPrice, IsActive, Pricebook2Id
+ * 
+ * Related Object: Order__c (Custom object for order tracking)
+ * Fields:
+ * - Order_Number__c (Auto-Number) - ORD-{00000}
+ * - Purchaser__c (Lookup: User)
+ * - Total_Amount__c (Currency) - Final price after discounts
+ * - Points_Redeemed__c (Number) - Points used for discount
+ * - Points_Discount__c (Currency) - Dollar value of points
+ * - Order_Date__c (DateTime)
+ * - Status__c (Picklist) - Pending, Paid, Shipped, Delivered, Cancelled
+ * - Stripe_Payment_Intent_ID__c (Text, 100) - Stripe transaction reference
+ * - Stripe_Session_ID__c (Text, 150) - Stripe checkout session
+ * - Shipping_Address__c (Text Area)
+ * - Tracking_Number__c (Text, 100)
+ * 
+ * Related Object: Order_Item__c (Order line items)
+ * Fields:
+ * - Order__c (Master-Detail: Order__c)
+ * - Product__c (Lookup: Product2)
+ * - Quantity__c (Number)
+ * - Unit_Price__c (Currency)
+ * - Selected_Size__c (Picklist)
+ * - Selected_Color__c (Picklist)
+ * - Subtotal__c (Formula) - Quantity * Unit_Price
+ * 
+ * =============================================================================
+ * CMS CONTENT REFERENCES
+ * =============================================================================
+ * 
+ * - [CMS:shop_hero_title] → "Transition Trails Shop"
+ * - [CMS:shop_hero_description] → "Celebrate your journey with official gear"
+ * - [CMS:shop_member_discount_banner] → Member discount messaging
+ * - [CMS:shop_points_redemption_info] → How to redeem points
+ * 
+ * Product Images:
+ * - Stored as ContentVersion in Salesforce Files
+ * - Product2.Image_URL__c → Public link to image
+ * - Naming convention: product-{sku}-{view}.png (e.g., product-hoodie-teal-front.png)
+ * 
+ * =============================================================================
+ * STRIPE PAYMENT INTEGRATION
+ * =============================================================================
+ * 
+ * Payment Flow:
+ * 1. User selects product, size, color, quantity
+ * 2. Optionally redeems points (100 points = $10 discount)
+ * 3. Clicks "Checkout" → Triggers Flow: Create_Stripe_Checkout_Session
+ * 4. Apex creates Stripe Checkout Session with product details
+ * 5. User redirected to Stripe hosted checkout page
+ * 6. After payment → Stripe webhook fires → Updates Order__c.Status__c = 'Paid'
+ * 7. Success page shows order confirmation
+ * 
+ * Apex Implementation:
+ * 
+ * StripeCheckoutController.cls:
+ * - createCheckoutSession(productId, quantity, pointsToRedeem, size, color)
+ *   → Returns Stripe session URL for redirect
+ * 
+ * - processWebhook(webhookPayload)
+ *   → Validates Stripe webhook signature
+ *   → Updates Order__c status
+ *   → Deducts points from user balance
+ *   → Sends confirmation email
+ * 
+ * Named Credential:
+ * - Name: Stripe_API
+ * - URL: https://api.stripe.com
+ * - Authentication: Custom (API key in header)
+ * - Header: Authorization: Bearer {!$Credential.Password}
+ * 
+ * Custom Metadata:
+ * - Stripe_Configuration__mdt
+ *   - Publishable_Key__c (visible to client)
+ *   - Webhook_Secret__c (for signature validation)
+ *   - Success_URL__c → /s/shop/success?session_id={CHECKOUT_SESSION_ID}
+ *   - Cancel_URL__c → /s/shop?cancelled=true
+ * 
+ * Stripe Product Setup:
+ * - Each Product2 maps to a Stripe Product
+ * - Product2.Stripe_Price_ID__c stores the Stripe Price object ID
+ * - Prices created in Stripe dashboard or via API
+ * - Mode: Payment (one-time), not Subscription
+ * 
+ * =============================================================================
+ * POINTS REDEMPTION SYSTEM
+ * =============================================================================
+ * 
+ * Points Conversion Rate:
+ * - 100 points = $10.00 discount (0.10 per point)
+ * - Stored in Custom Setting: Points_Configuration__c.Dollar_Per_Point__c
+ * 
+ * Redemption Rules:
+ * - Maximum: 50% of product price can be covered by points
+ * - Minimum purchase: $5.00 after points discount
+ * - Points deducted only after successful payment (webhook confirmation)
+ * 
+ * Implementation:
+ * - User selects points slider (0 - available points)
+ * - Real-time price calculation: finalPrice = basePrice - (points * 0.10)
+ * - Stripe session includes: line_items with discounted price
+ * - On webhook success: Create Points_Transaction__c (Type = 'Redeemed', Points = -pointsUsed)
+ * 
+ * =============================================================================
+ * FLOWS & AUTOMATION
+ * =============================================================================
+ * 
+ * 1. Flow: Create_Stripe_Checkout_Session
+ *    Trigger: "Checkout" button click
+ *    Input: productId, quantity, pointsToRedeem, size, color, userId
+ *    Actions:
+ *      - Validate points balance (User.Total_Points__c >= pointsToRedeem)
+ *      - Calculate final price
+ *      - Create Order__c record (Status = 'Pending')
+ *      - Create Order_Item__c records
+ *      - Call Apex: StripeCheckoutController.createCheckoutSession()
+ *      - Redirect user to Stripe session URL
+ * 
+ * 2. Flow: Process_Stripe_Webhook
+ *    Trigger: Platform Event from Apex (Stripe_Webhook_Event__e)
+ *    Event Types: checkout.session.completed, payment_intent.succeeded
+ *    Actions:
+ *      - Update Order__c.Status__c = 'Paid'
+ *      - Update Order__c.Stripe_Payment_Intent_ID__c
+ *      - Create Points_Transaction__c (if points used)
+ *      - Update Product2.Stock_Quantity__c (decrement)
+ *      - Send confirmation email
+ *      - Award purchase bonus points (+10% of spend)
+ * 
+ * 3. Trigger: OrderTrigger (After Update)
+ *    Condition: Status__c changed to 'Paid'
+ *    Action: Send order confirmation email with order details
+ * 
+ * =============================================================================
+ * MEMBER DISCOUNTS
+ * =============================================================================
+ * 
+ * Member Pricing:
+ * - Learners (authenticated users) get 10% off all products
+ * - Calculated in checkout flow
+ * - Field: Order__c.Member_Discount_Applied__c (Checkbox)
+ * - Member discount stacks with points redemption
+ * 
+ * Example Calculation:
+ * - Base price: $45.00 (hoodie)
+ * - Member discount (10%): -$4.50 → $40.50
+ * - Points redeemed (200 points): -$20.00 → $20.50
+ * - Final Stripe charge: $20.50
+ * 
+ * =============================================================================
+ * VISITOR EXPERIENCE
+ * =============================================================================
+ * 
+ * Visitors (unauthenticated) can:
+ * - Browse all products
+ * - View product details
+ * - See full prices (no member discount)
+ * - Click "Buy Now" → Prompted to log in or sign up
+ * 
+ * Conversion trigger:
+ * - "Members save 10% + earn points!" banner
+ * - Locked checkout flow redirects to registration
+ * 
+ * =============================================================================
+ * INVENTORY MANAGEMENT
+ * =============================================================================
+ * 
+ * Stock Tracking:
+ * - Product2.Stock_Quantity__c decremented on successful order
+ * - Out of stock: Product card shows "Out of Stock" badge
+ * - Low stock (< 10): "Only X left!" urgency message
+ * - Restock alerts: Admin receives notification when stock < 5
+ * 
+ * Admin Panel:
+ * - Update stock quantities
+ * - Upload new product images
+ * - Set featured products
+ * - View order analytics
+ * 
+ * =============================================================================
+ * ORDER HISTORY & TRACKING
+ * =============================================================================
+ * 
+ * User can view order history:
+ * - Component: <OrderHistory> (separate tab or page)
+ * - Query: SELECT * FROM Order__c WHERE Purchaser__c = :currentUserId
+ * - Shows: Order number, date, items, total, status, tracking link
+ * 
+ * Shipping Integration (Future):
+ * - ShipStation API for fulfillment
+ * - Tracking numbers from webhook
+ * - Email notifications on shipment
+ * 
+ * =============================================================================
+ * LWC COMPONENT MAPPING
+ * =============================================================================
+ * 
+ * React Components → LWC:
+ * - <MerchStore> → <c-merch-store>
+ * - <ProductDetail> → <c-product-detail>
+ * - <ExplorationPointsMeter> → <c-exploration-points-meter>
+ * - <MemberGear> → <c-member-gear> (member-only products tab)
+ * 
+ * =============================================================================
+ * ACCESSIBILITY
+ * =============================================================================
+ * 
+ * - Product cards have alt text on images
+ * - Size/color selectors keyboard navigable
+ * - Cart icon shows item count (aria-live)
+ * - Checkout button disabled until valid selection
+ * - Form validation with clear error messages
+ * 
+ * =============================================================================
+ */
+
 import { ShoppingBag, Filter, Search, Star, Lock, Sparkles, TrendingUp, Gift, Percent, ArrowRight, X, Trophy } from 'lucide-react';
 import { useState } from 'react';
 import { Badge } from './ui/badge';
