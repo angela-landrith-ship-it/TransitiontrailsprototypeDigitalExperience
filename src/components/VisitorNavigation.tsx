@@ -1,6 +1,8 @@
 import { Home, Calendar, GraduationCap, Users, LogIn, ShoppingBag } from 'lucide-react';
 import { Badge } from './ui/badge';
 import { PageType } from '../App';
+import { ImageWithFallback } from './figma/ImageWithFallback';
+import logoImage from 'figma:asset/9a4ab37fd35580740e0a1287c7b07dbd9912a379.png';
 
 interface VisitorNavigationProps {
   activePage: PageType | string;
@@ -24,13 +26,15 @@ export function VisitorNavigation({ activePage, setActivePage, onSignIn }: Visit
           {/* Logo */}
           <button 
             onClick={() => setActivePage('visitor-home')}
-            className="flex items-center space-x-3 hover:opacity-80 transition-all duration-150 group"
+            className="flex items-center space-x-3 hover:opacity-90 transition-all duration-150 group"
           >
-            <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-white/20 to-white/10 flex items-center justify-center border border-white/20">
-              <span className="text-white text-sm">TT</span>
-            </div>
+            <ImageWithFallback 
+              src={logoImage} 
+              alt="Transition Trails Logo"
+              className="w-10 h-10 object-contain"
+            />
             <div className="hidden sm:flex items-center space-x-2">
-              <h1 className="text-white text-sm group-hover:text-[#F9A03F] transition-colors duration-150">
+              <h1 className="text-white group-hover:text-[#F9A03F] transition-colors duration-150">
                 Transition Trails
               </h1>
               <Badge className="bg-[#7EB5C1] text-white text-xs">Visitor</Badge>

@@ -2,6 +2,7 @@ import { GraduationCap, Users, Calendar, Sparkles, ArrowRight, CheckCircle, Play
 import { useState } from 'react';
 import { Badge } from './ui/badge';
 import { ImageWithFallback } from './figma/ImageWithFallback';
+import logoImage from 'figma:asset/9a4ab37fd35580740e0a1287c7b07dbd9912a379.png';
 
 interface VisitorLandingProps {
   onStartTrail: () => void;
@@ -93,6 +94,15 @@ export function VisitorLanding({ onStartTrail, onNavigate }: VisitorLandingProps
         <div className="relative py-24 px-4">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-12 animate-fade-in">
+              {/* Logo */}
+              <div className="flex justify-center mb-6">
+                <ImageWithFallback 
+                  src={logoImage} 
+                  alt="Transition Trails Logo"
+                  className="w-24 h-24 md:w-32 md:h-32 object-contain drop-shadow-2xl"
+                />
+              </div>
+              
               <Badge className="bg-[#F9A03F] text-white mb-6 px-4 py-1.5">
                 Free Visitor Access
               </Badge>

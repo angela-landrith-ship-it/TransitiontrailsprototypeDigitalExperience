@@ -5,7 +5,7 @@ import { AdminPanel } from './components/AdminPanel';
 import { PennyChat } from './components/PennyChat';
 import { Navigation } from './components/Navigation';
 import { TrailMissions } from './components/TrailMissions';
-import { CapstoneProjects } from './components/CapstoneProjects';
+import { ProjectsHub } from './components/ProjectsHub';
 import { SkillsAssessment } from './components/SkillsAssessment';
 import { Profile } from './components/Profile';
 import { SelfAssessment } from './components/SelfAssessment';
@@ -49,6 +49,7 @@ export default function App() {
   const [activePage, setActivePage] = useState<PageType>('visitor-home');
   const [isPennyChatOpen, setIsPennyChatOpen] = useState(false);
   const [lockedFeature, setLockedFeature] = useState<'capstone' | 'skills' | 'coach' | null>(null);
+  const [capstoneComplete, setCapstoneComplete] = useState(false);
 
   const handleEnrollment = () => {
     setUserMode('enrolled');
@@ -132,7 +133,13 @@ export default function App() {
       case 'trail-missions':
         return <TrailMissions onNavigate={setActivePage} />;
       case 'capstone-projects':
-        return <CapstoneProjects onNavigate={setActivePage} />;
+        return (
+          <ProjectsHub 
+            userRole="learner" 
+            capstoneComplete={capstoneComplete}
+            onCapstoneComplete={() => setCapstoneComplete(true)}
+          />
+        );
       case 'skills-assessment':
         return <SkillsAssessment onNavigate={setActivePage} />;
       case 'skills-iq-assessment':

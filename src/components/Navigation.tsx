@@ -1,7 +1,10 @@
-import { Home, Users, Settings, MessageCircle, Bell, ChevronDown, GraduationCap, Sparkles, Menu, X, ChevronRight, ShoppingBag } from 'lucide-react';
+import { Home, Users, Settings, MessageCircle, Bell, ChevronDown, GraduationCap, Sparkles, Menu, X, ChevronRight, ShoppingBag, User, LogOut } from 'lucide-react';
 import { PageType } from '../App';
 import { useState, useEffect, useRef } from 'react';
 import { Badge } from './ui/badge';
+import { ImageWithFallback } from './figma/ImageWithFallback';
+import logoImage from 'figma:asset/9a4ab37fd35580740e0a1287c7b07dbd9912a379.png';
+import profileImage from 'figma:asset/f5ce76cc9cdd7a0e710f2a4ab182ac3c118f5ea0.png';
 
 interface NavigationProps {
   activePage: PageType;
@@ -11,6 +14,7 @@ interface NavigationProps {
 export function Navigation({ activePage, setActivePage }: NavigationProps) {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showLearningDropdown, setShowLearningDropdown] = useState(false);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -123,13 +127,15 @@ export function Navigation({ activePage, setActivePage }: NavigationProps) {
             {/* Logo */}
             <button 
               onClick={() => setActivePage('learner')}
-              className="flex items-center space-x-3 hover:opacity-80 transition-all duration-150 group"
+              className="flex items-center space-x-3 hover:opacity-90 transition-all duration-150 group"
             >
-              <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-white/20 to-white/10 flex items-center justify-center border border-white/20">
-                <span className="text-white text-sm">TT</span>
-              </div>
+              <ImageWithFallback 
+                src={logoImage} 
+                alt="Transition Trails Logo"
+                className="w-10 h-10 object-contain"
+              />
               <div className="hidden sm:block">
-                <h1 className="text-white text-sm group-hover:text-[#F9A03F] transition-colors duration-150">
+                <h1 className="text-white group-hover:text-[#F9A03F] transition-colors duration-150">
                   Transition Trails
                 </h1>
               </div>
@@ -288,7 +294,7 @@ export function Navigation({ activePage, setActivePage }: NavigationProps) {
               )}
             </nav>
 
-            {/* Notifications & Mobile Menu */}
+            {/* Notifications & Profile & Mobile Menu */}
             <div className="flex items-center space-x-2">
               {/* Notifications */}
               <div className="relative hidden md:block">
@@ -318,6 +324,63 @@ export function Navigation({ activePage, setActivePage }: NavigationProps) {
                           <p className="text-xs text-gray-500 mt-1">{notification.time}</p>
                         </div>
                       ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Profile Avatar Dropdown */}
+              <div className="relative hidden md:block">
+                <button
+                  onClick={() => setShowProfileMenu(!showProfileMenu)}
+                  className="flex items-center space-x-2 p-1 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-150"
+                  aria-label="Profile Menu"
+                >
+                  <div className="w-8 h-8 rounded-full overflow-hidden border-2 border-white/30 hover:border-white/50 transition-all">
+                    <ImageWithFallback 
+                      src={profileImage}
+                      alt="Alex Johnson"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <ChevronDown className="w-4 h-4" />
+                </button>
+
+                {showProfileMenu && (
+                  <div className="absolute top-full right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-gray-200 py-2 animate-in fade-in slide-in-from-top-2 duration-150">
+                    <div className="px-4 py-3 border-b border-gray-200">
+                      <p className="text-sm text-gray-900">Alex Johnson</p>
+                      <p className="text-xs text-gray-500">alex.johnson@email.com</p>
+                    </div>
+                    <div className="py-1">
+                      <button
+                        onClick={() => {
+                          setShowProfileMenu(false);
+                          setActivePage('profile');
+                        }}
+                        className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 transition-colors flex items-center space-x-2"
+                      >
+                        <User className="w-4 h-4" />
+                        <span>My Profile</span>
+                      </button>
+                      <button
+                        onClick={() => {
+                          setShowProfileMenu(false);
+                          setActivePage('profile');
+                        }}
+                        className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 transition-colors flex items-center space-x-2"
+                      >
+                        <Settings className="w-4 h-4" />
+                        <span>Settings</span>
+                      </button>
+                    </div>
+                    <div className="border-t border-gray-200 py-1">
+                      <button
+                        className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 transition-colors flex items-center space-x-2"
+                      >
+                        <LogOut className="w-4 h-4" />
+                        <span>Sign Out</span>
+                      </button>
                     </div>
                   </div>
                 )}

@@ -212,6 +212,69 @@ export function BadgeSystem({ currentPoints, onCelebrate }: BadgeSystemProps) {
         </div>
       </div>
 
+      {/* Achievement Badges */}
+      <div>
+        <h3 className="text-xl text-gray-900 mb-4">Project Achievements</h3>
+        <div className="grid md:grid-cols-4 gap-4">
+          {/* Trail Contributor */}
+          <div className="bg-white rounded-xl p-4 border-2 border-gray-200 hover:border-[#3B6A52] hover:shadow-md transition-all">
+            <div className="flex flex-col items-center text-center">
+              <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-[#3B6A52] to-[#2C6975] flex items-center justify-center mb-3">
+                <Trophy className="w-8 h-8 text-white" />
+              </div>
+              <h4 className="text-gray-900 mb-1">Trail Contributor</h4>
+              <p className="text-xs text-gray-600 mb-2">Join a Partner Project</p>
+              <Badge className="bg-gray-100 text-gray-600 text-xs">
+                +20 points
+              </Badge>
+            </div>
+          </div>
+
+          {/* Trail Leader */}
+          <div className="bg-white rounded-xl p-4 border-2 border-gray-200 hover:border-[#F9A03F] hover:shadow-md transition-all">
+            <div className="flex flex-col items-center text-center">
+              <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-[#F9A03F] to-[#e89135] flex items-center justify-center mb-3">
+                <Crown className="w-8 h-8 text-white" />
+              </div>
+              <h4 className="text-gray-900 mb-1">Trail Leader</h4>
+              <p className="text-xs text-gray-600 mb-2">Lead a team of 3+ members</p>
+              <Badge className="bg-gray-100 text-gray-600 text-xs">
+                +30 points
+              </Badge>
+            </div>
+          </div>
+
+          {/* Client Hero */}
+          <div className="bg-white rounded-xl p-4 border-2 border-gray-200 hover:border-[#7EB5C1] hover:shadow-md transition-all">
+            <div className="flex flex-col items-center text-center">
+              <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-[#7EB5C1] to-[#2C6975] flex items-center justify-center mb-3">
+                <Star className="w-8 h-8 text-white" />
+              </div>
+              <h4 className="text-gray-900 mb-1">Client Hero</h4>
+              <p className="text-xs text-gray-600 mb-2">Receive positive partner feedback</p>
+              <Badge className="bg-gray-100 text-gray-600 text-xs">
+                +10 points
+              </Badge>
+            </div>
+          </div>
+
+          {/* TrailBuilder */}
+          <div className="bg-white rounded-xl p-4 border-2 border-[#F9A03F] hover:border-[#F9A03F] hover:shadow-xl transition-all relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-[#F9A03F]/20 to-transparent rounded-bl-3xl" />
+            <div className="flex flex-col items-center text-center relative z-10">
+              <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-[#F9A03F] via-[#e89135] to-[#F9A03F] flex items-center justify-center mb-3 animate-pulse">
+                <Sparkles className="w-8 h-8 text-white" />
+              </div>
+              <h4 className="text-gray-900 mb-1">TrailBuilder</h4>
+              <p className="text-xs text-gray-600 mb-2">Participate in TrailBuild Summit</p>
+              <Badge className="bg-[#F9A03F] text-white text-xs">
+                +25 points
+              </Badge>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Badge Detail Modal */}
       {selectedBadge && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"

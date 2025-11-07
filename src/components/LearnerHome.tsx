@@ -1,12 +1,13 @@
-import { Trophy, Target, BookOpen, MessageSquare, TrendingUp, Clock, Award, Calendar, Users, Sparkles, ChevronRight, CheckCircle, ExternalLink, ChevronDown, ArrowRight } from 'lucide-react';
+import { Trophy, Target, BookOpen, MessageSquare, TrendingUp, Clock, Award, Calendar, Users, Sparkles, ChevronRight, CheckCircle, ExternalLink, ChevronDown, ArrowRight, Heart } from 'lucide-react';
 import { ProgressRing } from './ProgressRing';
 import { SkillsIQAssessment } from './SkillsIQAssessment';
 import { TrailImpactMeter } from './TrailImpactMeter';
+import { CommunityEngagementMeter } from './CommunityEngagementMeter';
 import { PageType } from '../App';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './ui/collapsible';
 import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar';
 import { useState } from 'react';
-import profileImage from 'figma:asset/cc5353a77d95e01a0547378d6a7b5a415082cb97.png';
+import profileImage from 'figma:asset/f5ce76cc9cdd7a0e710f2a4ab182ac3c118f5ea0.png';
 
 interface LearnerHomeProps {
   onNavigate: (page: PageType) => void;
@@ -16,6 +17,9 @@ export function LearnerHome({ onNavigate }: LearnerHomeProps) {
   const [isPointsOpen, setIsPointsOpen] = useState(true);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [isTrailMissionsOpen, setIsTrailMissionsOpen] = useState(true);
+  const [isPrioritiesOpen, setIsPrioritiesOpen] = useState(true);
+  const [isSessionsOpen, setIsSessionsOpen] = useState(true);
+  const [showCommunityEngagement, setShowCommunityEngagement] = useState(false);
 
   const missions = [
     { id: 1, title: 'Salesforce Admin Essentials', type: 'Trail Mission', progress: 75, color: '#2C6975', dueDate: 'Mar 12' },
@@ -152,9 +156,11 @@ export function LearnerHome({ onNavigate }: LearnerHomeProps) {
       <div className="bg-gradient-to-r from-[#2C6975] to-[#7EB5C1] rounded-2xl shadow-lg p-8 mb-8 text-white relative overflow-hidden">
         <div className="flex items-start justify-between relative z-10">
           <div className="flex-1">
-            <h2 className="text-3xl mb-2">Welcome back, Alex!</h2>
-            <p className="text-blue-100 mb-1">The Guided Trail • Spring 2025 Cohort</p>
-            <p className="text-blue-100/80 text-sm mb-4">Salesforce Admin & Development Program</p>
+            <div className="mb-2">
+              <h2 className="text-3xl mb-2">Welcome back, Alex!</h2>
+              <p className="text-blue-100 mb-1">The Guided Trail • Spring 2025 Cohort</p>
+              <p className="text-blue-100/80 text-sm mb-4">Salesforce Admin & Development Program</p>
+            </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
               <div className="flex-1">
@@ -209,6 +215,187 @@ export function LearnerHome({ onNavigate }: LearnerHomeProps) {
       <div className="grid lg:grid-cols-3 gap-6 mb-8">
         {/* Left & Center Columns */}
         <div className="lg:col-span-2 space-y-6">
+          {/* Penny AI Focus Widget - Intelligent Priority & Event Curation - MOVED TO TOP */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            {/* Header */}
+            <div className="p-6 bg-gradient-to-r from-[#F9A03F]/10 to-[#F9A03F]/5 border-b border-gray-200">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#F9A03F] to-[#e89135] text-white flex items-center justify-center shadow-md">
+                    <Sparkles className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h3 className="text-gray-900 flex items-center space-x-2">
+                      <span>Penny's Focus Recommendations</span>
+                    </h3>
+                    <p className="text-sm text-gray-600">Personalized priorities from across your learning journey</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => onNavigate('penny-chat')}
+                  className="px-4 py-2 bg-[#F9A03F] text-white rounded-lg hover:bg-[#e89135] transition-colors text-sm flex items-center space-x-2"
+                >
+                  <MessageSquare className="w-4 h-4" />
+                  <span>Ask Penny</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Split View Content */}
+            <div className="grid md:grid-cols-2 divide-x divide-gray-200">
+              {/* Left: Priorities & Tasks - Collapsible */}
+              <Collapsible open={isPrioritiesOpen} onOpenChange={setIsPrioritiesOpen}>
+                <div className="p-6">
+                  <CollapsibleTrigger className="w-full flex items-center justify-between mb-4 hover:opacity-80 transition-opacity">
+                    <h4 className="text-gray-900 flex items-center space-x-2">
+                      <Target className="w-4 h-4 text-[#2C6975]" />
+                      <span>Your Priorities</span>
+                    </h4>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-xs text-gray-500">{pennyFocusItems.length} items</span>
+                      <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${isPrioritiesOpen ? 'rotate-180' : ''}`} />
+                    </div>
+                  </CollapsibleTrigger>
+
+                  <CollapsibleContent>
+                    <div className="space-y-3">
+                      {pennyFocusItems.map((item) => {
+                        const ItemIcon = item.icon;
+                        return (
+                          <button
+                            key={item.id}
+                            onClick={item.action}
+                            className="w-full text-left p-4 rounded-lg border border-gray-200 hover:border-[#2C6975] hover:bg-gray-50 transition-all group"
+                          >
+                            <div className="flex items-start space-x-3">
+                              <div
+                                className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                                style={{ backgroundColor: `${item.color}15` }}
+                              >
+                                <ItemIcon className="w-4 h-4" style={{ color: item.color }} />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-start justify-between gap-2 mb-1">
+                                  <p className="text-sm text-gray-900 group-hover:text-[#2C6975] transition-colors">
+                                    {item.title}
+                                  </p>
+                                  {item.priority === 'critical' && (
+                                    <span className="px-2 py-0.5 bg-red-100 text-red-700 rounded-full text-xs flex-shrink-0">
+                                      Critical
+                                    </span>
+                                  )}
+                                  {item.priority === 'high' && (
+                                    <span className="px-2 py-0.5 bg-[#F9A03F]/20 text-[#F9A03F] rounded-full text-xs flex-shrink-0">
+                                      High
+                                    </span>
+                                  )}
+                                </div>
+                                <p className="text-xs text-gray-600 mb-2">{item.description}</p>
+                                <div className="flex items-center space-x-3 text-xs text-gray-500">
+                                  <span className="flex items-center space-x-1">
+                                    <Clock className="w-3 h-3" />
+                                    <span>Due: {item.dueDate}</span>
+                                  </span>
+                                  <span className="px-2 py-0.5 bg-gray-100 rounded text-xs">
+                                    {item.source}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    <button
+                      onClick={() => onNavigate('daily-missions')}
+                      className="w-full mt-4 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm flex items-center justify-center space-x-2"
+                    >
+                      <span>View All Tasks</span>
+                      <ChevronRight className="w-4 h-4" />
+                    </button>
+                  </CollapsibleContent>
+                </div>
+              </Collapsible>
+
+              {/* Right: Upcoming Events - Collapsible */}
+              <Collapsible open={isSessionsOpen} onOpenChange={setIsSessionsOpen}>
+                <div className="p-6 bg-gray-50/50">
+                  <CollapsibleTrigger className="w-full flex items-center justify-between mb-4 hover:opacity-80 transition-opacity">
+                    <h4 className="text-gray-900 flex items-center space-x-2">
+                      <Calendar className="w-4 h-4 text-[#2C6975]" />
+                      <span>This Week's Sessions</span>
+                    </h4>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-xs text-gray-500">{upcomingSessions.length} scheduled</span>
+                      <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${isSessionsOpen ? 'rotate-180' : ''}`} />
+                    </div>
+                  </CollapsibleTrigger>
+
+                  <CollapsibleContent>
+                    <div className="space-y-2">
+                      {upcomingSessions.map((session) => (
+                        <div
+                          key={session.id}
+                          className="p-3 rounded-lg border-l-4 bg-white hover:shadow-sm transition-all"
+                          style={{ borderColor: session.color }}
+                        >
+                          <div className="flex items-center justify-between gap-3">
+                            <div className="flex items-center space-x-3 flex-1 min-w-0">
+                              <div className="text-center flex-shrink-0">
+                                <p className="text-xs text-gray-600">{session.date}</p>
+                                <p className="text-xs text-gray-900">{session.time}</p>
+                              </div>
+                              <div className="min-w-0">
+                                <p className="text-sm text-gray-900 truncate">{session.title}</p>
+                                <p className="text-xs text-gray-500 capitalize">{session.type.replace('-', ' ')}</p>
+                              </div>
+                            </div>
+                            <button
+                              className="px-3 py-1.5 text-xs rounded-lg transition-colors flex-shrink-0"
+                              style={{
+                                backgroundColor: session.color,
+                                color: 'white'
+                              }}
+                            >
+                              Join
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    <button
+                      onClick={() => onNavigate('program-calendar')}
+                      className="w-full mt-4 px-4 py-2 bg-[#2C6975] text-white rounded-lg hover:bg-[#234d56] transition-colors text-sm flex items-center justify-center space-x-2"
+                    >
+                      <span>View Full Calendar</span>
+                      <ChevronRight className="w-4 h-4" />
+                    </button>
+                  </CollapsibleContent>
+                </div>
+              </Collapsible>
+            </div>
+
+            {/* Penny Insight Footer */}
+            <div className="px-6 py-4 bg-gradient-to-r from-blue-50 to-blue-50/50 border-t border-blue-100">
+              <div className="flex items-start space-x-3">
+                <Sparkles className="w-5 h-5 text-[#F9A03F] flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-sm text-gray-900 mb-1">
+                    <span className="font-medium">Penny's Insight:</span> You have 2 critical items due this week. Focus on your status report and the batch job bug to stay on track for capstone completion.
+                  </p>
+                  <button
+                    onClick={() => onNavigate('penny-chat')}
+                    className="text-sm text-[#2C6975] hover:underline"
+                  >
+                    Get personalized guidance →
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* Capstone Project - Featured */}
           <div className="bg-gradient-to-br from-[#F9A03F]/10 to-[#F9A03F]/5 border-2 border-[#F9A03F]/30 rounded-xl p-6">
             <div className="flex items-center justify-between mb-4">
@@ -278,179 +465,49 @@ export function LearnerHome({ onNavigate }: LearnerHomeProps) {
             </div>
           </div>
 
-          {/* Penny AI Focus Widget - Intelligent Priority & Event Curation */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-            {/* Header */}
-            <div className="p-6 bg-gradient-to-r from-[#F9A03F]/10 to-[#F9A03F]/5 border-b border-gray-200">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#F9A03F] to-[#e89135] text-white flex items-center justify-center shadow-md">
-                    <Sparkles className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <h3 className="text-gray-900 flex items-center space-x-2">
-                      <span>Penny's Focus Recommendations</span>
-                    </h3>
-                    <p className="text-sm text-gray-600">Personalized priorities from across your learning journey</p>
-                  </div>
-                </div>
-                <button
-                  onClick={() => onNavigate('penny-chat')}
-                  className="px-4 py-2 bg-[#F9A03F] text-white rounded-lg hover:bg-[#e89135] transition-colors text-sm flex items-center space-x-2"
-                >
-                  <MessageSquare className="w-4 h-4" />
-                  <span>Ask Penny</span>
-                </button>
-              </div>
-            </div>
-
-            {/* Split View Content */}
-            <div className="grid md:grid-cols-2 divide-x divide-gray-200">
-              {/* Left: Priorities & Tasks */}
-              <div className="p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h4 className="text-gray-900 flex items-center space-x-2">
-                    <Target className="w-4 h-4 text-[#2C6975]" />
-                    <span>Your Priorities</span>
-                  </h4>
-                  <span className="text-xs text-gray-500">{pennyFocusItems.length} items</span>
-                </div>
-
-                <div className="space-y-3">
-                  {pennyFocusItems.map((item) => {
-                    const ItemIcon = item.icon;
-                    return (
-                      <button
-                        key={item.id}
-                        onClick={item.action}
-                        className="w-full text-left p-4 rounded-lg border border-gray-200 hover:border-[#2C6975] hover:bg-gray-50 transition-all group"
-                      >
-                        <div className="flex items-start space-x-3">
-                          <div
-                            className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-                            style={{ backgroundColor: `${item.color}15` }}
-                          >
-                            <ItemIcon className="w-4 h-4" style={{ color: item.color }} />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-start justify-between gap-2 mb-1">
-                              <p className="text-sm text-gray-900 group-hover:text-[#2C6975] transition-colors">
-                                {item.title}
-                              </p>
-                              {item.priority === 'critical' && (
-                                <span className="px-2 py-0.5 bg-red-100 text-red-700 rounded-full text-xs flex-shrink-0">
-                                  Critical
-                                </span>
-                              )}
-                              {item.priority === 'high' && (
-                                <span className="px-2 py-0.5 bg-[#F9A03F]/20 text-[#F9A03F] rounded-full text-xs flex-shrink-0">
-                                  High
-                                </span>
-                              )}
-                            </div>
-                            <p className="text-xs text-gray-600 mb-2">{item.description}</p>
-                            <div className="flex items-center space-x-3 text-xs text-gray-500">
-                              <span className="flex items-center space-x-1">
-                                <Clock className="w-3 h-3" />
-                                <span>Due: {item.dueDate}</span>
-                              </span>
-                              <span className="px-2 py-0.5 bg-gray-100 rounded text-xs">
-                                {item.source}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-
-                <button
-                  onClick={() => onNavigate('daily-missions')}
-                  className="w-full mt-4 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm flex items-center justify-center space-x-2"
-                >
-                  <span>View All Tasks</span>
-                  <ChevronRight className="w-4 h-4" />
-                </button>
-              </div>
-
-              {/* Right: Upcoming Events */}
-              <div className="p-6 bg-gray-50/50">
-                <div className="flex items-center justify-between mb-4">
-                  <h4 className="text-gray-900 flex items-center space-x-2">
-                    <Calendar className="w-4 h-4 text-[#2C6975]" />
-                    <span>This Week's Sessions</span>
-                  </h4>
-                  <span className="text-xs text-gray-500">{upcomingSessions.length} scheduled</span>
-                </div>
-
-                <div className="space-y-2">
-                  {upcomingSessions.map((session) => (
-                    <div
-                      key={session.id}
-                      className="p-3 rounded-lg border-l-4 bg-white hover:shadow-sm transition-all"
-                      style={{ borderColor: session.color }}
-                    >
-                      <div className="flex items-center justify-between gap-3">
-                        <div className="flex items-center space-x-3 flex-1 min-w-0">
-                          <div className="text-center flex-shrink-0">
-                            <p className="text-xs text-gray-600">{session.date}</p>
-                            <p className="text-xs text-gray-900">{session.time}</p>
-                          </div>
-                          <div className="min-w-0">
-                            <p className="text-sm text-gray-900 truncate">{session.title}</p>
-                            <p className="text-xs text-gray-500 capitalize">{session.type.replace('-', ' ')}</p>
-                          </div>
-                        </div>
-                        <button
-                          className="px-3 py-1.5 text-xs rounded-lg transition-colors flex-shrink-0"
-                          style={{
-                            backgroundColor: session.color,
-                            color: 'white'
-                          }}
-                        >
-                          Join
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                <button
-                  onClick={() => onNavigate('program-calendar')}
-                  className="w-full mt-4 px-4 py-2 bg-[#2C6975] text-white rounded-lg hover:bg-[#234d56] transition-colors text-sm flex items-center justify-center space-x-2"
-                >
-                  <span>View Full Calendar</span>
-                  <ChevronRight className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-
-            {/* Penny Insight Footer */}
-            <div className="px-6 py-4 bg-gradient-to-r from-blue-50 to-blue-50/50 border-t border-blue-100">
-              <div className="flex items-start space-x-3">
-                <Sparkles className="w-5 h-5 text-[#F9A03F] flex-shrink-0 mt-0.5" />
-                <div>
-                  <p className="text-sm text-gray-900 mb-1">
-                    <span className="font-medium">Penny's Insight:</span> You have 2 critical items due this week. Focus on your status report and the batch job bug to stay on track for capstone completion.
-                  </p>
-                  <button
-                    onClick={() => onNavigate('penny-chat')}
-                    className="text-sm text-[#2C6975] hover:underline"
-                  >
-                    Get personalized guidance →
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
           {/* Skills IQ Assessment */}
           <SkillsIQAssessment onNavigate={onNavigate} />
         </div>
 
-        {/* Right Sidebar */}
+        {/* Right Sidebar - REORDERED */}
         <div className="space-y-6">
+          {/* Quick Links - MOVED TO TOP */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <h3 className="text-gray-900 mb-4">Quick Links</h3>
+            <div className="space-y-2">
+              <button 
+                onClick={() => onNavigate('program-calendar')}
+                className="w-full text-left px-4 py-3 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-between"
+              >
+                <span className="text-sm text-gray-900">Program Calendar</span>
+                <ChevronRight className="w-4 h-4 text-gray-400" />
+              </button>
+              <a 
+                href="https://slack.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full text-left px-4 py-3 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-between"
+              >
+                <span className="text-sm text-gray-900">Open Slack</span>
+                <ExternalLink className="w-4 h-4 text-gray-400" />
+              </a>
+              <button 
+                onClick={() => onNavigate('community')}
+                className="w-full text-left px-4 py-3 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-between"
+              >
+                <span className="text-sm text-gray-900">Community</span>
+                <ChevronRight className="w-4 h-4 text-gray-400" />
+              </button>
+              <button 
+                onClick={() => onNavigate('learning-center')}
+                className="w-full text-left px-4 py-3 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-between"
+              >
+                <span className="text-sm text-gray-900">Learning Center</span>
+                <ChevronRight className="w-4 h-4 text-gray-400" />
+              </button>
+            </div>
+          </div>
+
           {/* Points Breakdown - Collapsible */}
           <Collapsible open={isPointsOpen} onOpenChange={setIsPointsOpen}>
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
@@ -494,8 +551,33 @@ export function LearnerHome({ onNavigate }: LearnerHomeProps) {
             </div>
           </Collapsible>
 
-          {/* Trail Impact Meter - Engagement Rewards */}
-          <TrailImpactMeter currentPoints={47} showLeaderboard={true} />
+          {/* Community Impact - Collapsible */}
+          <Collapsible open={showCommunityEngagement} onOpenChange={setShowCommunityEngagement}>
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+              <CollapsibleTrigger className="w-full p-6 flex items-center justify-between hover:bg-gray-50 transition-colors">
+                <div className="flex items-center space-x-3">
+                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all ${
+                    showCommunityEngagement 
+                      ? 'bg-[#2C6975] text-white' 
+                      : 'bg-gray-100 text-gray-600'
+                  }`}>
+                    <Heart className="w-6 h-6" />
+                  </div>
+                  <div className="text-left">
+                    <h3 className="text-gray-900">Community Impact</h3>
+                    <p className="text-sm text-gray-600">147 engagement points</p>
+                  </div>
+                </div>
+                <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform ${showCommunityEngagement ? 'rotate-180' : ''}`} />
+              </CollapsibleTrigger>
+              
+              <CollapsibleContent>
+                <div className="px-6 pb-6">
+                  <CommunityEngagementMeter currentPoints={147} showLeaderboard={true} />
+                </div>
+              </CollapsibleContent>
+            </div>
+          </Collapsible>
 
           {/* Trail Missions - Collapsible */}
           <Collapsible open={isTrailMissionsOpen} onOpenChange={setIsTrailMissionsOpen}>
@@ -564,29 +646,6 @@ export function LearnerHome({ onNavigate }: LearnerHomeProps) {
               </CollapsibleContent>
             </div>
           </Collapsible>
-
-          {/* Quick Links */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h3 className="text-gray-900 mb-4">Quick Links</h3>
-            <div className="space-y-2">
-              <button 
-                onClick={() => onNavigate('program-calendar')}
-                className="w-full text-left px-4 py-3 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-between"
-              >
-                <span className="text-sm text-gray-900">Program Calendar</span>
-                <ChevronRight className="w-4 h-4 text-gray-400" />
-              </button>
-              <a 
-                href="https://slack.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full text-left px-4 py-3 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-between"
-              >
-                <span className="text-sm text-gray-900">Open Slack</span>
-                <ExternalLink className="w-4 h-4 text-gray-400" />
-              </a>
-            </div>
-          </div>
         </div>
       </div>
 

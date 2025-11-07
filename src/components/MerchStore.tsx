@@ -5,6 +5,7 @@ import { ImageWithFallback } from './figma/ImageWithFallback';
 import { ExplorationPointsMeter } from './ExplorationPointsMeter';
 import { ProductDetail } from './ProductDetail';
 import { MemberGear } from './MemberGear';
+import transitionTrailsLogo from 'figma:asset/9a4ab37fd35580740e0a1287c7b07dbd9912a379.png';
 
 interface Product {
   id: string;
@@ -31,71 +32,71 @@ interface MerchStoreProps {
 const mockProducts: Product[] = [
   {
     id: '1',
-    name: 'Trail Spirit Hoodie',
+    name: 'Transition Trails Classic Hoodie',
     category: 'apparel',
     price: 45,
     pointsValue: 450,
-    image: 'https://images.unsplash.com/photo-1635439714465-3ed3e6a122e3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxicmFuZGVkJTIwbWVyY2hhbmRpc2UlMjBhcHBhcmVsJTIwaG9vZGllfGVufDF8fHx8MTc2MjMxMzQ1MXww&ixlib=rb-4.1.0&q=80&w=1080',
-    description: 'Premium hoodie featuring the Transition Trails logo. Soft cotton blend, perfect for coding sessions or trail walks.',
+    image: 'https://images.unsplash.com/photo-1627137727320-4a7c6782102a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx0ZWFsJTIwaG9vZGllJTIwYXBwYXJlbHxlbnwxfHx8fDE3NjI1NTI3MDN8MA&ixlib=rb-4.1.0&q=80&w=1080',
+    description: 'Premium hoodie with embroidered Transition Trails logo on the chest. Ultra-soft cotton blend in signature Teal color.',
     sizes: ['S', 'M', 'L', 'XL', '2XL'],
-    colors: ['Evergreen', 'Sky Blue', 'Charcoal'],
+    colors: ['Teal (#2C6975)', 'Sky Blue (#7EB5C1)', 'Forest Green (#3B6A52)'],
     stockQty: 24,
     featured: true
   },
   {
     id: '2',
-    name: 'Trailblazer Mug',
+    name: 'Transition Trails Trail Mug',
     category: 'drinkware',
     price: 18,
     pointsValue: 180,
-    image: 'https://images.unsplash.com/photo-1761384595903-9b339edd72ed?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb2ZmZWUlMjBtdWclMjBkcmlua3dhcmUlMjBsaWZlc3R5bGV8ZW58MXx8fHwxNzYyMzEzNDUxfDA&ixlib=rb-4.1.0&q=80&w=1080',
-    description: 'Ceramic mug with badge tier designs. Microwave and dishwasher safe. 12oz capacity.',
-    colors: ['White', 'Trail Cream'],
+    image: 'https://images.unsplash.com/photo-1640038382256-7db69d81cb7d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjZXJhbWljJTIwY29mZmVlJTIwbXVnJTIwd2hpdGV8ZW58MXx8fHwxNzYyNTQxMDI5fDA&ixlib=rb-4.1.0&q=80&w=1080',
+    description: 'Ceramic mug featuring the Transition Trails mountain and trail logo in rich teal. Perfect for your morning coffee or tea. 12oz.',
+    colors: ['Cream (#F5F3E8)', 'White with Teal Logo'],
     stockQty: 48,
     featured: true
   },
   {
     id: '3',
-    name: 'Learning Journey Notebook',
+    name: 'Transition Trails Journey Notebook',
     category: 'stationery',
     price: 12,
     pointsValue: 120,
-    image: 'https://images.unsplash.com/photo-1683270496324-a847d3533af7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxub3RlYm9vayUyMHN0YXRpb25lcnklMjBkZXNrfGVufDF8fHx8MTc2MjMxMzQ1Mnww&ixlib=rb-4.1.0&q=80&w=1080',
-    description: 'Hardcover notebook with dotted pages. Track your progress, sketch flows, or journal your tech journey.',
+    image: 'https://images.unsplash.com/photo-1611571741792-edb58d0ceb67?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxoYXJkY292ZXIlMjBub3RlYm9vayUyMGpvdXJuYWx8ZW58MXx8fHwxNzYyNTUyNzA0fDA&ixlib=rb-4.1.0&q=80&w=1080',
+    description: 'Hardcover notebook with Transition Trails branding and dotted pages. Document your learning journey. 160 pages.',
     stockQty: 36,
   },
   {
     id: '4',
-    name: 'Pathfinder T-Shirt',
+    name: 'Transition Trails Pathfinder Tee',
     category: 'apparel',
     price: 28,
     pointsValue: 280,
-    image: 'https://images.unsplash.com/photo-1635439714465-3ed3e6a122e3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxicmFuZGVkJTIwbWVyY2hhbmRpc2UlMjBhcHBhcmVsJTIwaG9vZGllfGVufDF8fHx8MTc2MjMxMzQ1MXww&ixlib=rb-4.1.0&q=80&w=1080',
-    description: 'Soft cotton tee with minimalist trail design. Perfect for casual wear or community events.',
+    image: 'https://images.unsplash.com/photo-1666358085449-a10a39f33942?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx0ZWFsJTIwdHNoaXJ0JTIwY2FzdWFsfGVufDF8fHx8MTc2MjU1MjcwNHww&ixlib=rb-4.1.0&q=80&w=1080',
+    description: 'Soft cotton tee with minimalist Transition Trails mountain logo. Comfortable fit for everyday wear or community events.',
     sizes: ['S', 'M', 'L', 'XL', '2XL'],
-    colors: ['Evergreen', 'Amber', 'White'],
+    colors: ['Forest Green (#3B6A52)', 'Orange Sunrise (#F9A03F)', 'Cream (#F5F3E8)'],
     stockQty: 32,
   },
   {
     id: '5',
-    name: 'Badge Collection Sticker Pack',
+    name: 'Transition Trails Sticker Pack',
     category: 'accessories',
     price: 8,
     pointsValue: 80,
-    image: 'https://images.unsplash.com/photo-1635439714465-3ed3e6a122e3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxicmFuZGVkJTIwbWVyY2hhbmRpc2UlMjBhcHBhcmVsJTIwaG9vZGllfGVufDF8fHx8MTc2MjMxMzQ1MXww&ixlib=rb-4.1.0&q=80&w=1080',
-    description: 'Set of 12 vinyl stickers featuring all badge tiers and Penny AI. Weatherproof and laptop-ready.',
+    image: 'https://images.unsplash.com/photo-1761276297637-4418549ead2d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx2aW55bCUyMHN0aWNrZXIlMjBwYWNrfGVufDF8fHx8MTc2MjU1MjcwNXww&ixlib=rb-4.1.0&q=80&w=1080',
+    description: 'Set of 12 vinyl stickers featuring the Transition Trails logo, badge tiers, and Penny AI. Weatherproof, perfect for laptops.',
     stockQty: 60,
   },
   {
     id: '6',
-    name: 'Trail Master Hoodie (Limited Edition)',
+    name: 'Transition Trails Trail Master Hoodie',
     category: 'apparel',
     price: 65,
     pointsValue: 650,
-    image: 'https://images.unsplash.com/photo-1635439714465-3ed3e6a122e3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxicmFuZGVkJTIwbWVyY2hhbmRpc2UlMjBhcHBhcmVsJTIwaG9vZGllfGVufDF8fHx8MTc2MjMxMzQ1MXww&ixlib=rb-4.1.0&q=80&w=1080',
-    description: 'Exclusive hoodie with embroidered badge icons. Only available to Trail Master tier members.',
+    image: 'https://images.unsplash.com/photo-1745825219087-802850857308?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcmVtaXVtJTIwaG9vZGllJTIwZmFzaGlvbnxlbnwxfHx8fDE3NjI1NDM1MTN8MA&ixlib=rb-4.1.0&q=80&w=1080',
+    description: 'Limited Edition premium hoodie with embroidered Transition Trails logo and Trail Master badge. Exclusive member-only design.',
     sizes: ['S', 'M', 'L', 'XL', '2XL'],
-    colors: ['Teal', 'Black'],
+    colors: ['Signature Teal (#2C6975)', 'Midnight Black'],
     stockQty: 12,
     memberOnly: true,
     featured: true
@@ -150,10 +151,19 @@ export function MerchStore({
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-between mb-6">
             <div className="flex-1">
-              <Badge className="bg-[#F9A03F] text-white mb-4 px-4 py-1.5">
-                Official Merch
-              </Badge>
-              <h1 className="text-5xl mb-4">Wear Your Trail</h1>
+              <div className="flex items-center space-x-4 mb-6">
+                <img 
+                  src={transitionTrailsLogo} 
+                  alt="Transition Trails Logo" 
+                  className="w-20 h-20 rounded-xl shadow-lg bg-white/10 p-2"
+                />
+                <div>
+                  <Badge className="bg-[#F9A03F] text-white mb-2 px-4 py-1.5">
+                    Official Merch
+                  </Badge>
+                  <h1 className="text-5xl">Wear Your Trail</h1>
+                </div>
+              </div>
               <p className="text-xl text-white/90 mb-6 max-w-2xl">
                 Official Transition Trails merchandise. Show your Trail Spirit and support the community.
               </p>
@@ -347,11 +357,11 @@ export function MerchStore({
               {isAuthenticated ? (
                 <>
                   <p className="text-gray-700 mb-4">
-                    "That Trail Spirit Hoodie screams Trail Spirit! You have {currentPoints} points — 
+                    "The Transition Trails Classic Hoodie is perfect for you! You have {currentPoints} points — 
                     {currentPoints >= 450 
                       ? " enough to get it free! 🎉" 
                       : ` you're ${450 - currentPoints} points away from getting it free.`
-                    }"
+                    } Show your Trail Spirit!"
                   </p>
                   <button className="px-4 py-2 bg-[#3B6A52] text-white rounded-lg hover:bg-[#2d5240] transition-colors text-sm">
                     View Recommended Items
@@ -360,7 +370,7 @@ export function MerchStore({
               ) : (
                 <>
                   <p className="text-gray-700 mb-4">
-                    "Welcome! Browse our Trail gear and show your spirit. Members get 15% off everything plus the chance to earn FREE merch through points. Join the Academy to unlock member benefits!"
+                    "Welcome to the official Transition Trails shop! Browse our gear featuring our iconic mountain and trail logo. Members get 15% off everything plus the chance to earn FREE merch through points. Join the Academy to unlock member benefits!"
                   </p>
                   <button className="px-4 py-2 bg-[#F9A03F] text-white rounded-lg hover:bg-[#e89135] transition-colors text-sm">
                     Learn About Member Benefits

@@ -14,6 +14,8 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './ui/collap
 import { BadgeSystem } from './BadgeSystem';
 import { EventCredits } from './EventCredits';
 import { PennyPromptSuggestions } from './PennyEncouragement';
+import { ImageWithFallback } from './figma/ImageWithFallback';
+import profileImage from 'figma:asset/f5ce76cc9cdd7a0e710f2a4ab182ac3c118f5ea0.png';
 
 interface ProfileProps {
   onNavigate: (page: PageType) => void;
@@ -52,6 +54,7 @@ export function Profile({ onNavigate }: ProfileProps) {
     points: 2380,
     totalPoints: 3500,
     avatar: 'AJ',
+    profilePicture: profileImage,
     bio: 'Career transitioner passionate about Salesforce and helping nonprofits scale their impact through technology.',
     linkedInUrl: 'https://linkedin.com/in/alexjohnson',
     githubUrl: 'https://github.com/alexjohnson',
@@ -323,8 +326,12 @@ export function Profile({ onNavigate }: ProfileProps) {
           <div className="flex items-start justify-between">
             <div className="flex items-start space-x-6">
               {/* Avatar */}
-              <div className="w-24 h-24 rounded-full bg-gradient-to-br from-[#2C6975] to-[#7EB5C1] flex items-center justify-center text-white text-3xl flex-shrink-0">
-                {userProfile.avatar}
+              <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-[#2C6975]/20 shadow-lg flex-shrink-0">
+                <ImageWithFallback 
+                  src={userProfile.profilePicture}
+                  alt={userProfile.name}
+                  className="w-full h-full object-cover"
+                />
               </div>
 
               {/* Profile Info */}
