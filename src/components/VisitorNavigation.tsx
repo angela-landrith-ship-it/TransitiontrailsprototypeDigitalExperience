@@ -1,4 +1,4 @@
-import { Home, Calendar, GraduationCap, Users, LogIn, ShoppingBag } from 'lucide-react';
+import { Home, Calendar, GraduationCap, Users, LogIn, ShoppingBag, Briefcase } from 'lucide-react';
 import { Badge } from './ui/badge';
 import { PageType } from '../App';
 import { ImageWithFallback } from './figma/ImageWithFallback';
@@ -14,6 +14,7 @@ export function VisitorNavigation({ activePage, setActivePage, onSignIn }: Visit
   const navItems: Array<{ id: PageType; label: string; icon: any }> = [
     { id: 'visitor-home', label: 'Home', icon: Home },
     { id: 'visitor-learning', label: 'Learning Center', icon: GraduationCap },
+    { id: 'portfolio', label: 'Portfolio', icon: Briefcase },
     { id: 'visitor-community', label: 'Community', icon: Users },
     { id: 'visitor-events', label: 'Events', icon: Calendar },
     { id: 'merch-store', label: 'Trail Shop', icon: ShoppingBag }

@@ -115,7 +115,6 @@
  * 
  * React Component → LWC Component:
  * - <ProgressRing> → <c-progress-ring>
- * - <SkillsIQAssessment> → <c-skills-iq-assessment>
  * - <TrailImpactMeter> → <c-trail-impact-meter>
  * - <CommunityEngagementMeter> → <c-community-engagement-meter>
  * 
@@ -146,7 +145,6 @@
 
 import { Trophy, Target, BookOpen, MessageSquare, TrendingUp, Clock, Award, Calendar, Users, Sparkles, ChevronRight, CheckCircle, ExternalLink, ChevronDown, ArrowRight, Heart } from 'lucide-react';
 import { ProgressRing } from './ProgressRing';
-import { SkillsIQAssessment } from './SkillsIQAssessment';
 import { TrailImpactMeter } from './TrailImpactMeter';
 import { CommunityEngagementMeter } from './CommunityEngagementMeter';
 import { PageType } from '../App';
@@ -611,9 +609,6 @@ export function LearnerHome({ onNavigate }: LearnerHomeProps) {
               </button>
             </div>
           </div>
-
-          {/* Skills IQ Assessment */}
-          <SkillsIQAssessment onNavigate={onNavigate} />
         </div>
 
         {/* Right Sidebar - REORDERED */}

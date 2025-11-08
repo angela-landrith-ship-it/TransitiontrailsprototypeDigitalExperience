@@ -15,6 +15,7 @@ import { BadgeSystem } from './BadgeSystem';
 import { EventCredits } from './EventCredits';
 import { PennyPromptSuggestions } from './PennyEncouragement';
 import { ImageWithFallback } from './figma/ImageWithFallback';
+import { PortfolioResumeTile } from './PortfolioResumeTile';
 import profileImage from 'figma:asset/f5ce76cc9cdd7a0e710f2a4ab182ac3c118f5ea0.png';
 
 interface ProfileProps {
@@ -850,6 +851,14 @@ export function Profile({ onNavigate }: ProfileProps) {
               {/* Sidebar - Penny Insights */}
               <div className="lg:col-span-1">
                 <div className="sticky top-6 space-y-6">
+                  {/* Portfolio Résumé Tile */}
+                  <PortfolioResumeTile
+                    hasProjects={true}
+                    showQR={true}
+                    showLinkedInComposer={true}
+                    onNavigateToProjects={() => onNavigate('capstone-projects')}
+                  />
+
                   {/* Penny Insights Card */}
                   <div className="bg-gradient-to-br from-[#F9A03F]/10 to-[#2C6975]/10 rounded-xl border-2 border-[#F9A03F]/30 p-6">
                     <div className="flex items-center space-x-3 mb-4">

@@ -250,7 +250,7 @@
  * =============================================================================
  */
 
-import { Home, Users, Settings, MessageCircle, Bell, ChevronDown, GraduationCap, Sparkles, Menu, X, ChevronRight, ShoppingBag, User, LogOut } from 'lucide-react';
+import { Home, Users, Settings, MessageCircle, Bell, ChevronDown, GraduationCap, Sparkles, Menu, X, ChevronRight, ShoppingBag, User, LogOut, Briefcase } from 'lucide-react';
 import { PageType } from '../App';
 import { useState, useEffect, useRef } from 'react';
 import { Badge } from './ui/badge';
@@ -424,6 +424,19 @@ export function Navigation({ activePage, setActivePage }: NavigationProps) {
                     {slackNotifications.length}
                   </span>
                 )}
+              </button>
+
+              {/* Portfolio */}
+              <button
+                onClick={() => setActivePage('portfolio')}
+                className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-150 text-sm ${
+                  activePage === 'portfolio' || activePage === 'portfolio-detail'
+                    ? 'bg-white/20 text-white'
+                    : 'text-white/80 hover:text-white hover:bg-white/10 hover:underline decoration-[#F9A03F]'
+                }`}
+              >
+                <Briefcase className="w-4 h-4" />
+                <span>Portfolio</span>
               </button>
 
               {/* Trail Shop */}
