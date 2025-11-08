@@ -103,9 +103,9 @@ export function VisitorEvents({ onEnroll }: VisitorEventsProps) {
   ];
 
   return (
-    <div className="min-h-screen bg-[#F5F3E8]">
+    <div className="min-h-screen bg-[#F5F3E8] dark:bg-slate-900">
       {/* Visitor Banner */}
-      <div className="bg-gradient-to-r from-[#7EB5C1] to-[#2C6975] text-white py-4 px-4">
+      <div className="bg-gradient-to-r from-[#7EB5C1] to-[#2C6975] dark:from-[#5a9fb0] dark:to-[#1e4a53] text-white py-4 px-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <Calendar className="w-5 h-5" />
@@ -126,28 +126,28 @@ export function VisitorEvents({ onEnroll }: VisitorEventsProps) {
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl text-gray-900 mb-2">Community Events</h1>
-          <p className="text-gray-600">Join free workshops, webinars, and networking sessions</p>
+          <h1 className="text-3xl text-gray-900 dark:text-white mb-2">Community Events</h1>
+          <p className="text-gray-600 dark:text-slate-400">Join free workshops, webinars, and networking sessions</p>
         </div>
 
         {/* Penny Event Recommendations */}
-        <div className="bg-gradient-to-r from-[#7EB5C1]/10 to-[#7EB5C1]/5 border-2 border-[#7EB5C1]/30 rounded-xl p-6 mb-8">
+        <div className="bg-gradient-to-r from-[#7EB5C1]/10 to-[#7EB5C1]/5 dark:from-[#7EB5C1]/20 dark:to-[#7EB5C1]/10 border-2 border-[#7EB5C1]/30 dark:border-[#7EB5C1]/50 rounded-xl p-6 mb-8">
           <div className="flex items-start space-x-4">
-            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#7EB5C1] to-[#2C6975] flex items-center justify-center flex-shrink-0 ring-4 ring-[#7EB5C1]/20">
+            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#7EB5C1] to-[#2C6975] flex items-center justify-center flex-shrink-0 ring-4 ring-[#7EB5C1]/20 dark:ring-[#7EB5C1]/30">
               <Sparkles className="w-6 h-6 text-white" />
             </div>
             <div className="flex-1">
               <div className="flex items-center space-x-2 mb-2">
-                <h3 className="text-gray-900">Penny's Event Picks</h3>
-                <Badge className="bg-[#7EB5C1] text-white text-xs">Recommended</Badge>
+                <h3 className="text-gray-900 dark:text-white">Penny's Event Picks</h3>
+                <Badge className="bg-[#7EB5C1] hover:bg-[#7EB5C1] text-white text-xs">Recommended</Badge>
               </div>
-              <p className="text-gray-700 mb-3">
+              <p className="text-gray-700 dark:text-slate-300 mb-3">
                 Based on your interest in Salesforce, I recommend starting with "Introduction to Salesforce for Nonprofits" 
                 on Nov 8. It's perfect for beginners and will help you understand if this is the right path for you!
               </p>
               <div className="flex flex-wrap gap-2">
-                <Badge className="bg-[#2C6975] text-white">Salesforce Intro - Nov 8</Badge>
-                <Badge className="bg-[#F9A03F] text-white">Meet Penny - Nov 12</Badge>
+                <Badge className="bg-[#2C6975] dark:bg-[#7EB5C1] hover:bg-[#2C6975] dark:hover:bg-[#7EB5C1] text-white dark:text-slate-900">Salesforce Intro - Nov 8</Badge>
+                <Badge className="bg-[#F9A03F] hover:bg-[#F9A03F] text-white">Meet Penny - Nov 12</Badge>
               </div>
             </div>
           </div>
@@ -155,10 +155,10 @@ export function VisitorEvents({ onEnroll }: VisitorEventsProps) {
 
         {/* Upcoming Events */}
         <div className="mb-12">
-          <h2 className="text-2xl text-gray-900 mb-6">Upcoming Events</h2>
+          <h2 className="text-2xl text-gray-900 dark:text-white mb-6">Upcoming Events</h2>
           <div className="space-y-6">
             {upcomingEvents.map((event) => (
-              <div key={event.id} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-all">
+              <div key={event.id} className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden hover:shadow-md transition-all">
                 <div 
                   className="h-2"
                   style={{ backgroundColor: event.color }}
@@ -167,39 +167,45 @@ export function VisitorEvents({ onEnroll }: VisitorEventsProps) {
                   <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4 mb-4">
                     <div className="flex-1">
                       <div className="flex items-start justify-between gap-3 mb-2">
-                        <h3 className="text-xl text-gray-900">{event.title}</h3>
-                        <Badge style={{ backgroundColor: `${event.color}20`, color: event.color }}>
+                        <h3 className="text-xl text-gray-900 dark:text-white">{event.title}</h3>
+                        <Badge 
+                          className="border-0"
+                          style={{ 
+                            backgroundColor: `${event.color}20`, 
+                            color: event.color 
+                          }}
+                        >
                           {event.type}
                         </Badge>
                       </div>
-                      <p className="text-gray-600 mb-4">{event.description}</p>
+                      <p className="text-gray-600 dark:text-slate-300 mb-4">{event.description}</p>
                       
                       <div className="grid sm:grid-cols-2 gap-3 mb-4">
-                        <div className="flex items-center space-x-2 text-sm text-gray-700">
-                          <Calendar className="w-4 h-4 text-gray-500" />
+                        <div className="flex items-center space-x-2 text-sm text-gray-700 dark:text-slate-300">
+                          <Calendar className="w-4 h-4 text-gray-500 dark:text-slate-400" />
                           <span>{event.date}</span>
                         </div>
-                        <div className="flex items-center space-x-2 text-sm text-gray-700">
-                          <Clock className="w-4 h-4 text-gray-500" />
+                        <div className="flex items-center space-x-2 text-sm text-gray-700 dark:text-slate-300">
+                          <Clock className="w-4 h-4 text-gray-500 dark:text-slate-400" />
                           <span>{event.time}</span>
                         </div>
-                        <div className="flex items-center space-x-2 text-sm text-gray-700">
-                          <MapPin className="w-4 h-4 text-gray-500" />
+                        <div className="flex items-center space-x-2 text-sm text-gray-700 dark:text-slate-300">
+                          <MapPin className="w-4 h-4 text-gray-500 dark:text-slate-400" />
                           <span>{event.location}</span>
                         </div>
-                        <div className="flex items-center space-x-2 text-sm text-gray-700">
-                          <Users className="w-4 h-4 text-gray-500" />
+                        <div className="flex items-center space-x-2 text-sm text-gray-700 dark:text-slate-300">
+                          <Users className="w-4 h-4 text-gray-500 dark:text-slate-400" />
                           <span>{event.attendees} / {event.maxAttendees} attending</span>
                         </div>
                       </div>
 
                       <div className="mb-4">
-                        <p className="text-sm text-gray-700 mb-2">
+                        <p className="text-sm text-gray-700 dark:text-slate-300 mb-2">
                           <span className="font-medium">Host:</span> {event.host}
                         </p>
                         <div className="flex flex-wrap gap-2">
                           {event.topics.map((topic, idx) => (
-                            <Badge key={idx} className="bg-gray-100 text-gray-700 text-xs">
+                            <Badge key={idx} className="bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-300 border-gray-200 dark:border-slate-600 text-xs">
                               {topic}
                             </Badge>
                           ))}
@@ -210,14 +216,14 @@ export function VisitorEvents({ onEnroll }: VisitorEventsProps) {
                     <div className="flex flex-col space-y-2 lg:w-48">
                       {rsvpedEvents.includes(event.id) ? (
                         <>
-                          <div className="px-4 py-3 bg-green-50 border border-green-200 text-green-700 rounded-lg text-center">
+                          <div className="px-4 py-3 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-700 text-green-700 dark:text-green-300 rounded-lg text-center">
                             <div className="flex items-center justify-center space-x-2 mb-1">
                               <Trophy className="w-4 h-4" />
                               <span className="text-sm font-medium">You're Registered!</span>
                             </div>
                             <p className="text-xs">Check your email for details</p>
                           </div>
-                          <button className="px-4 py-2 bg-[#2C6975] text-white rounded-lg hover:bg-[#234d56] transition-colors text-sm flex items-center justify-center space-x-2">
+                          <button className="px-4 py-2 bg-[#2C6975] dark:bg-[#7EB5C1] text-white dark:text-slate-900 rounded-lg hover:bg-[#234d56] dark:hover:bg-[#6a9fb0] transition-colors text-sm flex items-center justify-center space-x-2">
                             <Video className="w-4 h-4" />
                             <span>Join Meeting</span>
                           </button>
@@ -231,19 +237,19 @@ export function VisitorEvents({ onEnroll }: VisitorEventsProps) {
                           RSVP for Event
                         </button>
                       )}
-                      <button className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm">
+                      <button className="px-4 py-2 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-slate-300 bg-white dark:bg-slate-700 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-600 transition-colors text-sm">
                         Add to Calendar
                       </button>
                     </div>
                   </div>
 
                   {/* Progress Bar */}
-                  <div className="pt-4 border-t border-gray-200">
-                    <div className="flex items-center justify-between text-xs text-gray-600 mb-2">
+                  <div className="pt-4 border-t border-gray-200 dark:border-slate-700">
+                    <div className="flex items-center justify-between text-xs text-gray-600 dark:text-slate-400 mb-2">
                       <span>Event Capacity</span>
                       <span>{Math.round((event.attendees / event.maxAttendees) * 100)}% filled</span>
                     </div>
-                    <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                    <div className="w-full h-2 bg-gray-200 dark:bg-slate-700 rounded-full overflow-hidden">
                       <div 
                         className="h-full rounded-full transition-all"
                         style={{ 
@@ -261,26 +267,26 @@ export function VisitorEvents({ onEnroll }: VisitorEventsProps) {
 
         {/* Past Events */}
         <div className="mb-8">
-          <h2 className="text-2xl text-gray-900 mb-6">Event Recordings</h2>
+          <h2 className="text-2xl text-gray-900 dark:text-white mb-6">Event Recordings</h2>
           <div className="grid md:grid-cols-3 gap-6">
             {pastEvents.map((event) => (
-              <div key={event.id} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+              <div key={event.id} className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-6">
                 <div className="flex items-center space-x-2 mb-3">
-                  <Video className="w-5 h-5 text-[#2C6975]" />
-                  <Badge className="bg-[#2C6975]/10 text-[#2C6975] text-xs">Recording Available</Badge>
+                  <Video className="w-5 h-5 text-[#2C6975] dark:text-[#7EB5C1]" />
+                  <Badge className="bg-[#2C6975]/10 dark:bg-[#7EB5C1]/20 text-[#2C6975] dark:text-[#7EB5C1] border-[#2C6975]/20 dark:border-[#7EB5C1]/30 text-xs">Recording Available</Badge>
                 </div>
-                <h3 className="text-gray-900 mb-2">{event.title}</h3>
+                <h3 className="text-gray-900 dark:text-white mb-2">{event.title}</h3>
                 <div className="space-y-2 mb-4">
-                  <p className="text-sm text-gray-600 flex items-center space-x-2">
+                  <p className="text-sm text-gray-600 dark:text-slate-400 flex items-center space-x-2">
                     <Calendar className="w-3 h-3" />
                     <span>{event.date}</span>
                   </p>
-                  <p className="text-sm text-gray-600 flex items-center space-x-2">
+                  <p className="text-sm text-gray-600 dark:text-slate-400 flex items-center space-x-2">
                     <Users className="w-3 h-3" />
                     <span>{event.attendees} attended</span>
                   </p>
                 </div>
-                <button className="w-full py-2 bg-[#2C6975] text-white rounded-lg hover:bg-[#234d56] transition-colors text-sm flex items-center justify-center space-x-2">
+                <button className="w-full py-2 bg-[#2C6975] dark:bg-[#7EB5C1] text-white dark:text-slate-900 rounded-lg hover:bg-[#234d56] dark:hover:bg-[#6a9fb0] transition-colors text-sm flex items-center justify-center space-x-2">
                   <ExternalLink className="w-4 h-4" />
                   <span>Watch Recording</span>
                 </button>
@@ -290,7 +296,7 @@ export function VisitorEvents({ onEnroll }: VisitorEventsProps) {
         </div>
 
         {/* CTA Banner */}
-        <div className="bg-gradient-to-r from-[#2C6975] to-[#3B6A52] text-white rounded-xl p-8 text-center">
+        <div className="bg-gradient-to-r from-[#2C6975] to-[#3B6A52] dark:from-[#1e4a53] dark:to-[#2a5140] text-white rounded-xl p-8 text-center">
           <Calendar className="w-12 h-12 mx-auto mb-4" />
           <h3 className="text-2xl mb-3">Want Private Coaching Sessions?</h3>
           <p className="text-white/90 mb-6 max-w-2xl mx-auto">

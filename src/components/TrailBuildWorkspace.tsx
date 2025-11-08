@@ -79,7 +79,7 @@ export function TrailBuildWorkspace({ onClose }: TrailBuildWorkspaceProps) {
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F3E8] pb-12">
+    <div className="min-h-screen bg-[#F5F3E8] dark:bg-slate-900 pb-12">
       {/* Confetti on Demo Submission */}
       {showConfetti && (
         <div className="fixed inset-0 pointer-events-none z-50">

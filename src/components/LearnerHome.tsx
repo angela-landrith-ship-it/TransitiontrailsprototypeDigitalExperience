@@ -143,13 +143,14 @@
  * =============================================================================
  */
 
-import { Trophy, Target, BookOpen, MessageSquare, TrendingUp, Clock, Award, Calendar, Users, Sparkles, ChevronRight, CheckCircle, ExternalLink, ChevronDown, ArrowRight, Heart } from 'lucide-react';
+import { Trophy, Target, BookOpen, MessageSquare, TrendingUp, Clock, Award, Calendar, Users, Sparkles, ChevronRight, CheckCircle, ExternalLink, ChevronDown, ArrowRight, Heart, LayoutDashboard, Map, CalendarDays, Zap } from 'lucide-react';
 import { ProgressRing } from './ProgressRing';
 import { TrailImpactMeter } from './TrailImpactMeter';
 import { CommunityEngagementMeter } from './CommunityEngagementMeter';
 import { PageType } from '../App';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './ui/collapsible';
 import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { useState } from 'react';
 import profileImage from 'figma:asset/f5ce76cc9cdd7a0e710f2a4ab182ac3c118f5ea0.png';
 import { CMS, CMSWithVars } from './CMSContent';
@@ -164,6 +165,7 @@ interface LearnerHomeProps {
 }
 
 export function LearnerHome({ onNavigate }: LearnerHomeProps) {
+  const [activeTab, setActiveTab] = useState('overview');
   const [isPointsOpen, setIsPointsOpen] = useState(true);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [isTrailMissionsOpen, setIsTrailMissionsOpen] = useState(true);
@@ -303,7 +305,7 @@ export function LearnerHome({ onNavigate }: LearnerHomeProps) {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Hero Banner */}
-      <div className="bg-gradient-to-r from-[#2C6975] to-[#7EB5C1] rounded-2xl shadow-lg p-8 mb-8 text-white relative overflow-hidden">
+      <div className="bg-gradient-to-r from-[#2C6975] to-[#7EB5C1] dark:from-[#1e4a53] dark:to-[#5a9fb0] rounded-2xl shadow-lg p-8 mb-6 text-white relative overflow-hidden">
         <div className="flex items-start justify-between relative z-10">
           <div className="flex-1">
             <div className="mb-2">
@@ -361,503 +363,678 @@ export function LearnerHome({ onNavigate }: LearnerHomeProps) {
         </div>
       </div>
 
-      {/* Main Content Grid */}
-      <div className="grid lg:grid-cols-3 gap-6 mb-8">
-        {/* Left & Center Columns */}
-        <div className="lg:col-span-2 space-y-6">
-          {/* Penny AI Focus Widget - Intelligent Priority & Event Curation - MOVED TO TOP */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-            {/* Header */}
-            <div className="p-6 bg-gradient-to-r from-[#F9A03F]/10 to-[#F9A03F]/5 border-b border-gray-200">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#F9A03F] to-[#e89135] text-white flex items-center justify-center shadow-md">
-                    <Sparkles className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <h3 className="text-gray-900 flex items-center space-x-2">
-                      <span>{CMS('learner_home_penny_focus_title')}</span>
-                    </h3>
-                    <p className="text-sm text-gray-600">{CMS('learner_home_penny_focus_description')}</p>
+      {/* Tabs */}
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <TabsList className="grid w-full grid-cols-4 mb-8 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700">
+          <TabsTrigger value="overview" className="flex items-center justify-center space-x-2 data-[state=active]:bg-[#2C6975] dark:data-[state=active]:bg-[#7EB5C1] data-[state=active]:text-white dark:data-[state=active]:text-slate-900">
+            <LayoutDashboard className="w-4 h-4" />
+            <span className="hidden sm:inline">Overview</span>
+          </TabsTrigger>
+          <TabsTrigger value="trail" className="flex items-center justify-center space-x-2 data-[state=active]:bg-[#2C6975] dark:data-[state=active]:bg-[#7EB5C1] data-[state=active]:text-white dark:data-[state=active]:text-slate-900">
+            <Map className="w-4 h-4" />
+            <span className="hidden sm:inline">My Trail</span>
+          </TabsTrigger>
+          <TabsTrigger value="penny" className="flex items-center justify-center space-x-2 data-[state=active]:bg-[#F9A03F] data-[state=active]:text-white">
+            <Sparkles className="w-4 h-4" />
+            <span className="hidden sm:inline">Penny's Picks</span>
+          </TabsTrigger>
+          <TabsTrigger value="growth" className="flex items-center justify-center space-x-2 data-[state=active]:bg-[#2C6975] dark:data-[state=active]:bg-[#7EB5C1] data-[state=active]:text-white dark:data-[state=active]:text-slate-900">
+            <Zap className="w-4 h-4" />
+            <span className="hidden sm:inline">Growth</span>
+          </TabsTrigger>
+        </TabsList>
+
+        {/* Overview Tab */}
+        <TabsContent value="overview" className="space-y-6">
+          <div className="grid lg:grid-cols-3 gap-6">
+            {/* Left & Center Columns */}
+            <div className="lg:col-span-2 space-y-6">
+              {/* Penny AI Focus Widget */}
+              <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden">
+                <div className="p-6 bg-gradient-to-r from-[#F9A03F]/10 to-[#F9A03F]/5 dark:from-[#F9A03F]/20 dark:to-[#F9A03F]/10 border-b border-gray-200 dark:border-slate-700">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#F9A03F] to-[#e89135] text-white flex items-center justify-center shadow-md">
+                        <Sparkles className="w-6 h-6" />
+                      </div>
+                      <div>
+                        <h3 className="text-gray-900 dark:text-white flex items-center space-x-2">
+                          <span>{CMS('learner_home_penny_focus_title')}</span>
+                        </h3>
+                        <p className="text-sm text-gray-600 dark:text-slate-400">{CMS('learner_home_penny_focus_description')}</p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => onNavigate('penny-chat')}
+                      className="px-4 py-2 bg-sun-amber text-white rounded-lg hover:bg-sun-amber-dark transition-colors text-sm flex items-center space-x-2"
+                    >
+                      <MessageSquare className="w-4 h-4" />
+                      <span>{CMS('learner_home_btn_ask_penny')}</span>
+                    </button>
                   </div>
                 </div>
-                <button
-                  onClick={() => onNavigate('penny-chat')}
-                  className="px-4 py-2 bg-sun-amber text-white rounded-lg hover:bg-sun-amber-dark transition-colors text-sm flex items-center space-x-2"
-                >
-                  <MessageSquare className="w-4 h-4" />
-                  <span>{CMS('learner_home_btn_ask_penny')}</span>
-                </button>
-              </div>
-            </div>
 
-            {/* Split View Content */}
-            <div className="grid md:grid-cols-2 divide-x divide-gray-200">
-              {/* Left: Priorities & Tasks - Collapsible */}
-              <Collapsible open={isPrioritiesOpen} onOpenChange={setIsPrioritiesOpen}>
-                <div className="p-6">
-                  <CollapsibleTrigger className="w-full flex items-center justify-between mb-4 hover:opacity-80 transition-opacity">
-                    <h4 className="text-gray-900 flex items-center space-x-2">
-                      <Target className="w-4 h-4 text-penny-guide" />
-                      <span>Your Priorities</span>
-                    </h4>
-                    <div className="flex items-center space-x-2">
-                      <span className="text-xs text-gray-500">{pennyFocusItems.length} items</span>
-                      <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${isPrioritiesOpen ? 'rotate-180' : ''}`} />
-                    </div>
-                  </CollapsibleTrigger>
-
-                  <CollapsibleContent>
-                    <div className="space-y-3">
-                      {pennyFocusItems.map((item) => {
-                        const ItemIcon = item.icon;
-                        return (
-                          <button
-                            key={item.id}
-                            onClick={item.action}
-                            className="w-full text-left p-4 rounded-lg border border-gray-200 hover:border-penny-guide hover:bg-gray-50 transition-all group"
-                          >
-                            <div className="flex items-start space-x-3">
-                              <div
-                                className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-                                style={{ backgroundColor: `${item.color}15` }}
+                {/* Split View Content */}
+                <div className="grid md:grid-cols-2 divide-x divide-gray-200 dark:divide-slate-700">
+                  {/* Left: Priorities & Tasks - Collapsible */}
+                  <Collapsible open={isPrioritiesOpen} onOpenChange={setIsPrioritiesOpen}>
+                    <div className="p-6">
+                      <CollapsibleTrigger className="w-full flex items-center justify-between mb-4 hover:opacity-80 transition-opacity">
+                        <h4 className="text-gray-900 dark:text-white flex items-center space-x-2">
+                          <Target className="w-5 h-5" />
+                          <span>Focus Items</span>
+                        </h4>
+                        <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform ${isPrioritiesOpen ? 'rotate-180' : ''}`} />
+                      </CollapsibleTrigger>
+                      
+                      <CollapsibleContent>
+                        <div className="space-y-3">
+                          {pennyFocusItems.slice(0, 4).map((item) => {
+                            const Icon = item.icon;
+                            return (
+                              <button
+                                key={item.id}
+                                onClick={item.action}
+                                className={`w-full text-left p-3 rounded-lg border-2 transition-all hover:shadow-md ${
+                                  item.priority === 'critical' 
+                                    ? 'border-red-300 dark:border-red-700 bg-red-50 dark:bg-red-900/20' 
+                                    : item.priority === 'high' 
+                                    ? 'border-orange-300 dark:border-orange-700 bg-orange-50 dark:bg-orange-900/20' 
+                                    : 'border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50'
+                                }`}
                               >
-                                <ItemIcon className="w-4 h-4" style={{ color: item.color }} />
-                              </div>
-                              <div className="flex-1 min-w-0">
-                                <div className="flex items-start justify-between gap-2 mb-1">
-                                  <p className="text-sm text-gray-900 group-hover:text-penny-guide transition-colors">
-                                    {item.title}
-                                  </p>
-                                  {item.priority === 'critical' && (
-                                    <span className="px-2 py-0.5 bg-red-100 text-red-700 rounded-full text-xs flex-shrink-0">
-                                      {CMS('learner_home_priority_critical')}
-                                    </span>
-                                  )}
-                                  {item.priority === 'high' && (
-                                    <span className="px-2 py-0.5 bg-sun-amber/20 text-sun-amber rounded-full text-xs flex-shrink-0">
-                                      {CMS('learner_home_priority_high')}
-                                    </span>
-                                  )}
+                                <div className="flex items-start space-x-3">
+                                  <div 
+                                    className="w-8 h-8 rounded-lg flex items-center justify-center text-white flex-shrink-0"
+                                    style={{ backgroundColor: item.color }}
+                                  >
+                                    <Icon className="w-4 h-4" />
+                                  </div>
+                                  <div className="flex-1 min-w-0">
+                                    <h5 className="text-sm text-gray-900 dark:text-white mb-1">{item.title}</h5>
+                                    <p className="text-xs text-gray-600 dark:text-slate-400 mb-2">{item.description}</p>
+                                    <div className="flex items-center justify-between text-xs">
+                                      <span className="text-gray-500 dark:text-slate-500">{item.source}</span>
+                                      <span className={`${
+                                        item.priority === 'critical' ? 'text-red-600 dark:text-red-400' : 
+                                        item.priority === 'high' ? 'text-orange-600 dark:text-orange-400' : 
+                                        'text-gray-600 dark:text-slate-400'
+                                      }`}>
+                                        Due: {item.dueDate}
+                                      </span>
+                                    </div>
+                                  </div>
                                 </div>
-                                <p className="text-xs text-gray-600 mb-2">{item.description}</p>
-                                <div className="flex items-center space-x-3 text-xs text-gray-500">
-                                  <span className="flex items-center space-x-1">
-                                    <Clock className="w-3 h-3" />
-                                    <span>Due: {item.dueDate}</span>
-                                  </span>
-                                  <span className="px-2 py-0.5 bg-gray-100 rounded text-xs">
-                                    {item.source}
-                                  </span>
-                                </div>
-                              </div>
-                            </div>
-                          </button>
-                        );
-                      })}
-                    </div>
-
-                    <button
-                      onClick={() => onNavigate('daily-missions')}
-                      className="w-full mt-4 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm flex items-center justify-center space-x-2"
-                    >
-                      <span>View All Tasks</span>
-                      <ChevronRight className="w-4 h-4" />
-                    </button>
-                  </CollapsibleContent>
-                </div>
-              </Collapsible>
-
-              {/* Right: Upcoming Events - Collapsible */}
-              <Collapsible open={isSessionsOpen} onOpenChange={setIsSessionsOpen}>
-                <div className="p-6 bg-gray-50/50">
-                  <CollapsibleTrigger className="w-full flex items-center justify-between mb-4 hover:opacity-80 transition-opacity">
-                    <h4 className="text-gray-900 flex items-center space-x-2">
-                      <Calendar className="w-4 h-4 text-penny-guide" />
-                      <span>This Week's Sessions</span>
-                    </h4>
-                    <div className="flex items-center space-x-2">
-                      <span className="text-xs text-gray-500">{upcomingSessions.length} scheduled</span>
-                      <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${isSessionsOpen ? 'rotate-180' : ''}`} />
-                    </div>
-                  </CollapsibleTrigger>
-
-                  <CollapsibleContent>
-                    <div className="space-y-2">
-                      {upcomingSessions.map((session) => (
-                        <div
-                          key={session.id}
-                          className="p-3 rounded-lg border-l-4 bg-white hover:shadow-sm transition-all"
-                          style={{ borderColor: session.color }}
-                        >
-                          <div className="flex items-center justify-between gap-3">
-                            <div className="flex items-center space-x-3 flex-1 min-w-0">
-                              <div className="text-center flex-shrink-0">
-                                <p className="text-xs text-gray-600">{session.date}</p>
-                                <p className="text-xs text-gray-900">{session.time}</p>
-                              </div>
-                              <div className="min-w-0">
-                                <p className="text-sm text-gray-900 truncate">{session.title}</p>
-                                <p className="text-xs text-gray-500 capitalize">{session.type.replace('-', ' ')}</p>
-                              </div>
-                            </div>
-                            <button
-                              className="px-3 py-1.5 text-xs rounded-lg transition-colors flex-shrink-0"
-                              style={{
-                                backgroundColor: session.color,
-                                color: 'white'
-                              }}
-                            >
-                              Join
-                            </button>
-                          </div>
+                              </button>
+                            );
+                          })}
                         </div>
-                      ))}
+                      </CollapsibleContent>
                     </div>
+                  </Collapsible>
 
-                    <button
-                      onClick={() => onNavigate('program-calendar')}
-                      className="w-full mt-4 px-4 py-2 bg-penny-guide text-white rounded-lg hover:bg-penny-guide-dark transition-colors text-sm flex items-center justify-center space-x-2"
-                    >
-                      <span>View Full Calendar</span>
-                      <ChevronRight className="w-4 h-4" />
-                    </button>
-                  </CollapsibleContent>
+                  {/* Right: Upcoming Sessions - Collapsible */}
+                  <Collapsible open={isSessionsOpen} onOpenChange={setIsSessionsOpen}>
+                    <div className="p-6">
+                      <CollapsibleTrigger className="w-full flex items-center justify-between mb-4 hover:opacity-80 transition-opacity">
+                        <h4 className="text-gray-900 dark:text-white flex items-center space-x-2">
+                          <Calendar className="w-5 h-5" />
+                          <span>This Week</span>
+                        </h4>
+                        <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform ${isSessionsOpen ? 'rotate-180' : ''}`} />
+                      </CollapsibleTrigger>
+                      
+                      <CollapsibleContent>
+                        <div className="space-y-2">
+                          {upcomingSessions.map((session) => (
+                            <div 
+                              key={session.id}
+                              className="p-3 rounded-lg bg-gray-50 dark:bg-slate-700/50 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors cursor-pointer border border-transparent hover:border-gray-200 dark:hover:border-slate-600"
+                            >
+                              <div className="flex items-center space-x-3">
+                                <div 
+                                  className="w-2 h-2 rounded-full flex-shrink-0"
+                                  style={{ backgroundColor: session.color }}
+                                ></div>
+                                <div className="flex-1 min-w-0">
+                                  <p className="text-sm text-gray-900 dark:text-white truncate">{session.title}</p>
+                                  <div className="flex items-center space-x-3 text-xs text-gray-600 dark:text-slate-400 mt-1">
+                                    <span>{session.date}</span>
+                                    <span>•</span>
+                                    <span>{session.time}</span>
+                                  </div>
+                                </div>
+                                <ExternalLink className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                              </div>
+                            </div>
+                          ))}
+                          <button 
+                            onClick={() => setActiveTab('schedule')}
+                            className="w-full mt-2 text-sm text-[#2C6975] dark:text-[#7EB5C1] hover:underline"
+                          >
+                            View full calendar →
+                          </button>
+                        </div>
+                      </CollapsibleContent>
+                    </div>
+                  </Collapsible>
                 </div>
-              </Collapsible>
+              </div>
+
+              {/* Capstone Project */}
+              <div className="bg-gradient-to-br from-[#F9A03F]/5 to-[#F9A03F]/10 dark:from-[#F9A03F]/10 dark:to-[#F9A03F]/20 rounded-xl p-6 border-2 border-[#F9A03F]/30 dark:border-[#F9A03F]/50">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 rounded-lg bg-sun-amber text-white flex items-center justify-center">
+                      <Trophy className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h3 className="text-gray-900 dark:text-white">Your Capstone Project</h3>
+                      <p className="text-sm text-gray-600 dark:text-slate-400">40% of your total program points</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => onNavigate('capstone-projects')}
+                    className="px-4 py-2 bg-sun-amber text-white rounded-lg hover:bg-sun-amber-dark transition-colors flex items-center space-x-2"
+                  >
+                    <span>View Full Details</span>
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                </div>
+                
+                <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-slate-700">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex-1">
+                      <h4 className="text-gray-900 dark:text-white mb-2">Community Service Volunteer Management System</h4>
+                      <p className="text-sm text-gray-600 dark:text-slate-400 mb-3">
+                        Building a Salesforce application to manage volunteer programs for Hearts & Hands Community Services
+                      </p>
+                      <div className="flex items-center space-x-6 text-sm text-gray-600 dark:text-slate-400">
+                        <div className="flex items-center space-x-2">
+                          <Clock className="w-4 h-4" />
+                          <span>Due: Apr 8, 2025</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Target className="w-4 h-4" />
+                          <span>520 / 1,400 points</span>
+                        </div>
+                      </div>
+                    </div>
+                    <ProgressRing progress={37} size={80} color="#F9A03F" />
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-3 mb-4">
+                    <div className="bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-700 rounded-lg p-3">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-sm text-gray-700 dark:text-slate-300">Completed Phases</span>
+                        <CheckCircle className="w-4 h-4 text-green-600 dark:text-green-400" />
+                      </div>
+                      <p className="text-xl text-gray-900 dark:text-white">2 / 7</p>
+                    </div>
+                    <div className="bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 rounded-lg p-3">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-sm text-gray-700 dark:text-slate-300">Current Phase</span>
+                        <Sparkles className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                      </div>
+                      <p className="text-sm text-gray-900 dark:text-white">Automation & Logic</p>
+                    </div>
+                  </div>
+                  
+                  <button
+                    onClick={() => onNavigate('capstone-projects')}
+                    className="w-full py-2 border-2 border-sun-amber text-sun-amber dark:text-[#F9A03F] rounded-lg hover:bg-sun-amber hover:text-white transition-colors flex items-center justify-center space-x-2"
+                  >
+                    <span>Open Project Workspace</span>
+                    <ExternalLink className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Career Navigator */}
+              <CareerNavigator
+                currentLevel="Explorer"
+                completedMilestones={['skills-assessment']}
+                currentMilestone="trail-missions"
+                totalPoints={2380}
+                certificationsEarned={0}
+                onNavigate={onNavigate}
+              />
             </div>
 
-            {/* Penny Insight Footer */}
-            <div className="px-6 py-4 bg-gradient-to-r from-blue-50 to-blue-50/50 border-t border-blue-100">
-              <div className="flex items-start space-x-3">
-                <Sparkles className="w-5 h-5 text-sun-amber flex-shrink-0 mt-0.5" />
-                <div>
-                  <p className="text-sm text-gray-900 mb-1">
-                    <span className="font-medium">Penny's Insight:</span> You have 2 critical items due this week. Focus on your status report and the batch job bug to stay on track for capstone completion.
-                  </p>
-                  <button
-                    onClick={() => onNavigate('penny-chat')}
-                    className="text-sm text-penny-guide hover:underline"
+            {/* Right Sidebar */}
+            <div className="space-y-6">
+              {/* Daily Challenges */}
+              <DailyChallenges
+                onNavigate={onNavigate}
+                currentStreak={3}
+                completedToday={[]}
+              />
+
+              {/* Learning Streaks */}
+              <StreakTracker
+                currentStreak={12}
+                longestStreak={28}
+                totalActiveDays={45}
+                lastActiveDate={new Date().toISOString().split('T')[0]}
+                streakSaverAvailable={true}
+                milestonesReached={[7]}
+              />
+
+              {/* Leaderboard Widget */}
+              <LeaderboardWidget
+                category="points"
+                timeframe="weekly"
+                limit={5}
+                currentUserId="user-4"
+                onViewFull={() => onNavigate('leaderboard')}
+              />
+
+              {/* Quick Links */}
+              <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-6">
+                <h3 className="text-gray-900 dark:text-white mb-4">Quick Links</h3>
+                <div className="space-y-2">
+                  <button 
+                    onClick={() => onNavigate('program-calendar')}
+                    className="w-full text-left px-4 py-3 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors flex items-center justify-between"
                   >
-                    Get personalized guidance →
+                    <span className="text-sm text-gray-900 dark:text-white">Program Calendar</span>
+                    <ChevronRight className="w-4 h-4 text-gray-400" />
+                  </button>
+                  <a 
+                    href="https://slack.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full text-left px-4 py-3 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors flex items-center justify-between"
+                  >
+                    <span className="text-sm text-gray-900 dark:text-white">Open Slack</span>
+                    <ExternalLink className="w-4 h-4 text-gray-400" />
+                  </a>
+                  <button 
+                    onClick={() => onNavigate('community')}
+                    className="w-full text-left px-4 py-3 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors flex items-center justify-between"
+                  >
+                    <span className="text-sm text-gray-900 dark:text-white">Community</span>
+                    <ChevronRight className="w-4 h-4 text-gray-400" />
+                  </button>
+                  <button 
+                    onClick={() => onNavigate('learning-center')}
+                    className="w-full text-left px-4 py-3 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors flex items-center justify-between"
+                  >
+                    <span className="text-sm text-gray-900 dark:text-white">Learning Center</span>
+                    <ChevronRight className="w-4 h-4 text-gray-400" />
                   </button>
                 </div>
               </div>
             </div>
           </div>
+        </TabsContent>
 
-          {/* Capstone Project - Featured */}
-          <div className="bg-gradient-to-br from-[#F9A03F]/10 to-[#F9A03F]/5 border-2 border-[#F9A03F]/30 rounded-xl p-6">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 rounded-lg bg-sun-amber text-white flex items-center justify-center">
-                  <Trophy className="w-6 h-6" />
-                </div>
-                <div>
-                  <h3 className="text-gray-900">Your Capstone Project</h3>
-                  <p className="text-sm text-gray-600">40% of your total program points</p>
-                </div>
-              </div>
-              <button
-                onClick={() => onNavigate('capstone-projects')}
-                className="px-4 py-2 bg-sun-amber text-white rounded-lg hover:bg-sun-amber-dark transition-colors flex items-center space-x-2"
-              >
-                <span>View Full Details</span>
-                <ChevronRight className="w-4 h-4" />
-              </button>
-            </div>
-            
-            <div className="bg-white rounded-xl p-6 shadow-sm">
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex-1">
-                  <h4 className="text-gray-900 mb-2">Community Service Volunteer Management System</h4>
-                  <p className="text-sm text-gray-600 mb-3">
-                    Building a Salesforce application to manage volunteer programs for Hearts & Hands Community Services
-                  </p>
-                  <div className="flex items-center space-x-6 text-sm text-gray-600">
-                    <div className="flex items-center space-x-2">
-                      <Clock className="w-4 h-4" />
-                      <span>Due: Apr 8, 2025</span>
+        {/* My Trail Tab */}
+        <TabsContent value="trail" className="space-y-6">
+          <div className="grid lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2 space-y-6">
+              {/* Trail Missions */}
+              <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden">
+                <div className="p-6 flex items-center justify-between border-b border-gray-200 dark:border-slate-700">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 rounded-lg bg-penny-guide text-white flex items-center justify-center">
+                      <BookOpen className="w-6 h-6" />
                     </div>
-                    <div className="flex items-center space-x-2">
-                      <Target className="w-4 h-4" />
-                      <span>520 / 1,400 points</span>
+                    <div>
+                      <h3 className="text-gray-900 dark:text-white">Trail Missions</h3>
+                      <p className="text-sm text-gray-600 dark:text-slate-400">3 active learning paths</p>
                     </div>
                   </div>
+                  <button
+                    onClick={() => onNavigate('trail-missions')}
+                    className="px-4 py-2 bg-penny-guide dark:bg-[#3B6A52] text-white rounded-lg hover:bg-penny-guide-dark transition-colors text-sm flex items-center space-x-1"
+                  >
+                    <span>View All</span>
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
                 </div>
-                <ProgressRing progress={37} size={80} color="#F9A03F" />
-              </div>
-              
-              <div className="grid grid-cols-2 gap-3 mb-4">
-                <div className="bg-green-50 border border-green-200 rounded-lg p-3">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm text-gray-700">Completed Phases</span>
-                    <CheckCircle className="w-4 h-4 text-green-600" />
-                  </div>
-                  <p className="text-xl text-gray-900">2 / 7</p>
-                </div>
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm text-gray-700">Current Phase</span>
-                    <Sparkles className="w-4 h-4 text-blue-600" />
-                  </div>
-                  <p className="text-sm text-gray-900">Automation & Logic</p>
-                </div>
-              </div>
-              
-              <button
-                onClick={() => onNavigate('capstone-projects')}
-                className="w-full py-2 border-2 border-sun-amber text-sun-amber rounded-lg hover:bg-sun-amber hover:text-white transition-colors flex items-center justify-center space-x-2"
-              >
-                <span>Open Project Workspace</span>
-                <ExternalLink className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-
-          {/* NEW: Career Navigator Dashboard */}
-          <CareerNavigator
-            currentLevel="Explorer"
-            completedMilestones={['skills-assessment']}
-            currentMilestone="trail-missions"
-            totalPoints={2380}
-            certificationsEarned={0}
-            onNavigate={onNavigate}
-          />
-
-          {/* NEW: Penny AI Recommendations */}
-          <PennyRecommendations
-            onNavigate={onNavigate}
-            userId="current-user"
-            userSkills={[
-              { name: 'Apex Development', level: 2 },
-              { name: 'Lightning Web Components', level: 3 },
-              { name: 'Data Modeling', level: 4 },
-              { name: 'Process Automation', level: 3 },
-            ]}
-            completedTrails={[]}
-            currentLevel="Explorer"
-          />
-        </div>
-
-        {/* Right Sidebar - REORDERED */}
-        <div className="space-y-6">
-          {/* NEW: Daily Challenges - TOP OF SIDEBAR */}
-          <DailyChallenges
-            onNavigate={onNavigate}
-            currentStreak={3}
-            completedToday={[]}
-          />
-
-          {/* NEW: Learning Streaks - AFTER DAILY CHALLENGES */}
-          <StreakTracker
-            currentStreak={12}
-            longestStreak={28}
-            totalActiveDays={45}
-            lastActiveDate={new Date().toISOString().split('T')[0]}
-            streakSaverAvailable={true}
-            milestonesReached={[7]}
-          />
-
-          {/* NEW: Leaderboard Widget - AFTER LEARNING STREAKS */}
-          <LeaderboardWidget
-            category="points"
-            timeframe="weekly"
-            limit={5}
-            currentUserId="user-4"
-            onViewFull={() => onNavigate('leaderboard')}
-          />
-
-          {/* Quick Links - MOVED TO TOP */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h3 className="text-gray-900 mb-4">Quick Links</h3>
-            <div className="space-y-2">
-              <button 
-                onClick={() => onNavigate('program-calendar')}
-                className="w-full text-left px-4 py-3 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-between"
-              >
-                <span className="text-sm text-gray-900">Program Calendar</span>
-                <ChevronRight className="w-4 h-4 text-gray-400" />
-              </button>
-              <a 
-                href="https://slack.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full text-left px-4 py-3 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-between"
-              >
-                <span className="text-sm text-gray-900">Open Slack</span>
-                <ExternalLink className="w-4 h-4 text-gray-400" />
-              </a>
-              <button 
-                onClick={() => onNavigate('community')}
-                className="w-full text-left px-4 py-3 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-between"
-              >
-                <span className="text-sm text-gray-900">Community</span>
-                <ChevronRight className="w-4 h-4 text-gray-400" />
-              </button>
-              <button 
-                onClick={() => onNavigate('learning-center')}
-                className="w-full text-left px-4 py-3 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-between"
-              >
-                <span className="text-sm text-gray-900">Learning Center</span>
-                <ChevronRight className="w-4 h-4 text-gray-400" />
-              </button>
-            </div>
-          </div>
-
-          {/* Points Breakdown - Collapsible */}
-          <Collapsible open={isPointsOpen} onOpenChange={setIsPointsOpen}>
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-              <CollapsibleTrigger className="w-full p-6 flex items-center justify-between hover:bg-gray-50 transition-colors">
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#F9A03F] to-[#F9A03F]/70 text-white flex items-center justify-center">
-                    <Award className="w-6 h-6" />
-                  </div>
-                  <div className="text-left">
-                    <h3 className="text-gray-900">Points Breakdown</h3>
-                    <p className="text-sm text-gray-600">{pointsSystem.earned} / {pointsSystem.total} points earned ({Math.round((pointsSystem.earned / pointsSystem.total) * 100)}%)</p>
-                  </div>
-                </div>
-                <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform ${isPointsOpen ? 'rotate-180' : ''}`} />
-              </CollapsibleTrigger>
-              
-              <CollapsibleContent>
-                <div className="px-6 pb-6 space-y-3">
-                  {pointsSystem.breakdown.map((item, index) => {
-                    const percentage = Math.round((item.earned / item.total) * 100);
-                    return (
-                      <div key={index} className="space-y-2">
-                        <div className="flex items-center justify-between text-sm">
-                          <div className="flex items-center space-x-2">
-                            <span className="text-gray-900">{item.category}</span>
-                            <span className="text-xs text-gray-500">({item.percentage}% of program)</span>
-                          </div>
-                          <span className="text-gray-600">{item.earned} / {item.total}</span>
-                        </div>
-                        <div className="w-full bg-gray-100 rounded-full h-2">
-                          <div 
-                            className="bg-sun-amber h-2 rounded-full transition-all duration-500"
-                            style={{ width: `${percentage}%` }}
-                          ></div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </CollapsibleContent>
-            </div>
-          </Collapsible>
-
-          {/* Community Impact - Collapsible */}
-          <Collapsible open={showCommunityEngagement} onOpenChange={setShowCommunityEngagement}>
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-              <CollapsibleTrigger className="w-full p-6 flex items-center justify-between hover:bg-gray-50 transition-colors">
-                <div className="flex items-center space-x-3">
-                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all ${
-                    showCommunityEngagement 
-                      ? 'bg-penny-guide text-white' 
-                      : 'bg-gray-100 text-gray-600'
-                  }`}>
-                    <Heart className="w-6 h-6" />
-                  </div>
-                  <div className="text-left">
-                    <h3 className="text-gray-900">Community Impact</h3>
-                    <p className="text-sm text-gray-600">147 engagement points</p>
-                  </div>
-                </div>
-                <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform ${showCommunityEngagement ? 'rotate-180' : ''}`} />
-              </CollapsibleTrigger>
-              
-              <CollapsibleContent>
-                <div className="px-6 pb-6">
-                  <CommunityEngagementMeter currentPoints={147} showLeaderboard={true} />
-                </div>
-              </CollapsibleContent>
-            </div>
-          </Collapsible>
-
-          {/* Trail Missions - Collapsible */}
-          <Collapsible open={isTrailMissionsOpen} onOpenChange={setIsTrailMissionsOpen}>
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-              <div className="p-6 flex items-center justify-between">
-                <CollapsibleTrigger className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
-                  <div className="w-10 h-10 rounded-lg bg-penny-guide text-white flex items-center justify-center">
-                    <BookOpen className="w-6 h-6" />
-                  </div>
-                  <div className="text-left">
-                    <h3 className="text-gray-900">Trail Missions</h3>
-                    <p className="text-sm text-gray-600">3 active learning paths</p>
-                  </div>
-                  <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform ml-2 ${isTrailMissionsOpen ? 'rotate-180' : ''}`} />
-                </CollapsibleTrigger>
-                <button
-                  onClick={() => onNavigate('trail-missions')}
-                  className="px-4 py-2 bg-penny-guide text-white rounded-lg hover:bg-penny-guide-dark transition-colors text-sm flex items-center space-x-1"
-                >
-                  <span>View All</span>
-                  <ChevronRight className="w-4 h-4" />
-                </button>
-              </div>
-              
-              <CollapsibleContent>
-                <div className="px-6 pb-6 space-y-4">
+                <div className="p-6 space-y-4">
                   {missions.map((mission) => (
-                    <div key={mission.id} className="p-4 bg-gray-50 rounded-xl hover:shadow-md transition-shadow border border-gray-100">
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <div className="flex items-center space-x-2 mb-2">
-                            <span className="inline-block px-3 py-1 rounded-full bg-[#7EB5C1]/10 text-[#2C6975] text-xs">
-                              {mission.type}
-                            </span>
-                            <span className="text-xs text-gray-500">Due: {mission.dueDate}</span>
-                          </div>
-                          <h4 className="text-gray-900 mb-3">{mission.title}</h4>
-                          <div className="flex items-center space-x-4">
-                            <div className="flex-1">
-                              <div className="w-full bg-gray-200 rounded-full h-2">
-                                <div 
-                                  className="h-2 rounded-full transition-all duration-500"
-                                  style={{ width: `${mission.progress}%`, backgroundColor: mission.color }}
-                                ></div>
-                              </div>
-                            </div>
-                            <span className="text-sm text-gray-600">{mission.progress}%</span>
-                          </div>
+                    <div key={mission.id} className="p-4 bg-gray-50 dark:bg-slate-700/50 rounded-lg border border-gray-200 dark:border-slate-600">
+                      <div className="flex items-start justify-between mb-3">
+                        <div>
+                          <h4 className="text-gray-900 dark:text-white mb-1">{mission.title}</h4>
+                          <p className="text-sm text-gray-600 dark:text-slate-400">{mission.type} • Due {mission.dueDate}</p>
                         </div>
-                        <ProgressRing progress={mission.progress} size={60} color={mission.color} />
+                        <span className="text-sm text-gray-900 dark:text-white">{mission.progress}%</span>
                       </div>
-                      <div className="mt-4 flex space-x-2">
-                        <button className="flex-1 bg-[#2C6975] text-white px-4 py-2 rounded-lg hover:bg-[#234f57] transition-colors text-sm">
-                          Continue
-                        </button>
-                        <button 
-                          onClick={() => onNavigate('trail-missions')}
-                          className="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors text-sm"
-                        >
-                          Details
-                        </button>
+                      <div className="w-full bg-gray-200 dark:bg-slate-600 rounded-full h-2">
+                        <div 
+                          className="h-2 rounded-full transition-all"
+                          style={{ width: `${mission.progress}%`, backgroundColor: mission.color }}
+                        ></div>
                       </div>
                     </div>
                   ))}
                 </div>
-              </CollapsibleContent>
-            </div>
-          </Collapsible>
-        </div>
-      </div>
+              </div>
 
-      {/* Footer */}
-      <footer className="border-t border-gray-200 pt-6 mt-8">
-        <div className="flex flex-wrap items-center justify-between text-sm text-gray-600">
-          <div className="flex space-x-6">
-            <a href="#" className="hover:text-[#2C6975]">Support</a>
-            <a href="#" className="hover:text-[#2C6975]">Resources</a>
-            <a href="#" className="hover:text-[#2C6975]">Policies</a>
-            <a href="#" className="hover:text-[#2C6975]">Contact</a>
+              {/* Trail Impact Meter */}
+              <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-6">
+                <h3 className="text-gray-900 dark:text-white mb-4">Trail Impact</h3>
+                <TrailImpactMeter />
+              </div>
+            </div>
+
+            {/* Sidebar */}
+            <div className="space-y-6">
+              {/* Points Breakdown */}
+              <Collapsible open={isPointsOpen} onOpenChange={setIsPointsOpen}>
+                <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden">
+                  <CollapsibleTrigger className="w-full p-6 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#F9A03F] to-[#F9A03F]/70 text-white flex items-center justify-center">
+                        <Award className="w-6 h-6" />
+                      </div>
+                      <div className="text-left">
+                        <h3 className="text-gray-900 dark:text-white">Points Breakdown</h3>
+                        <p className="text-sm text-gray-600 dark:text-slate-400">{pointsSystem.earned} / {pointsSystem.total} points earned ({Math.round((pointsSystem.earned / pointsSystem.total) * 100)}%)</p>
+                      </div>
+                    </div>
+                    <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform ${isPointsOpen ? 'rotate-180' : ''}`} />
+                  </CollapsibleTrigger>
+                  
+                  <CollapsibleContent>
+                    <div className="px-6 pb-6 space-y-3">
+                      {pointsSystem.breakdown.map((item, index) => {
+                        const percentage = Math.round((item.earned / item.total) * 100);
+                        return (
+                          <div key={index} className="space-y-2">
+                            <div className="flex items-center justify-between text-sm">
+                              <div className="flex items-center space-x-2">
+                                <span className="text-gray-900 dark:text-white">{item.category}</span>
+                                <span className="text-xs text-gray-500 dark:text-slate-500">({item.percentage}% of program)</span>
+                              </div>
+                              <span className="text-gray-600 dark:text-slate-400">{item.earned} / {item.total}</span>
+                            </div>
+                            <div className="w-full bg-gray-100 dark:bg-slate-700 rounded-full h-2">
+                              <div 
+                                className="bg-sun-amber h-2 rounded-full transition-all duration-500"
+                                style={{ width: `${percentage}%` }}
+                              ></div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </CollapsibleContent>
+                </div>
+              </Collapsible>
+
+              {/* Community Impact */}
+              <Collapsible open={showCommunityEngagement} onOpenChange={setShowCommunityEngagement}>
+                <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden">
+                  <CollapsibleTrigger className="w-full p-6 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors">
+                    <div className="flex items-center space-x-3">
+                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all ${
+                        showCommunityEngagement 
+                          ? 'bg-penny-guide text-white' 
+                          : 'bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-slate-400'
+                      }`}>
+                        <Heart className="w-6 h-6" />
+                      </div>
+                      <div className="text-left">
+                        <h3 className="text-gray-900 dark:text-white">Community Impact</h3>
+                        <p className="text-sm text-gray-600 dark:text-slate-400">147 engagement points</p>
+                      </div>
+                    </div>
+                    <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform ${showCommunityEngagement ? 'rotate-180' : ''}`} />
+                  </CollapsibleTrigger>
+                  
+                  <CollapsibleContent>
+                    <div className="px-6 pb-6">
+                      <CommunityEngagementMeter currentPoints={147} showLeaderboard={true} />
+                    </div>
+                  </CollapsibleContent>
+                </div>
+              </Collapsible>
+            </div>
           </div>
-          <p>© Transition Trails 2025</p>
-        </div>
-      </footer>
+        </TabsContent>
+
+        {/* Penny's Recommendations Tab */}
+        <TabsContent value="penny" className="space-y-6">
+          <div className="grid lg:grid-cols-3 gap-6">
+            {/* Main Content - 2 Columns */}
+            <div className="lg:col-span-2 space-y-6">
+              {/* Penny AI Recommendations */}
+              <PennyRecommendations
+                onNavigate={onNavigate}
+                userId="current-user"
+                userSkills={[
+                  { name: 'Apex Development', level: 2 },
+                  { name: 'Lightning Web Components', level: 3 },
+                  { name: 'Data Modeling', level: 4 },
+                  { name: 'Process Automation', level: 3 },
+                ]}
+                completedTrails={[]}
+                currentLevel="Explorer"
+              />
+
+              {/* Penny's Priority Focus Items */}
+              <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden">
+                <div className="p-6 bg-gradient-to-r from-[#F9A03F]/10 to-[#F9A03F]/5 dark:from-[#F9A03F]/20 dark:to-[#F9A03F]/10 border-b border-gray-200 dark:border-slate-700">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#F9A03F] to-[#e89135] text-white flex items-center justify-center shadow-md">
+                        <Target className="w-6 h-6" />
+                      </div>
+                      <div>
+                        <h3 className="text-gray-900 dark:text-white">Critical Path Focus</h3>
+                        <p className="text-sm text-gray-600 dark:text-slate-400">Tasks prioritized by impact and urgency</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-6 space-y-3">
+                  {pennyFocusItems.map((item) => {
+                    const Icon = item.icon;
+                    return (
+                      <button
+                        key={item.id}
+                        onClick={item.action}
+                        className={`w-full text-left p-4 rounded-lg border-2 transition-all hover:shadow-md ${
+                          item.priority === 'critical' 
+                            ? 'border-red-300 dark:border-red-700 bg-red-50 dark:bg-red-900/20' 
+                            : item.priority === 'high' 
+                            ? 'border-orange-300 dark:border-orange-700 bg-orange-50 dark:bg-orange-900/20' 
+                            : 'border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50'
+                        }`}
+                      >
+                        <div className="flex items-start space-x-3">
+                          <div 
+                            className="w-10 h-10 rounded-lg flex items-center justify-center text-white flex-shrink-0"
+                            style={{ backgroundColor: item.color }}
+                          >
+                            <Icon className="w-5 h-5" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center justify-between mb-2">
+                              <h5 className="text-sm text-gray-900 dark:text-white">{item.title}</h5>
+                              <span className={`text-xs px-2 py-1 rounded-full ${
+                                item.priority === 'critical' ? 'bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300' : 
+                                item.priority === 'high' ? 'bg-orange-100 dark:bg-orange-900/40 text-orange-700 dark:text-orange-300' : 
+                                'bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-slate-400'
+                              }`}>
+                                {item.priority}
+                              </span>
+                            </div>
+                            <p className="text-xs text-gray-600 dark:text-slate-400 mb-2">{item.description}</p>
+                            <div className="flex items-center justify-between text-xs">
+                              <span className="text-gray-500 dark:text-slate-500 flex items-center space-x-1">
+                                <BookOpen className="w-3 h-3" />
+                                <span>{item.source}</span>
+                              </span>
+                              <span className={`flex items-center space-x-1 ${
+                                item.priority === 'critical' ? 'text-red-600 dark:text-red-400' : 
+                                item.priority === 'high' ? 'text-orange-600 dark:text-orange-400' : 
+                                'text-gray-600 dark:text-slate-400'
+                              }`}>
+                                <Clock className="w-3 h-3" />
+                                <span>Due: {item.dueDate}</span>
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Career Navigator */}
+              <CareerNavigator
+                currentLevel="Explorer"
+                completedMilestones={['skills-assessment']}
+                currentMilestone="trail-missions"
+                totalPoints={2380}
+                certificationsEarned={0}
+                onNavigate={onNavigate}
+              />
+            </div>
+
+            {/* Sidebar */}
+            <div className="space-y-6">
+              {/* This Week's Schedule */}
+              <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden">
+                <div className="p-6 border-b border-gray-200 dark:border-slate-700">
+                  <div className="flex items-center justify-between mb-1">
+                    <div className="flex items-center space-x-2">
+                      <Calendar className="w-5 h-5 text-[#2C6975] dark:text-[#7EB5C1]" />
+                      <h3 className="text-gray-900 dark:text-white">This Week</h3>
+                    </div>
+                    <button 
+                      onClick={() => onNavigate('program-calendar')}
+                      className="text-xs text-[#2C6975] dark:text-[#7EB5C1] hover:underline flex items-center space-x-1"
+                    >
+                      <span>Full Calendar</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </button>
+                  </div>
+                </div>
+                
+                <div className="p-4 space-y-2">
+                  {upcomingSessions.map((session) => (
+                    <div 
+                      key={session.id}
+                      className="p-3 rounded-lg bg-gray-50 dark:bg-slate-700/50 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors cursor-pointer border border-transparent hover:border-gray-200 dark:hover:border-slate-600"
+                    >
+                      <div className="flex items-center space-x-3">
+                        <div 
+                          className="w-2 h-2 rounded-full flex-shrink-0"
+                          style={{ backgroundColor: session.color }}
+                        ></div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm text-gray-900 dark:text-white truncate">{session.title}</p>
+                          <div className="flex items-center space-x-2 text-xs text-gray-600 dark:text-slate-400 mt-1">
+                            <span>{session.date}</span>
+                            <span>•</span>
+                            <span>{session.time}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Ask Penny */}
+              <div className="bg-gradient-to-br from-[#F9A03F]/10 to-[#F9A03F]/5 dark:from-[#F9A03F]/20 dark:to-[#F9A03F]/10 rounded-xl p-6 border-2 border-[#F9A03F]/30 dark:border-[#F9A03F]/50">
+                <div className="flex items-center space-x-3 mb-4">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#F9A03F] to-[#e89135] flex items-center justify-center">
+                    <Sparkles className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-gray-900 dark:text-white">Ask Penny</h3>
+                    <p className="text-xs text-gray-600 dark:text-slate-400">Your AI Learning Guide</p>
+                  </div>
+                </div>
+                <p className="text-sm text-gray-700 dark:text-slate-300 mb-4">
+                  Need help with these recommendations or want personalized guidance? Chat with Penny anytime!
+                </p>
+                <button
+                  onClick={() => onNavigate('penny-chat')}
+                  className="w-full px-4 py-2 bg-sun-amber text-white rounded-lg hover:bg-sun-amber-dark transition-colors text-sm flex items-center justify-center space-x-2"
+                >
+                  <MessageSquare className="w-4 h-4" />
+                  <span>Chat with Penny</span>
+                </button>
+              </div>
+
+              {/* Quick Links */}
+              <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-6">
+                <h3 className="text-gray-900 dark:text-white mb-4">Quick Actions</h3>
+                <div className="space-y-2">
+                  <button 
+                    onClick={() => onNavigate('trail-missions')}
+                    className="w-full text-left px-4 py-3 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors flex items-center justify-between"
+                  >
+                    <span className="text-sm text-gray-900 dark:text-white">Browse Trail Missions</span>
+                    <ChevronRight className="w-4 h-4 text-gray-400" />
+                  </button>
+                  <button 
+                    onClick={() => onNavigate('learning-center')}
+                    className="w-full text-left px-4 py-3 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors flex items-center justify-between"
+                  >
+                    <span className="text-sm text-gray-900 dark:text-white">Learning Center</span>
+                    <ChevronRight className="w-4 h-4 text-gray-400" />
+                  </button>
+                  <button 
+                    onClick={() => onNavigate('capstone-projects')}
+                    className="w-full text-left px-4 py-3 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors flex items-center justify-between"
+                  >
+                    <span className="text-sm text-gray-900 dark:text-white">My Capstone Project</span>
+                    <ChevronRight className="w-4 h-4 text-gray-400" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </TabsContent>
+
+        {/* Growth Tab */}
+        <TabsContent value="growth" className="space-y-6">
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* Daily Challenges - Full Width */}
+            <DailyChallenges
+              onNavigate={onNavigate}
+              currentStreak={3}
+              completedToday={[]}
+            />
+
+            {/* Learning Streaks - Full Width */}
+            <StreakTracker
+              currentStreak={12}
+              longestStreak={28}
+              totalActiveDays={45}
+              lastActiveDate={new Date().toISOString().split('T')[0]}
+              streakSaverAvailable={true}
+              milestonesReached={[7]}
+            />
+          </div>
+
+          {/* Leaderboard - Full Width */}
+          <LeaderboardWidget
+            category="points"
+            timeframe="weekly"
+            limit={10}
+            currentUserId="user-4"
+            onViewFull={() => onNavigate('leaderboard')}
+          />
+
+          {/* Community Engagement */}
+          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-6">
+            <h3 className="text-xl text-gray-900 dark:text-white mb-6">Community Engagement</h3>
+            <CommunityEngagementMeter currentPoints={147} showLeaderboard={true} />
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

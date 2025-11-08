@@ -243,7 +243,7 @@ export function CapstoneProjects({ onNavigate }: CapstoneProjectsProps) {
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F3E8] pb-12">
+    <div className="min-h-screen bg-[#F5F3E8] dark:bg-slate-900 pb-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-6">

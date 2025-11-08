@@ -77,7 +77,7 @@ export function VisitorLanding({ onStartTrail, onNavigate }: VisitorLandingProps
   ];
 
   return (
-    <div className="min-h-screen bg-[#F5F3E8]">
+    <div className="min-h-screen bg-[#F5F3E8] dark:bg-slate-900">
       {/* Hero Section with Real Photo */}
       <div className="relative overflow-hidden">
         {/* Background Image */}
@@ -131,20 +131,20 @@ export function VisitorLanding({ onStartTrail, onNavigate }: VisitorLandingProps
 
       {/* Features Grid */}
       <div className="max-w-6xl mx-auto px-4 py-16">
-        <h2 className="text-3xl text-gray-900 text-center mb-12">What You Can Explore</h2>
+        <h2 className="text-3xl text-gray-900 dark:text-white text-center mb-12">What You Can Explore</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {features.map((feature) => {
             const Icon = feature.icon;
             return (
-              <div key={feature.title} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-all">
+              <div key={feature.title} className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-6 hover:shadow-md transition-all">
                 <div 
                   className="w-12 h-12 rounded-lg flex items-center justify-center mb-4"
                   style={{ backgroundColor: `${feature.color}15` }}
                 >
                   <Icon className="w-6 h-6" style={{ color: feature.color }} />
                 </div>
-                <h3 className="text-gray-900 mb-2">{feature.title}</h3>
-                <p className="text-sm text-gray-600">{feature.description}</p>
+                <h3 className="text-gray-900 dark:text-white mb-2">{feature.title}</h3>
+                <p className="text-sm text-gray-600 dark:text-slate-300">{feature.description}</p>
               </div>
             );
           })}
@@ -152,36 +152,36 @@ export function VisitorLanding({ onStartTrail, onNavigate }: VisitorLandingProps
       </div>
 
       {/* What You'll Unlock */}
-      <div className="bg-gradient-to-br from-[#F9A03F]/10 to-[#F9A03F]/5 py-16 px-4">
+      <div className="bg-gradient-to-br from-[#F9A03F]/10 to-[#F9A03F]/5 dark:from-slate-800 dark:to-slate-850 py-16 px-4">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl text-gray-900 text-center mb-4">Ready for More?</h2>
-          <p className="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
+          <h2 className="text-3xl text-gray-900 dark:text-white text-center mb-4">Ready for More?</h2>
+          <p className="text-center text-gray-600 dark:text-slate-300 mb-12 max-w-2xl mx-auto">
             When you join the full Academy, you'll unlock premium features and personalized learning paths
           </p>
           <div className="grid md:grid-cols-3 gap-6">
-            <div className="bg-white rounded-xl p-6 shadow-sm border-2 border-[#F9A03F]/30">
+            <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border-2 border-[#F9A03F]/30 dark:border-[#F9A03F]/50">
               <Trophy className="w-10 h-10 text-[#F9A03F] mb-4" />
-              <h3 className="text-gray-900 mb-2">Capstone Projects</h3>
-              <p className="text-sm text-gray-600 mb-4">Build real Salesforce applications for nonprofit organizations</p>
-              <div className="flex items-center space-x-2 text-xs text-gray-500">
+              <h3 className="text-gray-900 dark:text-white mb-2">Capstone Projects</h3>
+              <p className="text-sm text-gray-600 dark:text-slate-300 mb-4">Build real Salesforce applications for nonprofit organizations</p>
+              <div className="flex items-center space-x-2 text-xs text-gray-500 dark:text-slate-400">
                 <Lock className="w-3 h-3" />
                 <span>Unlocks with enrollment</span>
               </div>
             </div>
-            <div className="bg-white rounded-xl p-6 shadow-sm border-2 border-[#2C6975]/30">
-              <Target className="w-10 h-10 text-[#2C6975] mb-4" />
-              <h3 className="text-gray-900 mb-2">Personal Coaching</h3>
-              <p className="text-sm text-gray-600 mb-4">1:1 sessions with experienced learning coaches</p>
-              <div className="flex items-center space-x-2 text-xs text-gray-500">
+            <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border-2 border-[#2C6975]/30 dark:border-[#7EB5C1]/50">
+              <Target className="w-10 h-10 text-[#2C6975] dark:text-[#7EB5C1] mb-4" />
+              <h3 className="text-gray-900 dark:text-white mb-2">Personal Coaching</h3>
+              <p className="text-sm text-gray-600 dark:text-slate-300 mb-4">1:1 sessions with experienced learning coaches</p>
+              <div className="flex items-center space-x-2 text-xs text-gray-500 dark:text-slate-400">
                 <Lock className="w-3 h-3" />
                 <span>Unlocks with enrollment</span>
               </div>
             </div>
-            <div className="bg-white rounded-xl p-6 shadow-sm border-2 border-[#7EB5C1]/30">
+            <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border-2 border-[#7EB5C1]/30 dark:border-[#7EB5C1]/50">
               <GraduationCap className="w-10 h-10 text-[#7EB5C1] mb-4" />
-              <h3 className="text-gray-900 mb-2">Trail of Mastery</h3>
-              <p className="text-sm text-gray-600 mb-4">Complete the 12-week guided learning path with certifications</p>
-              <div className="flex items-center space-x-2 text-xs text-gray-500">
+              <h3 className="text-gray-900 dark:text-white mb-2">Trail of Mastery</h3>
+              <p className="text-sm text-gray-600 dark:text-slate-300 mb-4">Complete the 12-week guided learning path with certifications</p>
+              <div className="flex items-center space-x-2 text-xs text-gray-500 dark:text-slate-400">
                 <Lock className="w-3 h-3" />
                 <span>Unlocks with enrollment</span>
               </div>
@@ -192,20 +192,20 @@ export function VisitorLanding({ onStartTrail, onNavigate }: VisitorLandingProps
 
       {/* Testimonials */}
       <div className="max-w-6xl mx-auto px-4 py-16">
-        <h2 className="text-3xl text-gray-900 text-center mb-12">From Visitors to Success Stories</h2>
+        <h2 className="text-3xl text-gray-900 dark:text-white text-center mb-12">From Visitors to Success Stories</h2>
         <div className="grid md:grid-cols-2 gap-8">
           {testimonials.map((testimonial) => (
-            <div key={testimonial.name} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div key={testimonial.name} className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-6">
               <div className="flex items-center space-x-4 mb-4">
                 <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#2C6975] to-[#7EB5C1] flex items-center justify-center text-white">
                   {testimonial.avatar}
                 </div>
                 <div>
-                  <p className="text-gray-900">{testimonial.name}</p>
-                  <p className="text-sm text-gray-600">{testimonial.role}</p>
+                  <p className="text-gray-900 dark:text-white">{testimonial.name}</p>
+                  <p className="text-sm text-gray-600 dark:text-slate-300">{testimonial.role}</p>
                 </div>
               </div>
-              <p className="text-gray-700 italic">"{testimonial.quote}"</p>
+              <p className="text-gray-700 dark:text-slate-300 italic">"{testimonial.quote}"</p>
             </div>
           ))}
         </div>
@@ -280,7 +280,7 @@ export function VisitorLanding({ onStartTrail, onNavigate }: VisitorLandingProps
       {/* Registration Modal - 2 Steps */}
       {showOnboarding && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-[#F5F3E8] rounded-xl shadow-2xl max-w-md w-full p-8">
+          <div className="bg-[#F5F3E8] dark:bg-slate-800 rounded-xl shadow-2xl max-w-md w-full p-8">
             {registrationStep === 1 ? (
               <>
                 {/* Step 1 - Registration Form */}
@@ -288,50 +288,50 @@ export function VisitorLanding({ onStartTrail, onNavigate }: VisitorLandingProps
                   <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#F9A03F] to-[#e89135] mx-auto mb-4 flex items-center justify-center">
                     <Sparkles className="w-8 h-8 text-white" />
                   </div>
-                  <h3 className="text-2xl text-gray-900 mb-2">Join the Visitor Trail</h3>
-                  <p className="text-gray-600">Tell us a bit about yourself to get started</p>
+                  <h3 className="text-2xl text-gray-900 dark:text-white mb-2">Join the Visitor Trail</h3>
+                  <p className="text-gray-600 dark:text-slate-300">Tell us a bit about yourself to get started</p>
                   
                   {/* Progress Dots */}
                   <div className="flex items-center justify-center space-x-2 mt-4">
                     <div className="w-2 h-2 rounded-full bg-[#F9A03F]"></div>
-                    <div className="w-2 h-2 rounded-full bg-gray-300"></div>
+                    <div className="w-2 h-2 rounded-full bg-gray-300 dark:bg-slate-600"></div>
                   </div>
-                  <p className="text-xs text-gray-500 mt-1">Step 1 of 2</p>
+                  <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">Step 1 of 2</p>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div>
-                    <label className="block text-sm text-gray-700 mb-1">First Name</label>
+                    <label className="block text-sm text-gray-700 dark:text-slate-300 mb-1">First Name</label>
                     <input
                       type="text"
                       required
                       value={formData.firstName}
                       onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                      className="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F9A03F]"
+                      className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F9A03F]"
                       placeholder="Enter your first name"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm text-gray-700 mb-1">Last Name</label>
+                    <label className="block text-sm text-gray-700 dark:text-slate-300 mb-1">Last Name</label>
                     <input
                       type="text"
                       required
                       value={formData.lastName}
                       onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                      className="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F9A03F]"
+                      className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F9A03F]"
                       placeholder="Enter your last name"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm text-gray-700 mb-1">Email Address</label>
+                    <label className="block text-sm text-gray-700 dark:text-slate-300 mb-1">Email Address</label>
                     <input
                       type="email"
                       required
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F9A03F]"
+                      className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F9A03F]"
                       placeholder="your.email@example.com"
                     />
                   </div>

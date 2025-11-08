@@ -9,4 +9,5 @@ export { SlackChannelLink } from './SlackChannelLink';
 export { GitHubRepositoryLink, RepoFolderStructure } from './GitHubRepositoryLink';
 export { PDFGenerationButton, PDFPreviewCard } from './PDFGenerationButton';
 export { AudienceToggle, RoleIndicator, type UserRole } from './AudienceToggle';
+export { AudienceSelector, type AudienceRole } from './AudienceSelector';
 export { LinearProjectLink, LinearSetupGuide } from './LinearProjectLink';

@@ -1,7 +1,10 @@
 import { Lock, Play, Clock, CheckCircle, Trophy, TrendingUp, ArrowRight, Sparkles, Mountain, Compass, Map, Star, MessageCircle, Users, BookOpen, Award, Zap } from 'lucide-react';
 import { Badge } from './ui/badge';
 import { Progress } from './ui/progress';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { ExplorationMeter } from './ExplorationMeter';
+import { UpgradePromptModal } from './UpgradePromptModal';
+import { ProgressiveFeatureLock } from './ProgressiveFeatureLock';
 
 interface VisitorLearningCenterProps {
   onEnroll: () => void;
@@ -13,6 +16,17 @@ export function VisitorLearningCenter({ onEnroll }: VisitorLearningCenterProps) 
   const [showBadge, setShowBadge] = useState(false);
   const [showConversionModal, setShowConversionModal] = useState(false);
   const [selectedPennyPrompt, setSelectedPennyPrompt] = useState('');
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  
+  // Check if user should see upgrade prompt (70% progress)
+  useEffect(() => {
+    const progressPercent = (explorationPoints / 500) * 100;
+    if (progressPercent >= 70 && !showUpgradeModal) {
+      setTimeout(() => {
+        setShowUpgradeModal(true);
+      }, 2000);
+    }
+  }, [explorationPoints]);
 
   const freeCourses = [
     {
@@ -102,7 +116,7 @@ export function VisitorLearningCenter({ onEnroll }: VisitorLearningCenterProps) 
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F3E8]">
+    <div className="min-h-screen bg-[#F5F3E8] dark:bg-slate-900">
       {/* Visitor Banner */}
       <div className="bg-gradient-to-r from-[#7EB5C1] to-[#2C6975] text-white py-4 px-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
@@ -196,31 +210,31 @@ export function VisitorLearningCenter({ onEnroll }: VisitorLearningCenterProps) 
           {/* Three Path Cards */}
           <div className="grid md:grid-cols-3 gap-8">
             {/* Card 1: The Guided Trail */}
-            <div className="bg-white rounded-2xl shadow-lg border-2 border-gray-200 overflow-hidden hover:shadow-xl hover:border-[#3B6A52] transition-all duration-300 group">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border-2 border-gray-200 dark:border-slate-700 overflow-hidden hover:shadow-xl hover:border-[#3B6A52] dark:hover:border-[#3B6A52] transition-all duration-300 group">
               <div className="bg-gradient-to-br from-[#3B6A52] to-[#2C6975] p-8 text-center">
-                <div className="w-20 h-20 rounded-full bg-white flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                <div className="w-20 h-20 rounded-full bg-white dark:bg-slate-200 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
                   <Map className="w-10 h-10 text-[#3B6A52]" />
                 </div>
                 <h3 className="text-2xl text-white mb-2">The Guided Trail</h3>
               </div>
               
               <div className="p-8">
-                <p className="text-gray-700 mb-6 min-h-[60px]">
+                <p className="text-gray-700 dark:text-slate-300 mb-6 min-h-[60px]">
                   Start with beginner-friendly, self-paced content and explore at your own pace.
                 </p>
                 
                 <div className="space-y-3 mb-8">
                   <div className="flex items-start space-x-3">
-                    <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-                    <span className="text-sm text-gray-700">3 Free Intro Courses</span>
+                    <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
+                    <span className="text-sm text-gray-700 dark:text-slate-300">3 Free Intro Courses</span>
                   </div>
                   <div className="flex items-start space-x-3">
-                    <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-                    <span className="text-sm text-gray-700">Penny's Starter Tips</span>
+                    <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
+                    <span className="text-sm text-gray-700 dark:text-slate-300">Penny's Starter Tips</span>
                   </div>
                   <div className="flex items-start space-x-3">
-                    <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-                    <span className="text-sm text-gray-700">Visitor Slack Access</span>
+                    <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
+                    <span className="text-sm text-gray-700 dark:text-slate-300">Visitor Slack Access</span>
                   </div>
                 </div>
 
@@ -232,7 +246,7 @@ export function VisitorLearningCenter({ onEnroll }: VisitorLearningCenterProps) 
             </div>
 
             {/* Card 2: Trail of Mastery */}
-            <div className="bg-white rounded-2xl shadow-lg border-2 border-gray-200 overflow-hidden hover:shadow-xl hover:border-[#F9A03F] transition-all duration-300 group">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border-2 border-gray-200 dark:border-slate-700 overflow-hidden hover:shadow-xl hover:border-[#F9A03F] dark:hover:border-[#F9A03F] transition-all duration-300 group">
               <div className="bg-gradient-to-br from-[#F9A03F] to-[#e89135] p-8 text-center">
                 <div className="w-20 h-20 rounded-full bg-white flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
                   <Mountain className="w-10 h-10 text-[#F9A03F]" />
@@ -660,6 +674,16 @@ export function VisitorLearningCenter({ onEnroll }: VisitorLearningCenterProps) 
           </div>
         </div>
       )}
+
+      {/* Upgrade Prompt Modal */}
+      <UpgradePromptModal
+        isOpen={showUpgradeModal}
+        onClose={() => setShowUpgradeModal(false)}
+        onUpgrade={onEnroll}
+        triggerReason="progress"
+        visitorProgress={(explorationPoints / 500) * 100}
+        visitorName="Alex" // In production: from current user
+      />
     </div>
   );
 }

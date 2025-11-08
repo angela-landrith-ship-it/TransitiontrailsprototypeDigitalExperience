@@ -323,6 +323,7 @@ export function Navigation({ activePage, setActivePage }: NavigationProps) {
     { id: 'learning-center' as PageType, label: 'Learning Center', icon: '📖', description: 'Courses and resources' },
     { id: 'trail-mastery' as PageType, label: 'Trail of Mastery', icon: '🏆', description: 'Advanced professional tracks' },
     { id: 'capstone-projects' as PageType, label: 'Capstone Projects', icon: '🚀', description: 'Real-world projects' },
+    { id: 'explorers-journey' as PageType, label: "Explorer's Journey", icon: '🌍', description: 'Lifelong learning community' },
   ];
 
   const isLearningPage = activePage === 'trail-missions' || activePage === 'learning-center' || activePage === 'capstone-projects' || activePage === 'trail-mastery' || activePage === 'trail-detail';
@@ -335,6 +336,7 @@ export function Navigation({ activePage, setActivePage }: NavigationProps) {
     'trail-mastery': 'Trail of Mastery',
     'trail-detail': 'Trail Detail',
     'capstone-projects': 'Capstone Projects',
+    'explorers-journey': "Explorer's Journey",
     'community': 'Community',
     'profile': 'My Profile',
     'coach-dashboard': 'Coach Hub',
@@ -350,6 +352,12 @@ export function Navigation({ activePage, setActivePage }: NavigationProps) {
     'visitor-events': 'Events',
     'portfolio': 'Portfolio',
     'portfolio-detail': 'Portfolio Detail',
+    'postcards-from-future': 'Postcards from the Future',
+    'forums': 'Discussion Forums',
+    'peer-reviews': 'Peer Reviews',
+    'study-groups': 'Study Groups',
+    'messages': 'Messages',
+    'profile-directory': 'Member Directory',
   };
 
   // Breadcrumb logic
@@ -455,6 +463,15 @@ export function Navigation({ activePage, setActivePage }: NavigationProps) {
               >
                 <ShoppingBag className="w-4 h-4" />
                 <span>Trail Shop</span>
+              </button>
+
+              {/* Donate Button - Highlighted */}
+              <button
+                onClick={() => setActivePage('postcards-from-future')}
+                className="flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-150 text-sm bg-[#F9A03F] hover:bg-[#F9A03F]/90 text-white shadow-lg"
+              >
+                <Sparkles className="w-4 h-4" />
+                <span>Donate</span>
               </button>
 
               {/* Learning Dropdown */}

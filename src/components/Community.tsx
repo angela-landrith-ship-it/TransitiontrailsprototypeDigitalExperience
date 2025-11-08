@@ -223,13 +223,13 @@ export function Community({ onNavigate }: CommunityProps) {
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F3E8]">
+    <div className="min-h-screen bg-[#F5F3E8] dark:bg-slate-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
           <button
             onClick={() => onNavigate('learner')}
-            className="flex items-center space-x-2 text-[#2C6975] hover:underline mb-4 transition-all duration-150"
+            className="flex items-center space-x-2 text-[#2C6975] dark:text-[#7EB5C1] hover:underline mb-4 transition-all duration-150"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Back to Home</span>
@@ -237,20 +237,20 @@ export function Community({ onNavigate }: CommunityProps) {
 
           <div className="flex items-start justify-between">
             <div>
-              <h1 className="text-4xl text-gray-900 mb-2">Community</h1>
-              <p className="text-lg text-gray-600">
+              <h1 className="text-4xl text-gray-900 dark:text-white mb-2">Community</h1>
+              <p className="text-lg text-gray-600 dark:text-slate-300">
                 Connect with your cohort, join conversations, and learn together
               </p>
             </div>
 
             {isSlackConnected && (
               <div className="flex items-center space-x-3">
-                <Badge variant="outline" className="bg-green-50 text-green-700 border-green-300">
-                  <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+                <Badge variant="outline" className="bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400 border-green-300 dark:border-green-700">
+                  <div className="w-2 h-2 bg-green-500 dark:bg-green-400 rounded-full mr-2"></div>
                   Slack Connected
                 </Badge>
-                <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                  <Settings className="w-5 h-5 text-gray-600" />
+                <button className="p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
+                  <Settings className="w-5 h-5 text-gray-600 dark:text-slate-400" />
                 </button>
               </div>
             )}
@@ -457,11 +457,11 @@ export function Community({ onNavigate }: CommunityProps) {
           {/* Left & Center - Main Content (2 columns) */}
           <div className="lg:col-span-2 space-y-6">
             {/* Trending Conversations */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-6">
               <div className="flex items-center space-x-3 mb-6">
                 <TrendingUp className="w-6 h-6 text-[#F9A03F]" />
-                <h2 className="text-2xl text-gray-900">Trending Conversations</h2>
-                <Badge variant="outline" className="bg-[#F9A03F]/10 text-[#F9A03F] border-[#F9A03F]/30 text-xs">
+                <h2 className="text-2xl text-gray-900 dark:text-white">Trending Conversations</h2>
+                <Badge variant="outline" className="bg-[#F9A03F]/10 dark:bg-[#F9A03F]/20 text-[#F9A03F] border-[#F9A03F]/30 dark:border-[#F9A03F]/50 text-xs">
                   Powered by Penny
                 </Badge>
               </div>
@@ -470,7 +470,7 @@ export function Community({ onNavigate }: CommunityProps) {
                 {trendingConversations.map((convo, idx) => (
                   <div
                     key={idx}
-                    className="group p-4 border border-gray-200 rounded-lg hover:border-[#2C6975] hover:shadow-md transition-all duration-150 cursor-pointer"
+                    className="group p-4 border border-gray-200 dark:border-slate-700 rounded-lg hover:border-[#2C6975] dark:hover:border-[#7EB5C1] hover:shadow-md transition-all duration-150 cursor-pointer"
                   >
                     <div className="flex items-start space-x-3">
                       {convo.isPinned && (
@@ -478,16 +478,16 @@ export function Community({ onNavigate }: CommunityProps) {
                       )}
                       <div className="flex-1">
                         <div className="flex items-center space-x-2 mb-2">
-                          <span className="text-sm text-[#2C6975] group-hover:underline">
+                          <span className="text-sm text-[#2C6975] dark:text-[#7EB5C1] group-hover:underline">
                             {convo.channel}
                           </span>
-                          <span className="text-xs text-gray-500">• {convo.timestamp}</span>
+                          <span className="text-xs text-gray-500 dark:text-slate-400">• {convo.timestamp}</span>
                         </div>
                         
-                        <p className="text-gray-900 mb-3">{convo.summary}</p>
+                        <p className="text-gray-900 dark:text-white mb-3">{convo.summary}</p>
 
                         <div className="flex items-center justify-between">
-                          <div className="flex items-center space-x-4 text-sm text-gray-600">
+                          <div className="flex items-center space-x-4 text-sm text-gray-600 dark:text-slate-300">
                             <div className="flex items-center space-x-1">
                               <MessageSquare className="w-4 h-4" />
                               <span>{convo.replies} replies</span>
@@ -502,7 +502,7 @@ export function Community({ onNavigate }: CommunityProps) {
                             </div>
                           </div>
 
-                          <button className="text-sm text-[#2C6975] hover:underline flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <button className="text-sm text-[#2C6975] dark:text-[#7EB5C1] hover:underline flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
                             <span>View in Slack</span>
                             <ExternalLink className="w-3 h-3" />
                           </button>
@@ -515,28 +515,28 @@ export function Community({ onNavigate }: CommunityProps) {
             </div>
 
             {/* Slack Channels */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-6">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl text-gray-900">Slack Channels</h2>
-                <button className="text-sm text-[#2C6975] hover:underline">
+                <h2 className="text-2xl text-gray-900 dark:text-white">Slack Channels</h2>
+                <button className="text-sm text-[#2C6975] dark:text-[#7EB5C1] hover:underline">
                   Browse All Channels
                 </button>
               </div>
 
               {/* Category: My Channels */}
               <div className="mb-6">
-                <h3 className="text-sm text-gray-600 uppercase tracking-wide mb-3">My Channels</h3>
+                <h3 className="text-sm text-gray-600 dark:text-slate-400 uppercase tracking-wide mb-3">My Channels</h3>
                 <div className="grid grid-cols-1 gap-3">
                   {slackChannels.filter(ch => ch.isJoined).map((channel) => (
                     <div
                       key={channel.id}
-                      className="group p-4 border border-gray-200 rounded-lg hover:border-[#2C6975] hover:shadow-sm transition-all duration-150 cursor-pointer"
+                      className="group p-4 border border-gray-200 dark:border-slate-700 rounded-lg hover:border-[#2C6975] dark:hover:border-[#7EB5C1] hover:shadow-sm transition-all duration-150 cursor-pointer"
                     >
                       <div className="flex items-start space-x-3">
                         <div className="text-3xl">{channel.icon}</div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center space-x-2 mb-1">
-                            <h4 className="text-gray-900 group-hover:text-[#2C6975] transition-colors">
+                            <h4 className="text-gray-900 dark:text-white group-hover:text-[#2C6975] dark:group-hover:text-[#7EB5C1] transition-colors">
                               {channel.name}
                             </h4>
                             {channel.unread > 0 && (
@@ -545,8 +545,8 @@ export function Community({ onNavigate }: CommunityProps) {
                               </Badge>
                             )}
                           </div>
-                          <p className="text-sm text-gray-600 mb-2">{channel.description}</p>
-                          <div className="flex items-center space-x-4 text-xs text-gray-500">
+                          <p className="text-sm text-gray-600 dark:text-slate-300 mb-2">{channel.description}</p>
+                          <div className="flex items-center space-x-4 text-xs text-gray-500 dark:text-slate-400">
                             <div className="flex items-center space-x-1">
                               <Users className="w-3 h-3" />
                               <span>{channel.members} members</span>
@@ -557,7 +557,7 @@ export function Community({ onNavigate }: CommunityProps) {
                             </div>
                           </div>
                         </div>
-                        <button className="px-3 py-1 bg-[#2C6975] text-white rounded-lg hover:bg-[#1f4f5a] transition-colors text-sm opacity-0 group-hover:opacity-100">
+                        <button className="px-3 py-1 bg-[#2C6975] dark:bg-[#7EB5C1] text-white rounded-lg hover:bg-[#1f4f5a] dark:hover:bg-[#6aa4b0] transition-colors text-sm opacity-0 group-hover:opacity-100">
                           Open
                         </button>
                       </div>
@@ -568,25 +568,25 @@ export function Community({ onNavigate }: CommunityProps) {
 
               {/* Category: Suggested Channels */}
               <div>
-                <h3 className="text-sm text-gray-600 uppercase tracking-wide mb-3">Suggested for You</h3>
+                <h3 className="text-sm text-gray-600 dark:text-slate-400 uppercase tracking-wide mb-3">Suggested for You</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {slackChannels.filter(ch => !ch.isJoined).map((channel) => (
                     <div
                       key={channel.id}
-                      className="group p-4 border-2 border-dashed border-gray-200 rounded-lg hover:border-[#2C6975] transition-all duration-150"
+                      className="group p-4 border-2 border-dashed border-gray-200 dark:border-slate-700 rounded-lg hover:border-[#2C6975] dark:hover:border-[#7EB5C1] transition-all duration-150"
                     >
                       <div className="flex items-start space-x-3">
                         <div className="text-2xl">{channel.icon}</div>
                         <div className="flex-1 min-w-0">
-                          <h4 className="text-sm text-gray-900 mb-1">{channel.name}</h4>
-                          <p className="text-xs text-gray-600 mb-2 line-clamp-2">{channel.description}</p>
-                          <div className="flex items-center space-x-2 text-xs text-gray-500 mb-2">
+                          <h4 className="text-sm text-gray-900 dark:text-white mb-1">{channel.name}</h4>
+                          <p className="text-xs text-gray-600 dark:text-slate-300 mb-2 line-clamp-2">{channel.description}</p>
+                          <div className="flex items-center space-x-2 text-xs text-gray-500 dark:text-slate-400 mb-2">
                             <Users className="w-3 h-3" />
                             <span>{channel.members} members</span>
                           </div>
                           <button
                             onClick={() => handleJoinChannel(channel.id)}
-                            className="w-full py-1.5 border border-[#2C6975] text-[#2C6975] rounded-lg hover:bg-[#2C6975] hover:text-white transition-all duration-150 text-xs"
+                            className="w-full py-1.5 border border-[#2C6975] dark:border-[#7EB5C1] text-[#2C6975] dark:text-[#7EB5C1] rounded-lg hover:bg-[#2C6975] dark:hover:bg-[#7EB5C1] hover:text-white transition-all duration-150 text-xs"
                           >
                             Join Channel
                           </button>
@@ -602,42 +602,42 @@ export function Community({ onNavigate }: CommunityProps) {
           {/* Right Sidebar */}
           <div className="lg:col-span-1 space-y-6">
             {/* Upcoming Sessions */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sticky top-20">
+            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-6 sticky top-20">
               <div className="flex items-center space-x-2 mb-6">
-                <Calendar className="w-5 h-5 text-[#2C6975]" />
-                <h3 className="text-lg text-gray-900">Upcoming Sessions</h3>
+                <Calendar className="w-5 h-5 text-[#2C6975] dark:text-[#7EB5C1]" />
+                <h3 className="text-lg text-gray-900 dark:text-white">Upcoming Sessions</h3>
               </div>
 
               <div className="space-y-4">
                 {upcomingSessions.map((session) => (
                   <div
                     key={session.id}
-                    className="group p-4 border border-gray-200 rounded-lg hover:border-[#2C6975] hover:shadow-md transition-all duration-150"
+                    className="group p-4 border border-gray-200 dark:border-slate-700 rounded-lg hover:border-[#2C6975] dark:hover:border-[#7EB5C1] hover:shadow-md transition-all duration-150"
                   >
                     <div className="flex items-start space-x-3 mb-3">
                       <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                        session.type === 'huddle' ? 'bg-[#F9A03F]/20' :
-                        session.type === 'presentation' ? 'bg-[#2C6975]/20' :
-                        'bg-[#7EB5C1]/20'
+                        session.type === 'huddle' ? 'bg-[#F9A03F]/20 dark:bg-[#F9A03F]/30' :
+                        session.type === 'presentation' ? 'bg-[#2C6975]/20 dark:bg-[#7EB5C1]/30' :
+                        'bg-[#7EB5C1]/20 dark:bg-[#7EB5C1]/30'
                       }`}>
                         {session.type === 'huddle' ? (
                           <MessageCircle className={`w-5 h-5 ${
-                            session.type === 'huddle' ? 'text-[#F9A03F]' : 'text-[#2C6975]'
+                            session.type === 'huddle' ? 'text-[#F9A03F]' : 'text-[#2C6975] dark:text-[#7EB5C1]'
                           }`} />
                         ) : session.type === 'presentation' ? (
-                          <Video className="w-5 h-5 text-[#2C6975]" />
+                          <Video className="w-5 h-5 text-[#2C6975] dark:text-[#7EB5C1]" />
                         ) : (
                           <Users className="w-5 h-5 text-[#7EB5C1]" />
                         )}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h4 className="text-sm text-gray-900 mb-1">{session.title}</h4>
-                        <p className="text-xs text-gray-600 mb-2">{session.channel}</p>
-                        <div className="flex items-center space-x-2 text-xs text-gray-500 mb-2">
+                        <h4 className="text-sm text-gray-900 dark:text-white mb-1">{session.title}</h4>
+                        <p className="text-xs text-gray-600 dark:text-slate-300 mb-2">{session.channel}</p>
+                        <div className="flex items-center space-x-2 text-xs text-gray-500 dark:text-slate-400 mb-2">
                           <Calendar className="w-3 h-3" />
                           <span>{session.date} at {session.time}</span>
                         </div>
-                        <div className="flex items-center space-x-2 text-xs text-gray-500">
+                        <div className="flex items-center space-x-2 text-xs text-gray-500 dark:text-slate-400">
                           <Users className="w-3 h-3" />
                           <span>{session.attendees}/{session.maxAttendees} attending</span>
                         </div>
@@ -646,7 +646,7 @@ export function Community({ onNavigate }: CommunityProps) {
 
                     <button
                       onClick={() => handleJoinHuddle(session.id)}
-                      className="w-full py-2 bg-[#2C6975] text-white rounded-lg hover:bg-[#1f4f5a] transition-colors text-sm flex items-center justify-center space-x-2 group-hover:shadow-md"
+                      className="w-full py-2 bg-[#2C6975] dark:bg-[#7EB5C1] text-white rounded-lg hover:bg-[#1f4f5a] dark:hover:bg-[#6aa4b0] transition-colors text-sm flex items-center justify-center space-x-2 group-hover:shadow-md"
                       title="Join Huddle"
                     >
                       <Play className="w-4 h-4" />
@@ -656,15 +656,15 @@ export function Community({ onNavigate }: CommunityProps) {
                 ))}
               </div>
 
-              <button className="w-full mt-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm">
+              <button className="w-full mt-4 py-2 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-slate-300 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors text-sm">
                 View Full Calendar
               </button>
             </div>
 
             {/* Direct Messages */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-6">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg text-gray-900">Direct Messages</h3>
+                <h3 className="text-lg text-gray-900 dark:text-white">Direct Messages</h3>
                 <Badge variant="outline" className="bg-[#F9A03F] text-white border-[#F9A03F] text-xs">
                   1
                 </Badge>
@@ -676,8 +676,8 @@ export function Community({ onNavigate }: CommunityProps) {
                     key={idx}
                     className={`p-3 rounded-lg cursor-pointer transition-all duration-150 ${
                       dm.unread
-                        ? 'bg-[#F9A03F]/10 border-2 border-[#F9A03F]/30'
-                        : 'border border-gray-200 hover:border-[#2C6975]'
+                        ? 'bg-[#F9A03F]/10 dark:bg-[#F9A03F]/20 border-2 border-[#F9A03F]/30 dark:border-[#F9A03F]/50'
+                        : 'border border-gray-200 dark:border-slate-700 hover:border-[#2C6975] dark:hover:border-[#7EB5C1]'
                     }`}
                   >
                     <div className="flex items-start space-x-3">
@@ -688,42 +688,42 @@ export function Community({ onNavigate }: CommunityProps) {
                       </Avatar>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between mb-1">
-                          <h4 className="text-sm text-gray-900">{dm.name}</h4>
-                          <span className="text-xs text-gray-500">{dm.timestamp}</span>
+                          <h4 className="text-sm text-gray-900 dark:text-white">{dm.name}</h4>
+                          <span className="text-xs text-gray-500 dark:text-slate-400">{dm.timestamp}</span>
                         </div>
-                        <p className="text-xs text-gray-600 mb-1">{dm.role}</p>
-                        <p className="text-sm text-gray-700 line-clamp-2">{dm.lastMessage}</p>
+                        <p className="text-xs text-gray-600 dark:text-slate-300 mb-1">{dm.role}</p>
+                        <p className="text-sm text-gray-700 dark:text-slate-300 line-clamp-2">{dm.lastMessage}</p>
                       </div>
                     </div>
                   </div>
                 ))}
               </div>
 
-              <button className="w-full mt-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm">
+              <button className="w-full mt-4 py-2 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-slate-300 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors text-sm">
                 View All Messages
               </button>
             </div>
 
             {/* Community Stats */}
-            <div className="bg-gradient-to-br from-[#2C6975]/10 to-[#7EB5C1]/10 rounded-xl border border-[#2C6975]/20 p-6">
-              <h3 className="text-lg text-gray-900 mb-4">Your Community Impact</h3>
+            <div className="bg-gradient-to-br from-[#2C6975]/10 to-[#7EB5C1]/10 dark:from-slate-800 dark:to-slate-800 rounded-xl border border-[#2C6975]/20 dark:border-slate-700 p-6">
+              <h3 className="text-lg text-gray-900 dark:text-white mb-4">Your Community Impact</h3>
               
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Messages Sent</span>
-                  <span className="text-lg text-gray-900">127</span>
+                  <span className="text-sm text-gray-600 dark:text-slate-300">Messages Sent</span>
+                  <span className="text-lg text-gray-900 dark:text-white">127</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Channels Joined</span>
-                  <span className="text-lg text-gray-900">5</span>
+                  <span className="text-sm text-gray-600 dark:text-slate-300">Channels Joined</span>
+                  <span className="text-lg text-gray-900 dark:text-white">5</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Reactions Given</span>
-                  <span className="text-lg text-gray-900">89</span>
+                  <span className="text-sm text-gray-600 dark:text-slate-300">Reactions Given</span>
+                  <span className="text-lg text-gray-900 dark:text-white">89</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Sessions Attended</span>
-                  <span className="text-lg text-gray-900">8</span>
+                  <span className="text-sm text-gray-600 dark:text-slate-300">Sessions Attended</span>
+                  <span className="text-lg text-gray-900 dark:text-white">8</span>
                 </div>
               </div>
             </div>

@@ -1,4 +1,4 @@
-import { Home, Calendar, GraduationCap, Users, LogIn, ShoppingBag, Briefcase } from 'lucide-react';
+import { Home, Calendar, GraduationCap, Users, LogIn, ShoppingBag, Briefcase, Heart, Sparkles } from 'lucide-react';
 import { Badge } from './ui/badge';
 import { PageType } from '../App';
 import { ImageWithFallback } from './figma/ImageWithFallback';
@@ -13,10 +13,12 @@ interface VisitorNavigationProps {
 export function VisitorNavigation({ activePage, setActivePage, onSignIn }: VisitorNavigationProps) {
   const navItems: Array<{ id: PageType; label: string; icon: any }> = [
     { id: 'visitor-home', label: 'Home', icon: Home },
+    { id: 'our-vision', label: 'Our Vision', icon: Sparkles },
     { id: 'visitor-learning', label: 'Learning Center', icon: GraduationCap },
     { id: 'portfolio', label: 'Portfolio', icon: Briefcase },
     { id: 'visitor-community', label: 'Community', icon: Users },
     { id: 'visitor-events', label: 'Events', icon: Calendar },
+    { id: 'postcards-from-future', label: 'Donate', icon: Heart },
     { id: 'merch-store', label: 'Trail Shop', icon: ShoppingBag }
   ];
 
@@ -46,12 +48,15 @@ export function VisitorNavigation({ activePage, setActivePage, onSignIn }: Visit
           <nav className="hidden md:flex items-center space-x-1">
             {navItems.map((item) => {
               const Icon = item.icon;
+              const isDonateButton = item.id === 'postcards-from-future';
               return (
                 <button
                   key={item.id}
                   onClick={() => setActivePage(item.id)}
                   className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-150 text-sm ${
-                    activePage === item.id
+                    isDonateButton
+                      ? 'bg-[#F9A03F] text-white hover:bg-[#F9A03F]/90 shadow-lg'
+                      : activePage === item.id
                       ? 'bg-white/20 text-white'
                       : 'text-white/80 hover:text-white hover:bg-white/10'
                   }`}
@@ -86,7 +91,9 @@ export function VisitorNavigation({ activePage, setActivePage, onSignIn }: Visit
                 key={item.id}
                 onClick={() => setActivePage(item.id)}
                 className={`flex flex-col items-center space-y-1 px-3 py-2 rounded-lg transition-all ${
-                  activePage === item.id
+                  item.id === 'postcards-from-future'
+                    ? 'bg-[#F9A03F] text-white'
+                    : activePage === item.id
                     ? 'bg-white/20 text-white'
                     : 'text-white/70'
                 }`}

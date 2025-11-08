@@ -19,6 +19,7 @@ import {
 import { TrailCard } from './TrailCard';
 import { SectionHeader } from './SectionHeader';
 import { StatCard } from './StatCard';
+import { MasteryEnrollmentModal } from './MasteryEnrollmentModal';
 
 export interface TrailOfMasteryProps {
   onNavigate: (page: string, trailId?: string) => void;
@@ -112,9 +113,24 @@ export function TrailOfMastery({
     // 'product-owner': 45,
     // 'developer': 0,
   });
+  
+  const [showEnrollmentModal, setShowEnrollmentModal] = useState(false);
 
   const handleTrailClick = (trailId: string) => {
-    onNavigate('trail-detail', trailId);
+    // Check if already enrolled
+    if (trailId in enrollments) {
+      onNavigate('trail-detail', trailId);
+    } else {
+      // Show enrollment modal
+      setShowEnrollmentModal(true);
+    }
+  };
+  
+  const handleEnrollment = (data: any) => {
+    console.log('Enrolling in Trail of Mastery:', data);
+    // In production: Create Trail_Enrollment__c record
+    setShowEnrollmentModal(false);
+    onNavigate('trail-detail', data.roleTrack);
   };
 
   const completedTrails = Object.values(enrollments).filter(p => p === 100).length;
@@ -218,6 +234,16 @@ export function TrailOfMastery({
           </p>
         </div>
       </div>
+      
+      {/* Mastery Enrollment Modal */}
+      <MasteryEnrollmentModal
+        isOpen={showEnrollmentModal}
+        onClose={() => setShowEnrollmentModal(false)}
+        onEnroll={handleEnrollment}
+        userName="Alex" // In production: from current user
+        guidedTrailScore={87}
+        guidedTrailLevel="Expert"
+      />
     </div>
   );
 }

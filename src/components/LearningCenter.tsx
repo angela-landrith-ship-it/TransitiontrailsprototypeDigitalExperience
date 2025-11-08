@@ -166,9 +166,9 @@ export function LearningCenter({ onNavigate }: LearningCenterProps) {
   ];
 
   return (
-    <div className="min-h-screen bg-[#F5F3E8]">
+    <div className="min-h-screen bg-[#F5F3E8] dark:bg-slate-900">
       {/* Hero Section */}
-      <div className="relative bg-gradient-to-r from-[#2C6975] to-[#3B6A52] text-white overflow-hidden">
+      <div className="relative bg-gradient-to-r from-[#2C6975] to-[#3B6A52] dark:from-[#1e4a53] dark:to-[#2a5140] text-white overflow-hidden">
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-10">
           <ImageWithFallback
@@ -194,9 +194,9 @@ export function LearningCenter({ onNavigate }: LearningCenterProps) {
                 <button
                   key={category.id}
                   onClick={() => setSelectedCategory(category.id)}
-                  className={`group bg-white/10 backdrop-blur-sm border-2 ${
-                    isSelected ? 'border-white' : 'border-white/20'
-                  } rounded-xl p-6 text-left transition-all duration-150 hover:bg-white/20 hover:scale-105 hover:shadow-xl`}
+                  className={`group bg-white/10 dark:bg-white/5 backdrop-blur-sm border-2 ${
+                    isSelected ? 'border-white' : 'border-white/20 dark:border-white/10'
+                  } rounded-xl p-6 text-left transition-all duration-150 hover:bg-white/20 dark:hover:bg-white/10 hover:scale-105 hover:shadow-xl`}
                 >
                   <div className={`w-16 h-16 rounded-lg bg-gradient-to-br ${category.color} flex items-center justify-center text-white mb-4 group-hover:scale-110 transition-transform duration-150`}>
                     {category.icon}
@@ -239,19 +239,19 @@ export function LearningCenter({ onNavigate }: LearningCenterProps) {
           {/* Left Column - Course Catalog (2 columns) */}
           <div className="lg:col-span-2 space-y-6">
             {/* Search and Filter */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-4">
               <div className="flex items-center space-x-4">
                 <div className="flex-1 relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-slate-500" />
                   <input
                     type="text"
                     placeholder="Search courses, skills, or topics..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2C6975] focus:border-transparent"
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-slate-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2C6975] dark:focus:ring-[#7EB5C1] focus:border-transparent"
                   />
                 </div>
-                <button className="flex items-center space-x-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                <button className="flex items-center space-x-2 px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-700 dark:text-slate-300 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-600 transition-colors">
                   <Filter className="w-4 h-4" />
                   <span>Filter</span>
                 </button>
@@ -260,15 +260,15 @@ export function LearningCenter({ onNavigate }: LearningCenterProps) {
               {/* Category Filter Pills */}
               {selectedCategory !== 'all' && (
                 <div className="flex items-center space-x-2 mt-3">
-                  <span className="text-sm text-gray-600">Viewing:</span>
-                  <Badge variant="outline" className="bg-[#2C6975]/10 text-[#2C6975] border-[#2C6975]">
+                  <span className="text-sm text-gray-600 dark:text-slate-400">Viewing:</span>
+                  <Badge variant="outline" className="bg-[#2C6975]/10 dark:bg-[#7EB5C1]/20 text-[#2C6975] dark:text-[#7EB5C1] border-[#2C6975] dark:border-[#7EB5C1]">
                     {selectedCategory === 'free' && '📚 Free Courses'}
                     {selectedCategory === 'coaching' && '👥 Coaching Program'}
                     {selectedCategory === 'certification' && '🏆 Certification Prep'}
                   </Badge>
                   <button
                     onClick={() => setSelectedCategory('all')}
-                    className="text-sm text-[#2C6975] hover:underline"
+                    className="text-sm text-[#2C6975] dark:text-[#7EB5C1] hover:underline"
                   >
                     Clear
                   </button>
@@ -279,24 +279,24 @@ export function LearningCenter({ onNavigate }: LearningCenterProps) {
             {/* Course Grid */}
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <h2 className="text-2xl text-gray-900">
+                <h2 className="text-2xl text-gray-900 dark:text-white">
                   {selectedCategory === 'all' ? 'All Courses' : 
                    selectedCategory === 'free' ? 'Free Courses' :
                    selectedCategory === 'coaching' ? 'Coaching Programs' :
                    'Certification Prep'}
                 </h2>
-                <span className="text-sm text-gray-600">{filteredCourses.length} courses</span>
+                <span className="text-sm text-gray-600 dark:text-slate-400">{filteredCourses.length} courses</span>
               </div>
 
               <div className="grid grid-cols-1 gap-4">
                 {filteredCourses.map((course) => (
                   <div
                     key={course.id}
-                    className="group bg-white rounded-xl shadow-sm border border-gray-200 p-4 hover:shadow-md hover:border-[#2C6975] transition-all duration-150 cursor-pointer"
+                    className="group bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-4 hover:shadow-md hover:border-[#2C6975] dark:hover:border-[#7EB5C1] transition-all duration-150 cursor-pointer"
                   >
                     <div className="flex space-x-4">
                       {/* Thumbnail */}
-                      <div className="w-40 h-28 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100">
+                      <div className="w-40 h-28 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100 dark:bg-slate-700">
                         <ImageWithFallback
                           src={course.thumbnail}
                           alt={course.title}
@@ -311,25 +311,25 @@ export function LearningCenter({ onNavigate }: LearningCenterProps) {
                             <div className="flex items-center space-x-2 mb-1">
                               <Badge variant="outline" className={`text-xs ${
                                 course.provider === 'pluralsight' 
-                                  ? 'bg-[#F9A03F]/10 text-[#F9A03F] border-[#F9A03F]/30'
-                                  : 'bg-[#2C6975]/10 text-[#2C6975] border-[#2C6975]/30'
+                                  ? 'bg-[#F9A03F]/10 text-[#F9A03F] border-[#F9A03F]/30 dark:bg-[#F9A03F]/20 dark:border-[#F9A03F]/50'
+                                  : 'bg-[#2C6975]/10 dark:bg-[#7EB5C1]/20 text-[#2C6975] dark:text-[#7EB5C1] border-[#2C6975]/30 dark:border-[#7EB5C1]/50'
                               }`}>
                                 {course.provider === 'pluralsight' ? '📚 PluralSight' : '🌲 Trailhead'}
                               </Badge>
-                              <Badge variant="outline" className="text-xs bg-gray-100 text-gray-700">
+                              <Badge variant="outline" className="text-xs bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-300 border-gray-300 dark:border-slate-600">
                                 {course.level}
                               </Badge>
                             </div>
-                            <h3 className="text-gray-900 mb-1 group-hover:text-[#2C6975] transition-colors duration-150">
+                            <h3 className="text-gray-900 dark:text-white mb-1 group-hover:text-[#2C6975] dark:group-hover:text-[#7EB5C1] transition-colors duration-150">
                               {course.title}
                             </h3>
-                            <p className="text-sm text-gray-600 mb-2">{course.instructor}</p>
-                            <p className="text-sm text-gray-700 mb-3 line-clamp-1">{course.description}</p>
+                            <p className="text-sm text-gray-600 dark:text-slate-400 mb-2">{course.instructor}</p>
+                            <p className="text-sm text-gray-700 dark:text-slate-300 mb-3 line-clamp-1">{course.description}</p>
                           </div>
                         </div>
 
                         {/* Course Meta */}
-                        <div className="flex items-center space-x-4 text-sm text-gray-600 mb-3">
+                        <div className="flex items-center space-x-4 text-sm text-gray-600 dark:text-slate-400 mb-3">
                           <div className="flex items-center space-x-1">
                             <Clock className="w-4 h-4" />
                             <span>{course.duration}</span>
@@ -349,7 +349,7 @@ export function LearningCenter({ onNavigate }: LearningCenterProps) {
                           {course.skills.map((skill, idx) => (
                             <span
                               key={idx}
-                              className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded"
+                              className="px-2 py-1 bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-300 text-xs rounded"
                             >
                               {skill}
                             </span>
@@ -360,22 +360,22 @@ export function LearningCenter({ onNavigate }: LearningCenterProps) {
                         {course.progress > 0 ? (
                           <div className="space-y-2">
                             <div className="flex items-center justify-between text-sm">
-                              <span className="text-gray-600">Progress</span>
-                              <span className="text-gray-900">{course.progress}%</span>
+                              <span className="text-gray-600 dark:text-slate-400">Progress</span>
+                              <span className="text-gray-900 dark:text-white">{course.progress}%</span>
                             </div>
-                            <div className="w-full bg-gray-200 rounded-full h-2">
+                            <div className="w-full bg-gray-200 dark:bg-slate-700 rounded-full h-2">
                               <div
                                 className="bg-gradient-to-r from-[#2C6975] to-[#7EB5C1] h-2 rounded-full transition-all duration-300"
                                 style={{ width: `${course.progress}%` }}
                               ></div>
                             </div>
-                            <button className="w-full mt-2 py-2 bg-[#2C6975] text-white rounded-lg hover:bg-[#1f4f5a] transition-colors duration-150 flex items-center justify-center space-x-2">
+                            <button className="w-full mt-2 py-2 bg-[#2C6975] dark:bg-[#7EB5C1] text-white dark:text-slate-900 rounded-lg hover:bg-[#1f4f5a] dark:hover:bg-[#6a9fb0] transition-colors duration-150 flex items-center justify-center space-x-2">
                               <Play className="w-4 h-4" />
                               <span>Continue Learning</span>
                             </button>
                           </div>
                         ) : (
-                          <button className="w-full py-2 border-2 border-[#2C6975] text-[#2C6975] rounded-lg hover:bg-[#2C6975] hover:text-white transition-all duration-150 flex items-center justify-center space-x-2 group/btn">
+                          <button className="w-full py-2 border-2 border-[#2C6975] dark:border-[#7EB5C1] text-[#2C6975] dark:text-[#7EB5C1] rounded-lg hover:bg-[#2C6975] dark:hover:bg-[#7EB5C1] hover:text-white dark:hover:text-slate-900 transition-all duration-150 flex items-center justify-center space-x-2 group/btn">
                             <BookOpen className="w-4 h-4" />
                             <span>Start Course</span>
                             <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform duration-150" />
@@ -392,15 +392,15 @@ export function LearningCenter({ onNavigate }: LearningCenterProps) {
           {/* Right Sidebar - Recommendations */}
           <div className="lg:col-span-1 space-y-6">
             {/* Penny Recommendations */}
-            <div className="bg-gradient-to-br from-[#F9A03F]/10 to-[#2C6975]/10 rounded-xl border-2 border-[#F9A03F]/30 p-6 sticky top-20">
+            <div className="bg-gradient-to-br from-[#F9A03F]/10 to-[#2C6975]/10 dark:from-[#F9A03F]/20 dark:to-[#7EB5C1]/20 rounded-xl border-2 border-[#F9A03F]/30 dark:border-[#F9A03F]/50 p-6 sticky top-20">
               <div className="flex items-center space-x-3 mb-4">
                 <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#F9A03F] to-[#e89135] flex items-center justify-center">
                   <Sparkles className="w-5 h-5 text-white" />
                 </div>
-                <h3 className="text-lg text-gray-900">Recommended for You</h3>
+                <h3 className="text-lg text-gray-900 dark:text-white">Recommended for You</h3>
               </div>
 
-              <p className="text-sm text-gray-600 mb-4">
+              <p className="text-sm text-gray-600 dark:text-slate-300 mb-4">
                 Based on your Salesforce Admin trail and certification goals
               </p>
 
@@ -410,32 +410,32 @@ export function LearningCenter({ onNavigate }: LearningCenterProps) {
                     key={idx}
                     className={`p-4 rounded-lg border-2 cursor-pointer hover:shadow-md transition-all duration-150 ${
                       rec.priority === 'high'
-                        ? 'bg-red-50 border-red-200'
+                        ? 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-700'
                         : rec.priority === 'medium'
-                        ? 'bg-blue-50 border-blue-200'
-                        : 'bg-gray-50 border-gray-200'
+                        ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-700'
+                        : 'bg-gray-50 dark:bg-slate-700 border-gray-200 dark:border-slate-600'
                     }`}
                   >
                     <div className="flex items-start space-x-2 mb-2">
                       {rec.priority === 'high' && (
-                        <Zap className="w-4 h-4 text-red-600 flex-shrink-0 mt-0.5" />
+                        <Zap className="w-4 h-4 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
                       )}
                       {rec.priority === 'medium' && (
-                        <TrendingUp className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
+                        <TrendingUp className="w-4 h-4 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
                       )}
                       {rec.priority === 'low' && (
-                        <Lightbulb className="w-4 h-4 text-gray-600 flex-shrink-0 mt-0.5" />
+                        <Lightbulb className="w-4 h-4 text-gray-600 dark:text-gray-400 flex-shrink-0 mt-0.5" />
                       )}
                       <div className="flex-1">
-                        <h4 className="text-sm text-gray-900 mb-1">{rec.title}</h4>
-                        <p className="text-xs text-gray-600 mb-2">{rec.reason}</p>
-                        <div className="flex items-center space-x-2 text-xs text-gray-500">
+                        <h4 className="text-sm text-gray-900 dark:text-white mb-1">{rec.title}</h4>
+                        <p className="text-xs text-gray-600 dark:text-slate-300 mb-2">{rec.reason}</p>
+                        <div className="flex items-center space-x-2 text-xs text-gray-500 dark:text-slate-400">
                           <Clock className="w-3 h-3" />
                           <span>{rec.duration}</span>
                         </div>
                       </div>
                     </div>
-                    <button className="w-full mt-2 text-xs py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-150">
+                    <button className="w-full mt-2 text-xs py-2 bg-white dark:bg-slate-600 border border-gray-300 dark:border-slate-500 text-gray-700 dark:text-white rounded-lg hover:bg-gray-50 dark:hover:bg-slate-500 transition-colors duration-150">
                       View Course
                     </button>
                   </div>
@@ -449,33 +449,33 @@ export function LearningCenter({ onNavigate }: LearningCenterProps) {
             </div>
 
             {/* Learning Stats */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-              <h3 className="text-lg text-gray-900 mb-4">Your Learning Stats</h3>
+            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-6">
+              <h3 className="text-lg text-gray-900 dark:text-white mb-4">Your Learning Stats</h3>
               
               <div className="space-y-4">
                 <div>
                   <div className="flex items-center justify-between text-sm mb-2">
-                    <span className="text-gray-600">Courses in Progress</span>
-                    <span className="text-gray-900">3</span>
+                    <span className="text-gray-600 dark:text-slate-400">Courses in Progress</span>
+                    <span className="text-gray-900 dark:text-white">3</span>
                   </div>
                   <div className="flex items-center justify-between text-sm mb-2">
-                    <span className="text-gray-600">Completed This Month</span>
-                    <span className="text-gray-900">2</span>
+                    <span className="text-gray-600 dark:text-slate-400">Completed This Month</span>
+                    <span className="text-gray-900 dark:text-white">2</span>
                   </div>
                   <div className="flex items-center justify-between text-sm mb-2">
-                    <span className="text-gray-600">Learning Streak</span>
-                    <span className="text-gray-900">12 days 🔥</span>
+                    <span className="text-gray-600 dark:text-slate-400">Learning Streak</span>
+                    <span className="text-gray-900 dark:text-white">12 days 🔥</span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600">Total Hours</span>
-                    <span className="text-gray-900">47.5</span>
+                    <span className="text-gray-600 dark:text-slate-400">Total Hours</span>
+                    <span className="text-gray-900 dark:text-white">47.5</span>
                   </div>
                 </div>
 
-                <div className="pt-4 border-t border-gray-200">
+                <div className="pt-4 border-t border-gray-200 dark:border-slate-700">
                   <button
                     onClick={() => onNavigate('trail-missions')}
-                    className="w-full py-2 bg-[#2C6975]/10 text-[#2C6975] rounded-lg hover:bg-[#2C6975]/20 transition-colors duration-150 flex items-center justify-center space-x-2"
+                    className="w-full py-2 bg-[#2C6975]/10 dark:bg-[#7EB5C1]/20 text-[#2C6975] dark:text-[#7EB5C1] rounded-lg hover:bg-[#2C6975]/20 dark:hover:bg-[#7EB5C1]/30 transition-colors duration-150 flex items-center justify-center space-x-2"
                   >
                     <Target className="w-4 h-4" />
                     <span>View Trail Missions</span>

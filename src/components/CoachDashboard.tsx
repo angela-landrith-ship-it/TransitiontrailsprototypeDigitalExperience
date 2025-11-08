@@ -417,7 +417,7 @@ export function CoachDashboard() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#7EB5C1]/10 to-[#F5F3E8]">
+    <div className="min-h-screen bg-gradient-to-br from-[#7EB5C1]/10 to-[#F5F3E8] dark:from-slate-900 dark:to-slate-900">
       {/* Sky Blue themed header */}
       <div className="bg-gradient-to-r from-[#7EB5C1] to-[#5a9fb0] text-white shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">

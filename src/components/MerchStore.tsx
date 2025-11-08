@@ -397,7 +397,7 @@ export function MerchStore({
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F3E8]">
+    <div className="min-h-screen bg-[#F5F3E8] dark:bg-slate-900">
       {/* Hero Banner */}
       <div className="bg-gradient-to-r from-[#3B6A52] to-[#2C6975] text-white py-16 px-4">
         <div className="max-w-7xl mx-auto">
