@@ -134,7 +134,7 @@
   --secondary: #334155; /* Slate 700 */
   --secondary-foreground: #f1f5f9;
   --muted: #334155; /* Slate 700 */
-  --muted-foreground: #94a3b8; /* Slate 400 */
+  --muted-foreground: #cbd5e1; /* Slate 300 - WCAG AA compliant (was Slate 400) */
   --accent: #1e293b; /* Slate 800 */
   --accent-foreground: #f1f5f9;
   --destructive: #ef4444; /* Red 500 */
@@ -281,6 +281,26 @@
       line-height: 1.5;
     }
   }
+}
+
+/* ========================================
+   TTDS ACCESSIBILITY UTILITIES
+   ======================================== */
+
+/* Skip to Main Content Link (Accessibility) */
+.skip-to-main {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background-color: rgb(47 107 78);
+  color: white;
+  padding: 0.5rem 1rem;
+  z-index: 50;
+  transition: top 0.3s ease;
+}
+
+.skip-to-main:focus {
+  top: 0;
 }
 
 html {

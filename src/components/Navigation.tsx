@@ -321,16 +321,19 @@ export function Navigation({ activePage, setActivePage }: NavigationProps) {
   const learningPages = [
     { id: 'trail-missions' as PageType, label: 'Trail Missions', icon: '🎯', description: 'Skill-based learning paths' },
     { id: 'learning-center' as PageType, label: 'Learning Center', icon: '📖', description: 'Courses and resources' },
+    { id: 'trail-mastery' as PageType, label: 'Trail of Mastery', icon: '🏆', description: 'Advanced professional tracks' },
     { id: 'capstone-projects' as PageType, label: 'Capstone Projects', icon: '🚀', description: 'Real-world projects' },
   ];
 
-  const isLearningPage = activePage === 'trail-missions' || activePage === 'learning-center' || activePage === 'capstone-projects';
+  const isLearningPage = activePage === 'trail-missions' || activePage === 'learning-center' || activePage === 'capstone-projects' || activePage === 'trail-mastery' || activePage === 'trail-detail';
 
   // Page titles for breadcrumbs
   const pageTitles: Record<PageType, string> = {
     'learner': 'Home',
     'learning-center': 'Learning Center',
     'trail-missions': 'Trail Missions',
+    'trail-mastery': 'Trail of Mastery',
+    'trail-detail': 'Trail Detail',
     'capstone-projects': 'Capstone Projects',
     'community': 'Community',
     'profile': 'My Profile',
@@ -345,6 +348,8 @@ export function Navigation({ activePage, setActivePage }: NavigationProps) {
     'visitor-learning': 'Learning Center',
     'visitor-community': 'Community',
     'visitor-events': 'Events',
+    'portfolio': 'Portfolio',
+    'portfolio-detail': 'Portfolio Detail',
   };
 
   // Breadcrumb logic

@@ -314,14 +314,14 @@ export function LearnerHome({ onNavigate }: LearnerHomeProps) {
                   <span className="text-sm">68%</span>
                 </div>
                 <div className="w-full bg-white/20 rounded-full h-3">
-                  <div className="bg-[#F9A03F] h-3 rounded-full" style={{ width: '68%' }}></div>
+                  <div className="bg-sun-amber h-3 rounded-full" style={{ width: '68%' }}></div>
                 </div>
                 <p className="text-xs text-blue-100/70 mt-1">{CMSWithVars('learner_home_week_label', { current: '7', total: '12' })}</p>
               </div>
               
               <div className="flex items-center space-x-3">
                 <div className="w-12 h-12 rounded-lg bg-white/20 flex items-center justify-center">
-                  <Trophy className="w-7 h-7 text-[#F9A03F]" />
+                  <Trophy className="w-7 h-7 text-sun-amber" />
                 </div>
                 <div>
                   <p className="text-sm opacity-90">{CMS('learner_home_points_label')}</p>
@@ -378,7 +378,7 @@ export function LearnerHome({ onNavigate }: LearnerHomeProps) {
                 </div>
                 <button
                   onClick={() => onNavigate('penny-chat')}
-                  className="px-4 py-2 bg-[#F9A03F] text-white rounded-lg hover:bg-[#e89135] transition-colors text-sm flex items-center space-x-2"
+                  className="px-4 py-2 bg-sun-amber text-white rounded-lg hover:bg-sun-amber-dark transition-colors text-sm flex items-center space-x-2"
                 >
                   <MessageSquare className="w-4 h-4" />
                   <span>{CMS('learner_home_btn_ask_penny')}</span>
@@ -393,7 +393,7 @@ export function LearnerHome({ onNavigate }: LearnerHomeProps) {
                 <div className="p-6">
                   <CollapsibleTrigger className="w-full flex items-center justify-between mb-4 hover:opacity-80 transition-opacity">
                     <h4 className="text-gray-900 flex items-center space-x-2">
-                      <Target className="w-4 h-4 text-[#2C6975]" />
+                      <Target className="w-4 h-4 text-penny-guide" />
                       <span>Your Priorities</span>
                     </h4>
                     <div className="flex items-center space-x-2">
@@ -410,7 +410,7 @@ export function LearnerHome({ onNavigate }: LearnerHomeProps) {
                           <button
                             key={item.id}
                             onClick={item.action}
-                            className="w-full text-left p-4 rounded-lg border border-gray-200 hover:border-[#2C6975] hover:bg-gray-50 transition-all group"
+                            className="w-full text-left p-4 rounded-lg border border-gray-200 hover:border-penny-guide hover:bg-gray-50 transition-all group"
                           >
                             <div className="flex items-start space-x-3">
                               <div
@@ -421,7 +421,7 @@ export function LearnerHome({ onNavigate }: LearnerHomeProps) {
                               </div>
                               <div className="flex-1 min-w-0">
                                 <div className="flex items-start justify-between gap-2 mb-1">
-                                  <p className="text-sm text-gray-900 group-hover:text-[#2C6975] transition-colors">
+                                  <p className="text-sm text-gray-900 group-hover:text-penny-guide transition-colors">
                                     {item.title}
                                   </p>
                                   {item.priority === 'critical' && (
@@ -430,7 +430,7 @@ export function LearnerHome({ onNavigate }: LearnerHomeProps) {
                                     </span>
                                   )}
                                   {item.priority === 'high' && (
-                                    <span className="px-2 py-0.5 bg-[#F9A03F]/20 text-[#F9A03F] rounded-full text-xs flex-shrink-0">
+                                    <span className="px-2 py-0.5 bg-sun-amber/20 text-sun-amber rounded-full text-xs flex-shrink-0">
                                       {CMS('learner_home_priority_high')}
                                     </span>
                                   )}
@@ -468,7 +468,7 @@ export function LearnerHome({ onNavigate }: LearnerHomeProps) {
                 <div className="p-6 bg-gray-50/50">
                   <CollapsibleTrigger className="w-full flex items-center justify-between mb-4 hover:opacity-80 transition-opacity">
                     <h4 className="text-gray-900 flex items-center space-x-2">
-                      <Calendar className="w-4 h-4 text-[#2C6975]" />
+                      <Calendar className="w-4 h-4 text-penny-guide" />
                       <span>This Week's Sessions</span>
                     </h4>
                     <div className="flex items-center space-x-2">
@@ -512,7 +512,7 @@ export function LearnerHome({ onNavigate }: LearnerHomeProps) {
 
                     <button
                       onClick={() => onNavigate('program-calendar')}
-                      className="w-full mt-4 px-4 py-2 bg-[#2C6975] text-white rounded-lg hover:bg-[#234d56] transition-colors text-sm flex items-center justify-center space-x-2"
+                      className="w-full mt-4 px-4 py-2 bg-penny-guide text-white rounded-lg hover:bg-penny-guide-dark transition-colors text-sm flex items-center justify-center space-x-2"
                     >
                       <span>View Full Calendar</span>
                       <ChevronRight className="w-4 h-4" />
@@ -525,14 +525,14 @@ export function LearnerHome({ onNavigate }: LearnerHomeProps) {
             {/* Penny Insight Footer */}
             <div className="px-6 py-4 bg-gradient-to-r from-blue-50 to-blue-50/50 border-t border-blue-100">
               <div className="flex items-start space-x-3">
-                <Sparkles className="w-5 h-5 text-[#F9A03F] flex-shrink-0 mt-0.5" />
+                <Sparkles className="w-5 h-5 text-sun-amber flex-shrink-0 mt-0.5" />
                 <div>
                   <p className="text-sm text-gray-900 mb-1">
                     <span className="font-medium">Penny's Insight:</span> You have 2 critical items due this week. Focus on your status report and the batch job bug to stay on track for capstone completion.
                   </p>
                   <button
                     onClick={() => onNavigate('penny-chat')}
-                    className="text-sm text-[#2C6975] hover:underline"
+                    className="text-sm text-penny-guide hover:underline"
                   >
                     Get personalized guidance →
                   </button>
@@ -545,7 +545,7 @@ export function LearnerHome({ onNavigate }: LearnerHomeProps) {
           <div className="bg-gradient-to-br from-[#F9A03F]/10 to-[#F9A03F]/5 border-2 border-[#F9A03F]/30 rounded-xl p-6">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 rounded-lg bg-[#F9A03F] text-white flex items-center justify-center">
+                <div className="w-10 h-10 rounded-lg bg-sun-amber text-white flex items-center justify-center">
                   <Trophy className="w-6 h-6" />
                 </div>
                 <div>
@@ -555,7 +555,7 @@ export function LearnerHome({ onNavigate }: LearnerHomeProps) {
               </div>
               <button
                 onClick={() => onNavigate('capstone-projects')}
-                className="px-4 py-2 bg-[#F9A03F] text-white rounded-lg hover:bg-[#e69135] transition-colors flex items-center space-x-2"
+                className="px-4 py-2 bg-sun-amber text-white rounded-lg hover:bg-sun-amber-dark transition-colors flex items-center space-x-2"
               >
                 <span>View Full Details</span>
                 <ChevronRight className="w-4 h-4" />
@@ -602,7 +602,7 @@ export function LearnerHome({ onNavigate }: LearnerHomeProps) {
               
               <button
                 onClick={() => onNavigate('capstone-projects')}
-                className="w-full py-2 border-2 border-[#F9A03F] text-[#F9A03F] rounded-lg hover:bg-[#F9A03F] hover:text-white transition-colors flex items-center justify-center space-x-2"
+                className="w-full py-2 border-2 border-sun-amber text-sun-amber rounded-lg hover:bg-sun-amber hover:text-white transition-colors flex items-center justify-center space-x-2"
               >
                 <span>Open Project Workspace</span>
                 <ExternalLink className="w-4 h-4" />
@@ -681,7 +681,7 @@ export function LearnerHome({ onNavigate }: LearnerHomeProps) {
                         </div>
                         <div className="w-full bg-gray-100 rounded-full h-2">
                           <div 
-                            className="bg-[#F9A03F] h-2 rounded-full transition-all duration-500"
+                            className="bg-sun-amber h-2 rounded-full transition-all duration-500"
                             style={{ width: `${percentage}%` }}
                           ></div>
                         </div>
@@ -700,7 +700,7 @@ export function LearnerHome({ onNavigate }: LearnerHomeProps) {
                 <div className="flex items-center space-x-3">
                   <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all ${
                     showCommunityEngagement 
-                      ? 'bg-[#2C6975] text-white' 
+                      ? 'bg-penny-guide text-white' 
                       : 'bg-gray-100 text-gray-600'
                   }`}>
                     <Heart className="w-6 h-6" />
@@ -726,7 +726,7 @@ export function LearnerHome({ onNavigate }: LearnerHomeProps) {
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
               <div className="p-6 flex items-center justify-between">
                 <CollapsibleTrigger className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
-                  <div className="w-10 h-10 rounded-lg bg-[#2C6975] text-white flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-lg bg-penny-guide text-white flex items-center justify-center">
                     <BookOpen className="w-6 h-6" />
                   </div>
                   <div className="text-left">
@@ -737,7 +737,7 @@ export function LearnerHome({ onNavigate }: LearnerHomeProps) {
                 </CollapsibleTrigger>
                 <button
                   onClick={() => onNavigate('trail-missions')}
-                  className="px-4 py-2 bg-[#2C6975] text-white rounded-lg hover:bg-[#234d56] transition-colors text-sm flex items-center space-x-1"
+                  className="px-4 py-2 bg-penny-guide text-white rounded-lg hover:bg-penny-guide-dark transition-colors text-sm flex items-center space-x-1"
                 >
                   <span>View All</span>
                   <ChevronRight className="w-4 h-4" />

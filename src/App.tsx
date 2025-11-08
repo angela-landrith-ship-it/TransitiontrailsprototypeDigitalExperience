@@ -27,6 +27,8 @@ import { ThemeProvider } from './components/ThemeProvider';
 import { ThemeToggle } from './components/ThemeToggle';
 import { PortfolioGallery } from './components/PortfolioGallery';
 import { PortfolioDetail } from './components/PortfolioDetail';
+import { TrailOfMastery } from './components/TrailOfMastery';
+import { TrailDetail } from './components/TrailDetail';
 
 export type PageType = 
   | 'learner' 
@@ -47,7 +49,9 @@ export type PageType =
   | 'visitor-community'
   | 'visitor-events'
   | 'portfolio'
-  | 'portfolio-detail';
+  | 'portfolio-detail'
+  | 'trail-mastery'
+  | 'trail-detail';
 
 type UserMode = 'visitor' | 'enrolled';
 
@@ -58,6 +62,7 @@ export default function App() {
   const [lockedFeature, setLockedFeature] = useState<'capstone' | 'skills' | 'coach' | null>(null);
   const [capstoneComplete, setCapstoneComplete] = useState(false);
   const [portfolioSlug, setPortfolioSlug] = useState<string>('');
+  const [selectedTrailId, setSelectedTrailId] = useState<string>('');
   
   // Development: Audience/Role Toggle (hidden in production)
   const [testRole, setTestRole] = useState<UserRole>('learner');
@@ -194,6 +199,22 @@ export default function App() {
         }} />;
       case 'portfolio-detail':
         return <PortfolioDetail slug={portfolioSlug} onNavigate={setActivePage} />;
+      case 'trail-mastery':
+        return <TrailOfMastery 
+          onNavigate={(page, trailId) => {
+            setActivePage(page as PageType);
+            if (trailId) setSelectedTrailId(trailId);
+          }}
+          onBack={() => setActivePage('learning-center')}
+          userPoints={2380}
+          userLevel="Explorer"
+        />;
+      case 'trail-detail':
+        return <TrailDetail 
+          trailId={selectedTrailId}
+          onNavigate={setActivePage}
+          onBack={() => setActivePage('trail-mastery')}
+        />;
       default:
         return <LearnerHome onNavigate={setActivePage} />;
     }
@@ -201,7 +222,7 @@ export default function App() {
 
   return (
     <ThemeProvider>
-      <div className="min-h-screen bg-[#F5F3E8] dark:bg-slate-900">
+      <div className="min-h-screen bg-trail-cream dark:bg-slate-900">
         {/* Mode Toggle - Development/Demo Tool (Remove in production) */}
         <div className="fixed bottom-4 left-4 z-50 group">
           <div className="bg-white dark:bg-slate-800 rounded-lg shadow-lg border-2 border-gray-300 dark:border-slate-700 overflow-hidden hover:shadow-xl transition-shadow">
@@ -214,7 +235,7 @@ export default function App() {
                 onClick={handleSwitchToVisitor}
                 className={`px-3 py-1.5 text-xs rounded transition-all ${
                   userMode === 'visitor'
-                    ? 'bg-[#7EB5C1] text-white shadow-sm'
+                    ? 'bg-sky-blue text-white shadow-sm'
                     : 'bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-600'
                 }`}
                 title="View as a visitor exploring the platform"
@@ -225,7 +246,7 @@ export default function App() {
                 onClick={handleSignIn}
                 className={`px-3 py-1.5 text-xs rounded transition-all ${
                   userMode === 'enrolled'
-                    ? 'bg-[#2C6975] text-white shadow-sm'
+                    ? 'bg-penny-guide text-white shadow-sm'
                     : 'bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-600'
                 }`}
                 title="View as an enrolled learner"
