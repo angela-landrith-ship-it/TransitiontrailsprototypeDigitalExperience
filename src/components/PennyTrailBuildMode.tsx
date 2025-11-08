@@ -168,7 +168,7 @@ export function PennyTrailBuildMode() {
         </button>
       </div>
 
-      <style jsx>{`
+      <style>{`
         @keyframes pulse-glow {
           0%, 100% {
             box-shadow: 0 0 20px rgba(249, 160, 63, 0.3);

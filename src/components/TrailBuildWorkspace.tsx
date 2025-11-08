@@ -298,7 +298,7 @@ export function TrailBuildWorkspace({ onClose }: TrailBuildWorkspaceProps) {
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         @keyframes confetti {
           0% {
             transform: translateY(0) rotate(0deg);

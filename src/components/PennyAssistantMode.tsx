@@ -149,7 +149,7 @@ export function PennyAssistantMode({ projectName, projectStatus }: PennyAssistan
         </button>
       </div>
 
-      <style jsx>{`
+      <style>{`
         @keyframes pulse-fast {
           0%, 100% {
             opacity: 1;

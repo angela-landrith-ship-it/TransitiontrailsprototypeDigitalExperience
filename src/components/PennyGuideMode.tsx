@@ -79,7 +79,7 @@ export function PennyGuideMode({ context, currentSection }: PennyGuideModeProps)
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         @keyframes pulse-slow {
           0%, 100% {
             opacity: 1;

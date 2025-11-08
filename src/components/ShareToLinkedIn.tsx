@@ -301,7 +301,7 @@ export function ShareToLinkedIn({ isOpen, onClose, context, title, achievement, 
         </div>
       )}
 
-      <style jsx>{`
+      <style>{`
         .confetti-container {
           position: fixed;
           top: 0;

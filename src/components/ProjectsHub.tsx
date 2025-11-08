@@ -152,7 +152,7 @@ export function ProjectsHub({ userRole = 'learner', capstoneComplete = false, on
         <PartnerSubmissionModal onClose={() => setShowPartnerSubmission(false)} />
       )}
 
-      <style jsx>{`
+      <style>{`
         @keyframes confetti {
           0% {
             transform: translateY(0) rotate(0deg);
