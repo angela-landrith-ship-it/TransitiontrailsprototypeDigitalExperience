@@ -29,6 +29,7 @@ import { PortfolioGallery } from './components/PortfolioGallery';
 import { PortfolioDetail } from './components/PortfolioDetail';
 import { TrailOfMastery } from './components/TrailOfMastery';
 import { TrailDetail } from './components/TrailDetail';
+import { DiscussionForums } from './components/DiscussionForums';
 
 export type PageType = 
   | 'learner' 
@@ -42,6 +43,7 @@ export type PageType =
   | 'self-assessment'
   | 'learning-center'
   | 'community'
+  | 'forums'
   | 'merch-store'
   | 'order-history'
   | 'visitor-home'
@@ -175,6 +177,8 @@ export default function App() {
         return <LearningCenter onNavigate={setActivePage} />;
       case 'community':
         return <Community onNavigate={setActivePage} />;
+      case 'forums':
+        return <DiscussionForums onNavigate={setActivePage} />;
       case 'merch-store':
         return (
           <MerchStore 

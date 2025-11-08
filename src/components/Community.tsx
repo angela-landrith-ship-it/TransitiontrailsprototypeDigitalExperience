@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { ArrowLeft, Hash, Users, Calendar, MessageCircle, TrendingUp, Bell, ExternalLink, Sparkles, Play, Clock, User, ChevronRight, Video, Settings, Eye, Pin, ThumbsUp, MessageSquare } from 'lucide-react';
+import { ArrowLeft, Hash, Users, Calendar, MessageCircle, TrendingUp, Bell, ExternalLink, Sparkles, Play, Clock, User, ChevronRight, Video, Settings, Eye, Pin, ThumbsUp, MessageSquare, CheckCircle } from 'lucide-react';
+import { Button } from './ui/button';
 import { PageType } from '../App';
 import { Badge } from './ui/badge';
 import { Avatar, AvatarFallback } from './ui/avatar';
@@ -253,6 +254,63 @@ export function Community({ onNavigate }: CommunityProps) {
                 </button>
               </div>
             )}
+          </div>
+        </div>
+
+        {/* Discussion Forums Feature Card */}
+        <div className="bg-gradient-to-r from-[#2C6975] to-[#7EB5C1] rounded-xl shadow-lg p-8 mb-6">
+          <div className="flex items-start justify-between">
+            <div className="flex-1">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="bg-white/20 backdrop-blur-sm p-3 rounded-lg">
+                  <MessageCircle className="w-6 h-6 text-white" />
+                </div>
+                <Badge className="bg-[#F9A03F] text-white border-0">
+                  🆕 NEW FEATURE
+                </Badge>
+              </div>
+              <h2 className="text-white text-2xl mb-2">Discussion Forums Now Live!</h2>
+              <p className="text-white/90 mb-4 max-w-2xl">
+                Ask questions, share knowledge, and get help from the community. Native forums with Q&A, voting, best answers, and full search.
+              </p>
+              <div className="flex flex-wrap gap-3 mb-4">
+                <div className="flex items-center gap-2 text-white/90 text-sm">
+                  <CheckCircle className="w-4 h-4" />
+                  <span>1,078+ threads</span>
+                </div>
+                <div className="flex items-center gap-2 text-white/90 text-sm">
+                  <CheckCircle className="w-4 h-4" />
+                  <span>5,774+ answers</span>
+                </div>
+                <div className="flex items-center gap-2 text-white/90 text-sm">
+                  <CheckCircle className="w-4 h-4" />
+                  <span>Searchable knowledge base</span>
+                </div>
+              </div>
+              <Button
+                onClick={() => onNavigate('forums')}
+                className="bg-white text-[#2C6975] hover:bg-gray-100"
+              >
+                Browse Forums
+                <ArrowLeft className="w-4 h-4 ml-2 rotate-180" />
+              </Button>
+            </div>
+            <div className="hidden lg:block">
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 space-y-2">
+                <div className="text-white/80 text-sm">Popular Categories</div>
+                <div className="space-y-2">
+                  <div className="bg-white/20 backdrop-blur-sm rounded px-3 py-2 text-white text-sm">
+                    📚 Learning & Courses
+                  </div>
+                  <div className="bg-white/20 backdrop-blur-sm rounded px-3 py-2 text-white text-sm">
+                    🏗️ Capstone Projects
+                  </div>
+                  <div className="bg-white/20 backdrop-blur-sm rounded px-3 py-2 text-white text-sm">
+                    💼 Career & Jobs
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 

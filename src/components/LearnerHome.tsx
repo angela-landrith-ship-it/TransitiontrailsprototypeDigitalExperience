@@ -153,6 +153,11 @@ import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar';
 import { useState } from 'react';
 import profileImage from 'figma:asset/f5ce76cc9cdd7a0e710f2a4ab182ac3c118f5ea0.png';
 import { CMS, CMSWithVars } from './CMSContent';
+import { CareerNavigator } from './CareerNavigator';
+import { DailyChallenges } from './DailyChallenges';
+import { PennyRecommendations } from './PennyRecommendations';
+import { StreakTracker } from './StreakTracker';
+import { LeaderboardWidget } from './LeaderboardWidget';
 
 interface LearnerHomeProps {
   onNavigate: (page: PageType) => void;
@@ -609,10 +614,60 @@ export function LearnerHome({ onNavigate }: LearnerHomeProps) {
               </button>
             </div>
           </div>
+
+          {/* NEW: Career Navigator Dashboard */}
+          <CareerNavigator
+            currentLevel="Explorer"
+            completedMilestones={['skills-assessment']}
+            currentMilestone="trail-missions"
+            totalPoints={2380}
+            certificationsEarned={0}
+            onNavigate={onNavigate}
+          />
+
+          {/* NEW: Penny AI Recommendations */}
+          <PennyRecommendations
+            onNavigate={onNavigate}
+            userId="current-user"
+            userSkills={[
+              { name: 'Apex Development', level: 2 },
+              { name: 'Lightning Web Components', level: 3 },
+              { name: 'Data Modeling', level: 4 },
+              { name: 'Process Automation', level: 3 },
+            ]}
+            completedTrails={[]}
+            currentLevel="Explorer"
+          />
         </div>
 
         {/* Right Sidebar - REORDERED */}
         <div className="space-y-6">
+          {/* NEW: Daily Challenges - TOP OF SIDEBAR */}
+          <DailyChallenges
+            onNavigate={onNavigate}
+            currentStreak={3}
+            completedToday={[]}
+          />
+
+          {/* NEW: Learning Streaks - AFTER DAILY CHALLENGES */}
+          <StreakTracker
+            currentStreak={12}
+            longestStreak={28}
+            totalActiveDays={45}
+            lastActiveDate={new Date().toISOString().split('T')[0]}
+            streakSaverAvailable={true}
+            milestonesReached={[7]}
+          />
+
+          {/* NEW: Leaderboard Widget - AFTER LEARNING STREAKS */}
+          <LeaderboardWidget
+            category="points"
+            timeframe="weekly"
+            limit={5}
+            currentUserId="user-4"
+            onViewFull={() => onNavigate('leaderboard')}
+          />
+
           {/* Quick Links - MOVED TO TOP */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <h3 className="text-gray-900 mb-4">Quick Links</h3>
