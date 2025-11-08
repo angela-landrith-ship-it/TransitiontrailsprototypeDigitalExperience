@@ -30,6 +30,10 @@ import { PortfolioDetail } from './components/PortfolioDetail';
 import { TrailOfMastery } from './components/TrailOfMastery';
 import { TrailDetail } from './components/TrailDetail';
 import { DiscussionForums } from './components/DiscussionForums';
+import { PeerReviewHub } from './components/PeerReviewHub';
+import { StudyGroupsHub } from './components/StudyGroupsHub';
+import { MessagingHub } from './components/MessagingHub';
+import { ProfileDirectory } from './components/ProfileDirectory';
 
 export type PageType = 
   | 'learner' 
@@ -37,6 +41,10 @@ export type PageType =
   | 'admin-panel'
   | 'trail-missions' 
   | 'capstone-projects' 
+  | 'peer-reviews'
+  | 'study-groups'
+  | 'messages'
+  | 'profile-directory'
   | 'skills-assessment'
   | 'skills-iq-assessment'
   | 'profile'
@@ -163,6 +171,7 @@ export default function App() {
             userRole="learner" 
             capstoneComplete={capstoneComplete}
             onCapstoneComplete={() => setCapstoneComplete(true)}
+            onNavigate={setActivePage}
           />
         );
       case 'skills-assessment':
@@ -179,6 +188,14 @@ export default function App() {
         return <Community onNavigate={setActivePage} />;
       case 'forums':
         return <DiscussionForums onNavigate={setActivePage} />;
+      case 'peer-reviews':
+        return <PeerReviewHub onNavigate={setActivePage} />;
+      case 'study-groups':
+        return <StudyGroupsHub onNavigate={setActivePage} />;
+      case 'messages':
+        return <MessagingHub onNavigate={setActivePage} />;
+      case 'profile-directory':
+        return <ProfileDirectory onNavigate={setActivePage} />;
       case 'merch-store':
         return (
           <MerchStore 

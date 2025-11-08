@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-import { Briefcase, Users, Award, Sparkles, Zap } from 'lucide-react';
+import { Briefcase, Users, Award, Sparkles, Zap, Star, ArrowRight } from 'lucide-react';
 import { Badge } from './ui/badge';
+import { Button } from './ui/button';
 import { MyCapstone } from './MyCapstone';
 import { PartnerBoard } from './PartnerBoard';
 import { TeamProjects } from './TeamProjects';
@@ -12,9 +13,10 @@ interface ProjectsHubProps {
   userRole?: 'learner' | 'coach' | 'partner';
   capstoneComplete?: boolean;
   onCapstoneComplete?: () => void;
+  onNavigate?: (page: any) => void;
 }
 
-export function ProjectsHub({ userRole = 'learner', capstoneComplete = false, onCapstoneComplete }: ProjectsHubProps) {
+export function ProjectsHub({ userRole = 'learner', capstoneComplete = false, onCapstoneComplete, onNavigate }: ProjectsHubProps) {
   const [activeTab, setActiveTab] = useState('capstone');
   const [showPartnerSubmission, setShowPartnerSubmission] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
@@ -84,6 +86,65 @@ export function ProjectsHub({ userRole = 'learner', capstoneComplete = false, on
           </div>
         </div>
       </div>
+
+      {/* Peer Review Feature Card */}
+      {onNavigate && capstoneComplete && (
+        <div className="max-w-7xl mx-auto px-4 -mt-6 mb-6">
+          <div className="bg-gradient-to-r from-[#F9A03F] to-[#f89520] rounded-xl shadow-lg p-6">
+            <div className="flex items-start justify-between">
+              <div className="flex-1">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="bg-white/20 backdrop-blur-sm p-2 rounded-lg">
+                    <Star className="w-5 h-5 text-white" />
+                  </div>
+                  <Badge className="bg-white text-[#F9A03F] border-0">
+                    Phase 2 Feature
+                  </Badge>
+                </div>
+                <h3 className="text-white text-xl mb-1">Get Peer Feedback on Your Capstone</h3>
+                <p className="text-white/90 text-sm mb-3 max-w-2xl">
+                  Receive structured reviews from peers on your capstone project. Review others' work to earn 50 points per review and climb the leaderboard!
+                </p>
+                <div className="flex flex-wrap gap-2 mb-3">
+                  <div className="flex items-center gap-1 text-white/90 text-xs">
+                    <span className="text-white">✓</span>
+                    <span>5-category rubric</span>
+                  </div>
+                  <div className="flex items-center gap-1 text-white/90 text-xs">
+                    <span className="text-white">✓</span>
+                    <span>Detailed feedback</span>
+                  </div>
+                  <div className="flex items-center gap-1 text-white/90 text-xs">
+                    <span className="text-white">✓</span>
+                    <span>Earn reviewer badges</span>
+                  </div>
+                </div>
+                <Button
+                  onClick={() => onNavigate('peer-reviews')}
+                  className="bg-white text-[#F9A03F] hover:bg-gray-100"
+                  size="sm"
+                >
+                  Open Peer Reviews
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </div>
+              <div className="hidden lg:block">
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 space-y-2 min-w-[140px]">
+                  <div className="text-white/80 text-xs">Your Stats</div>
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-2xl text-white">2</span>
+                    <span className="text-sm text-white/80">pending</span>
+                  </div>
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-2xl text-white">8</span>
+                    <span className="text-sm text-white/80">completed</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Tabs */}
       <div className="max-w-7xl mx-auto px-4 -mt-6">

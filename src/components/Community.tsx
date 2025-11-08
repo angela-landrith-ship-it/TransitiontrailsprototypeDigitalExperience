@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowLeft, Hash, Users, Calendar, MessageCircle, TrendingUp, Bell, ExternalLink, Sparkles, Play, Clock, User, ChevronRight, Video, Settings, Eye, Pin, ThumbsUp, MessageSquare, CheckCircle } from 'lucide-react';
+import { ArrowLeft, Hash, Users, Calendar, MessageCircle, TrendingUp, Bell, ExternalLink, Sparkles, Play, Clock, User, ChevronRight, Video, Settings, Eye, Pin, ThumbsUp, MessageSquare, CheckCircle, Star, Send, UserCircle } from 'lucide-react';
 import { Button } from './ui/button';
 import { PageType } from '../App';
 import { Badge } from './ui/badge';
@@ -257,60 +257,199 @@ export function Community({ onNavigate }: CommunityProps) {
           </div>
         </div>
 
-        {/* Discussion Forums Feature Card */}
-        <div className="bg-gradient-to-r from-[#2C6975] to-[#7EB5C1] rounded-xl shadow-lg p-8 mb-6">
-          <div className="flex items-start justify-between">
-            <div className="flex-1">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="bg-white/20 backdrop-blur-sm p-3 rounded-lg">
-                  <MessageCircle className="w-6 h-6 text-white" />
-                </div>
-                <Badge className="bg-[#F9A03F] text-white border-0">
-                  🆕 NEW FEATURE
-                </Badge>
+        {/* Phase 2 Community Features - Row 1 */}
+        <div className="grid md:grid-cols-3 gap-6 mb-6">
+          {/* Discussion Forums */}
+          <div className="bg-gradient-to-r from-[#2C6975] to-[#235158] rounded-xl shadow-lg p-6">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="bg-white/20 backdrop-blur-sm p-2.5 rounded-lg">
+                <MessageCircle className="w-5 h-5 text-white" />
               </div>
-              <h2 className="text-white text-2xl mb-2">Discussion Forums Now Live!</h2>
-              <p className="text-white/90 mb-4 max-w-2xl">
-                Ask questions, share knowledge, and get help from the community. Native forums with Q&A, voting, best answers, and full search.
-              </p>
-              <div className="flex flex-wrap gap-3 mb-4">
-                <div className="flex items-center gap-2 text-white/90 text-sm">
-                  <CheckCircle className="w-4 h-4" />
-                  <span>1,078+ threads</span>
-                </div>
-                <div className="flex items-center gap-2 text-white/90 text-sm">
-                  <CheckCircle className="w-4 h-4" />
-                  <span>5,774+ answers</span>
-                </div>
-                <div className="flex items-center gap-2 text-white/90 text-sm">
-                  <CheckCircle className="w-4 h-4" />
-                  <span>Searchable knowledge base</span>
-                </div>
-              </div>
-              <Button
-                onClick={() => onNavigate('forums')}
-                className="bg-white text-[#2C6975] hover:bg-gray-100"
-              >
-                Browse Forums
-                <ArrowLeft className="w-4 h-4 ml-2 rotate-180" />
-              </Button>
+              <Badge className="bg-[#F9A03F] text-white border-0 text-xs">
+                Phase 2.1
+              </Badge>
             </div>
-            <div className="hidden lg:block">
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 space-y-2">
-                <div className="text-white/80 text-sm">Popular Categories</div>
-                <div className="space-y-2">
-                  <div className="bg-white/20 backdrop-blur-sm rounded px-3 py-2 text-white text-sm">
-                    📚 Learning & Courses
-                  </div>
-                  <div className="bg-white/20 backdrop-blur-sm rounded px-3 py-2 text-white text-sm">
-                    🏗️ Capstone Projects
-                  </div>
-                  <div className="bg-white/20 backdrop-blur-sm rounded px-3 py-2 text-white text-sm">
-                    💼 Career & Jobs
-                  </div>
-                </div>
+            <h3 className="text-white text-xl mb-2">Discussion Forums</h3>
+            <p className="text-white/90 text-sm mb-4">
+              Ask questions, share knowledge, and get help from the community with voting and best answers.
+            </p>
+            <div className="space-y-2 mb-4">
+              <div className="flex items-center gap-2 text-white/90 text-xs">
+                <CheckCircle className="w-3.5 h-3.5" />
+                <span>1,078+ threads</span>
+              </div>
+              <div className="flex items-center gap-2 text-white/90 text-xs">
+                <CheckCircle className="w-3.5 h-3.5" />
+                <span>5 categories</span>
+              </div>
+              <div className="flex items-center gap-2 text-white/90 text-xs">
+                <CheckCircle className="w-3.5 h-3.5" />
+                <span>Searchable knowledge base</span>
               </div>
             </div>
+            <Button
+              onClick={() => onNavigate('forums')}
+              className="w-full bg-white text-[#2C6975] hover:bg-gray-100"
+              size="sm"
+            >
+              Browse Forums
+              <ChevronRight className="w-4 h-4 ml-2" />
+            </Button>
+          </div>
+
+          {/* Peer Reviews */}
+          <div className="bg-gradient-to-r from-[#F9A03F] to-[#f89520] rounded-xl shadow-lg p-6">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="bg-white/20 backdrop-blur-sm p-2.5 rounded-lg">
+                <Star className="w-5 h-5 text-white" />
+              </div>
+              <Badge className="bg-white text-[#F9A03F] border-0 text-xs">
+                Phase 2.2
+              </Badge>
+            </div>
+            <h3 className="text-white text-xl mb-2">Peer Review System</h3>
+            <p className="text-white/90 text-sm mb-4">
+              Give and receive structured feedback on capstone projects with a professional 5-category rubric.
+            </p>
+            <div className="space-y-2 mb-4">
+              <div className="flex items-center gap-2 text-white/90 text-xs">
+                <CheckCircle className="w-3.5 h-3.5" />
+                <span>5-category rubric</span>
+              </div>
+              <div className="flex items-center gap-2 text-white/90 text-xs">
+                <CheckCircle className="w-3.5 h-3.5" />
+                <span>Earn reviewer badges</span>
+              </div>
+              <div className="flex items-center gap-2 text-white/90 text-xs">
+                <CheckCircle className="w-3.5 h-3.5" />
+                <span>+50 pts per review</span>
+              </div>
+            </div>
+            <Button
+              onClick={() => onNavigate('peer-reviews')}
+              className="w-full bg-white text-[#F9A03F] hover:bg-gray-100"
+              size="sm"
+            >
+              Open Peer Reviews
+              <ChevronRight className="w-4 h-4 ml-2" />
+            </Button>
+          </div>
+
+          {/* 1-on-1 Messaging */}
+          <div className="bg-gradient-to-r from-[#3B6A52] to-[#2d5440] rounded-xl shadow-lg p-6">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="bg-white/20 backdrop-blur-sm p-2.5 rounded-lg">
+                <Send className="w-5 h-5 text-white" />
+              </div>
+              <Badge className="bg-white text-[#3B6A52] border-0 text-xs">
+                🆕 Phase 2.4
+              </Badge>
+            </div>
+            <h3 className="text-white text-xl mb-2">1-on-1 Messaging</h3>
+            <p className="text-white/90 text-sm mb-4">
+              Connect directly with peers and coaches through private messages and real-time chat.
+            </p>
+            <div className="space-y-2 mb-4">
+              <div className="flex items-center gap-2 text-white/90 text-xs">
+                <CheckCircle className="w-3.5 h-3.5" />
+                <span>Direct peer messaging</span>
+              </div>
+              <div className="flex items-center gap-2 text-white/90 text-xs">
+                <CheckCircle className="w-3.5 h-3.5" />
+                <span>Coach support chats</span>
+              </div>
+              <div className="flex items-center gap-2 text-white/90 text-xs">
+                <CheckCircle className="w-3.5 h-3.5" />
+                <span>Read receipts & typing</span>
+              </div>
+            </div>
+            <Button
+              onClick={() => onNavigate('messages')}
+              className="w-full bg-white text-[#3B6A52] hover:bg-gray-100"
+              size="sm"
+            >
+              Open Messages
+              <ChevronRight className="w-4 h-4 ml-2" />
+            </Button>
+          </div>
+        </div>
+
+        {/* Phase 2 Community Features - Row 2 */}
+        <div className="grid md:grid-cols-2 gap-6 mb-6">
+          {/* Study Groups */}
+          <div className="bg-gradient-to-r from-[#7EB5C1] to-[#6a9aa5] rounded-xl shadow-lg p-6">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="bg-white/20 backdrop-blur-sm p-2.5 rounded-lg">
+                <Users className="w-5 h-5 text-white" />
+              </div>
+              <Badge className="bg-white text-[#7EB5C1] border-0 text-xs">
+                Phase 2.3
+              </Badge>
+            </div>
+            <h3 className="text-white text-xl mb-2">Study Groups</h3>
+            <p className="text-white/90 text-sm mb-4">
+              Form collaborative learning communities with group challenges, resource sharing, and study sessions.
+            </p>
+            <div className="space-y-2 mb-4">
+              <div className="flex items-center gap-2 text-white/90 text-xs">
+                <CheckCircle className="w-3.5 h-3.5" />
+                <span>Create or join groups</span>
+              </div>
+              <div className="flex items-center gap-2 text-white/90 text-xs">
+                <CheckCircle className="w-3.5 h-3.5" />
+                <span>Share resources</span>
+              </div>
+              <div className="flex items-center gap-2 text-white/90 text-xs">
+                <CheckCircle className="w-3.5 h-3.5" />
+                <span>Schedule study sessions</span>
+              </div>
+            </div>
+            <Button
+              onClick={() => onNavigate('study-groups')}
+              className="w-full bg-white text-[#7EB5C1] hover:bg-gray-100"
+              size="sm"
+            >
+              Browse Study Groups
+              <ChevronRight className="w-4 h-4 ml-2" />
+            </Button>
+          </div>
+
+          {/* Social Profiles */}
+          <div className="bg-gradient-to-r from-[#2C6975] to-[#235158] rounded-xl shadow-lg p-6">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="bg-white/20 backdrop-blur-sm p-2.5 rounded-lg">
+                <UserCircle className="w-5 h-5 text-white" />
+              </div>
+              <Badge className="bg-white text-[#2C6975] border-0 text-xs">
+                🆕 Phase 2.5 - FINAL!
+              </Badge>
+            </div>
+            <h3 className="text-white text-xl mb-2">Social Profiles</h3>
+            <p className="text-white/90 text-sm mb-4">
+              Browse learner profiles, showcase your skills, display achievements, and connect with the community.
+            </p>
+            <div className="space-y-2 mb-4">
+              <div className="flex items-center gap-2 text-white/90 text-xs">
+                <CheckCircle className="w-3.5 h-3.5" />
+                <span>Public learner profiles</span>
+              </div>
+              <div className="flex items-center gap-2 text-white/90 text-xs">
+                <CheckCircle className="w-3.5 h-3.5" />
+                <span>Skills & projects showcase</span>
+              </div>
+              <div className="flex items-center gap-2 text-white/90 text-xs">
+                <CheckCircle className="w-3.5 h-3.5" />
+                <span>Badges & achievements</span>
+              </div>
+            </div>
+            <Button
+              onClick={() => onNavigate('profile-directory')}
+              className="w-full bg-white text-[#2C6975] hover:bg-gray-100"
+              size="sm"
+            >
+              Browse Profiles
+              <ChevronRight className="w-4 h-4 ml-2" />
+            </Button>
           </div>
         </div>
 
