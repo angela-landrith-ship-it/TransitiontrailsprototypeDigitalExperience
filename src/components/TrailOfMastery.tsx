@@ -15,6 +15,11 @@ import {
   TrendingUp,
   Users,
   ArrowLeft,
+  Sparkles,
+  Settings,
+  Target,
+  Crown,
+  Brain,
 } from 'lucide-react';
 import { TrailCard } from './TrailCard';
 import { SectionHeader } from './SectionHeader';
@@ -44,17 +49,76 @@ interface Trail {
 }
 
 const trails: Trail[] = [
+  // BEGINNER TRAILS
+  {
+    id: 'business-analyst',
+    role: 'Salesforce Business Analyst',
+    title: 'Trail of Mastery: Business Analyst',
+    description: 'Excel in discovery, documentation, and process optimization using Salesforce automation tools.',
+    duration: '12–16 weeks',
+    difficulty: 'Beginner',
+    icon: BarChart3,
+    color: 'blue',
+    badge: 'Business Process Expert',
+    pennyMode: 'Discovery Guide',
+    modules: 5,
+    totalPoints: 300,
+  },
+  {
+    id: 'salesforce-admin',
+    role: 'Salesforce Administrator',
+    title: 'Trail of Mastery: Salesforce Admin',
+    description: 'Master user management, security settings, workflow automation, reports & dashboards, and platform configuration.',
+    duration: '12–16 weeks',
+    difficulty: 'Beginner',
+    icon: Settings,
+    color: 'amber',
+    badge: 'Certified Platform Expert',
+    pennyMode: 'Configuration Guide',
+    modules: 5,
+    totalPoints: 300,
+  },
+  
+  // INTERMEDIATE TRAILS
+  {
+    id: 'citizen-developer',
+    role: 'Citizen Developer',
+    title: 'Trail of Mastery: Citizen Developer Platforms',
+    description: 'Master no-code and low-code platforms like HubSpot, Canva, Notion, Airtable, Jotform, Monday.com, Mailchimp, and more.',
+    duration: 'Self-Paced',
+    difficulty: 'Intermediate',
+    icon: Sparkles,
+    color: 'evergreen',
+    badge: 'Multi-Platform Maker',
+    pennyMode: 'Cross-Platform Mentor',
+    modules: 10,
+    totalPoints: 2200,
+  },
+  {
+    id: 'ai-specialist',
+    role: 'AI for Digital Platforms',
+    title: 'Trail of Mastery: AI Specialist',
+    description: 'Master AI tools for Salesforce Einstein, Canva AI, Jotform AI, automation platforms, and emerging AI technologies.',
+    duration: '12–16 weeks',
+    difficulty: 'Intermediate',
+    icon: Brain,
+    color: 'blue',
+    badge: 'AI Innovation Leader',
+    pennyMode: 'AI Strategy Guide',
+    modules: 6,
+    totalPoints: 350,
+  },
   {
     id: 'product-owner',
     role: 'Salesforce Product Owner',
     title: 'Trail of Mastery: Product Owner',
-    description: 'Master strategic planning, stakeholder management, backlog grooming, and business process optimization.',
+    description: 'Master backlog management, user story refinement, stakeholder communication, and agile delivery with Salesforce teams.',
     duration: '12–16 weeks',
-    difficulty: 'Advanced',
-    icon: Briefcase,
-    color: 'amber',
-    badge: 'Trailblazer Visionary',
-    pennyMode: 'Mentor',
+    difficulty: 'Intermediate',
+    icon: Target,
+    color: 'blue',
+    badge: 'Agile Product Leader',
+    pennyMode: 'Delivery Mentor',
     modules: 5,
     totalPoints: 300,
   },
@@ -64,11 +128,27 @@ const trails: Trail[] = [
     title: 'Trail of Mastery: Developer',
     description: 'Build expertise in Apex, Lightning Web Components, and API integrations with declarative-first principles.',
     duration: '12–16 weeks',
-    difficulty: 'Advanced',
+    difficulty: 'Intermediate',
     icon: Code,
     color: 'teal',
-    badge: 'Trailblazer Engineer',
-    pennyMode: 'Assistant',
+    badge: 'Certified Developer',
+    pennyMode: 'Code Assistant',
+    modules: 5,
+    totalPoints: 300,
+  },
+  
+  // ADVANCED TRAILS
+  {
+    id: 'product-manager',
+    role: 'Salesforce Product Manager',
+    title: 'Trail of Mastery: Product Manager',
+    description: 'Lead product strategy, roadmap planning, cross-functional teams, and business impact measurement for Salesforce solutions.',
+    duration: '12–16 weeks',
+    difficulty: 'Advanced',
+    icon: Crown,
+    color: 'amber',
+    badge: 'Strategic Product Leader',
+    pennyMode: 'Strategy Advisor',
     modules: 5,
     totalPoints: 300,
   },
@@ -81,22 +161,8 @@ const trails: Trail[] = [
     difficulty: 'Advanced',
     icon: Network,
     color: 'evergreen',
-    badge: 'Trailblazer Architect',
-    pennyMode: 'Advisor',
-    modules: 5,
-    totalPoints: 300,
-  },
-  {
-    id: 'business-analyst',
-    role: 'Salesforce Business Analyst',
-    title: 'Trail of Mastery: Business Analyst',
-    description: 'Excel in discovery, documentation, and process optimization using Salesforce automation tools.',
-    duration: '12–16 weeks',
-    difficulty: 'Advanced',
-    icon: BarChart3,
-    color: 'blue',
-    badge: 'Trailblazer Analyst',
-    pennyMode: 'Guide',
+    badge: 'Enterprise Architect',
+    pennyMode: 'Architecture Advisor',
     modules: 5,
     totalPoints: 300,
   },
@@ -117,6 +183,12 @@ export function TrailOfMastery({
   const [showEnrollmentModal, setShowEnrollmentModal] = useState(false);
 
   const handleTrailClick = (trailId: string) => {
+    // Special handling for Citizen Developer - goes directly to platform gallery
+    if (trailId === 'citizen-developer') {
+      onNavigate('citizen-developer', trailId);
+      return;
+    }
+    
     // Check if already enrolled
     if (trailId in enrollments) {
       onNavigate('trail-detail', trailId);
@@ -151,7 +223,7 @@ export function TrailOfMastery({
 
           <SectionHeader
             title="Trail of Mastery Programs"
-            description="Advance your Salesforce career through hands-on mastery paths designed for real-world expertise."
+            description="Advance your digital career through hands-on mastery paths designed for real-world expertise—from Beginner to Advanced."
             icon={Award}
             level="h1"
           />
@@ -194,9 +266,9 @@ export function TrailOfMastery({
                 Build Real-World Expertise
               </h3>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                Each Trail of Mastery includes guided learning modules, team collaboration projects,
-                personalized Penny mentorship, and certification preparation. Complete any trail to
-                earn Expert Level status and unlock the coveted Trailblazer badge for your chosen role.
+                Choose from eight role-based learning paths spanning Beginner to Advanced levels, including six Salesforce career tracks, Citizen Developer Platforms (10 tools), and AI Specialist.
+                Each trail includes guided learning modules, team collaboration projects, personalized Penny mentorship,
+                and certification preparation. Complete trails to earn Expert Level status and specialized badges.
               </p>
             </div>
           </div>

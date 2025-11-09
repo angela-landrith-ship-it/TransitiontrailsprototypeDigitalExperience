@@ -188,7 +188,7 @@ export function VisitorLearningCenter({ onEnroll }: VisitorLearningCenterProps) 
             
             <div className="relative z-10 text-center max-w-3xl mx-auto">
               <h1 className="text-5xl text-gray-900 mb-4">
-                Explore Your Path to Salesforce Mastery.
+                Explore Your Path to Digital Skill Mastery
               </h1>
               <p className="text-xl text-gray-700">
                 As a visitor, you can preview three ways to start your journey — from guided introductions to full Academy membership.

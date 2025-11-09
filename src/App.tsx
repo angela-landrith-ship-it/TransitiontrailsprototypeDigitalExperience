@@ -29,6 +29,7 @@ import { PortfolioGallery } from './components/PortfolioGallery';
 import { PortfolioDetail } from './components/PortfolioDetail';
 import { TrailOfMastery } from './components/TrailOfMastery';
 import { TrailDetail } from './components/TrailDetail';
+import { CitizenDeveloperMastery } from './components/CitizenDeveloperMastery';
 import { DiscussionForums } from './components/DiscussionForums';
 import { PeerReviewHub } from './components/PeerReviewHub';
 import { StudyGroupsHub } from './components/StudyGroupsHub';
@@ -66,6 +67,8 @@ export type PageType =
   | 'portfolio-detail'
   | 'trail-mastery'
   | 'trail-detail'
+  | 'citizen-developer'
+  | 'platform-detail'
   | 'explorers-journey'
   | 'postcards-from-future'
   | 'our-vision';
@@ -310,6 +313,33 @@ export default function App() {
         />;
       case 'postcards-from-future':
         return <PostcardsFromTheFuture />;
+      case 'citizen-developer':
+        return <CitizenDeveloperMastery
+          onNavigate={(page, platformId) => {
+            setActivePage(page as PageType);
+            if (platformId) setSelectedTrailId(platformId);
+          }}
+          onBack={() => setActivePage('trail-mastery')}
+          userPoints={2380}
+          userLevel="Explorer"
+        />;
+      case 'platform-detail':
+        return (
+          <div className="p-8 text-center bg-white dark:bg-slate-800 min-h-screen">
+            <h2 className="text-2xl mb-4 text-gray-900 dark:text-white">
+              Platform Detail Page
+            </h2>
+            <p className="text-gray-600 dark:text-gray-400 mb-4">
+              Platform ID: {selectedTrailId}
+            </p>
+            <button 
+              onClick={() => setActivePage('citizen-developer')}
+              className="px-6 py-3 bg-evergreen text-white rounded-lg hover:bg-evergreen-dark transition-colors"
+            >
+              Back to Citizen Developer Platforms
+            </button>
+          </div>
+        );
       default:
         return (
           <>
